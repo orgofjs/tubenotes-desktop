@@ -76,7 +76,7 @@ TubeNotes, YouTube videolarınız için modern bir bilgi yönetim sistemidir. Vi
 - Windows 10+ (64-bit)
 - macOS 10.13+
 - Linux: Ubuntu 18.04+, Fedora 32+, Debian 10+
-- RAM: 4GB (önerilen 8GB)
+- RAM: -
 - Disk: 500MB boş alan
 
 **Geliştirme**
