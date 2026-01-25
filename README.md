@@ -20,41 +20,48 @@
 
 ### Genel Bakış
 
-TubeNotes, YouTube videolarınız için modern bir bilgi yönetim sistemidir. Videolarınızı klasörlerde düzenleyin, zengin formatlı notlar alın ve içeriklerinizi etkili bir şekilde yönetin. Masaüstü (Windows, macOS, Linux) ve web uygulaması olarak kullanılabilir.
+TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistemidir. Video notları alın, sonsuz canvas üzerinde fikirlerinizi görselleştirin, şekiller çizin, markdown notları ekleyin. Masaüstü uygulaması (Windows, macOS, Linux) olarak kullanılabilir.
 
 ### Ana Özellikler
 
-**YouTube Entegrasyonu**
-- Otomatik video metadata çekme (başlık, kanal, thumbnail)
-- YouTube videolarına direkt bağlantılar
-- Thumbnail önizleme kartları
+**🎨 Canvas Mode (Yeni!)**
+- React Flow tabanlı sonsuz canvas
+- Sürükle-bırak ile şekil ekleme (dikdörtgen, daire, elips)
+- Metin kutuları ile hızlı not alma
+- CodeMirror ile markdown editör node'ları
+- Manuel kaydetme (Ctrl+S) - veri güvenliği
+- Canvas export/import (.json)
+- Zoom ve pan özellikleri
 
-**Zengin Metin Editörü**
-- Tiptap editör ile profesyonel not alma
+**📝 YouTube Video Notları**
+- Otomatik video metadata çekme (başlık, kanal, thumbnail)
+- Tiptap zengin metin editörü
 - Kalın, italik, altı çizili, üstü çizili metin
 - Başlıklar, listeler, alıntılar, bağlantılar, kod blokları
 - Karakter sayacı
-- Otomatik kaydetme (3 saniye)
+- YouTube'a direkt bağlantılar
 
-**Organizasyon Sistemi**
+**📁 Organizasyon Sistemi**
+- Canvas ve notlar için klasör yapısı
 - Sınırsız klasör ve alt klasör
 - Klasör ağacı navigasyonu
 - Hızlı filtreler (Önemli, Tamamlanan)
 
-**Tema Desteği**
+**🎨 Tema Desteği**
 - Dark Theme: Siyah arka plan, kırmızı vurgular
 - Navy Theme: Lacivert arka plan, turuncu vurgular
 - Light Theme: Krem arka plan, bordo vurgular
 
-**Arama ve Filtreleme**
+**🔍 Arama ve Filtreleme**
 - Başlık, kanal ve not içeriklerinde gerçek zamanlı arama
 - Durum filtreleme (İzlenmedi, İzleniyor, İzlendi)
 - Klasör bazlı filtreleme
 
-**Veri Yönetimi**
+**💾 Veri Yönetimi**
+- SQLite veritabanı (better-sqlite3)
 - Yerel depolama (bulut bağımlılığı yok)
-- JSON tabanlı yapı
 - Gizlilik odaklı
+- Canvas verilerinin güvenli saklanması
 
 ### Teknolojiler
 
@@ -62,13 +69,17 @@ TubeNotes, YouTube videolarınız için modern bir bilgi yönetim sistemidir. Vi
 |----------|-----------|
 | Framework | Next.js 16.1.3 (App Router, Turbopack) |
 | Masaüstü | Electron 40.0.0 + electron-builder |
+| Veritabanı | SQLite (better-sqlite3 12.6.2) |
+| ORM | Prisma 7.3.0 (schema tanımı için) |
 | Dil | TypeScript 5 |
 | Stil | Tailwind CSS 4 |
-| Editör | Tiptap (StarterKit, Link, Placeholder, CharacterCount) |
+| Canvas | @xyflow/react 12.10.0 (React Flow) |
+| Editör (Not) | Tiptap 3.15.3 (StarterKit, Link, Placeholder, CharacterCount) |
+| Editör (Markdown) | CodeMirror 4.25.4 (@uiw/react-codemirror) |
 | Animasyon | Framer Motion 12.26.2 |
-| İkonlar | Lucide React |
-| Tarih | date-fns |
-| PWA | @ducanh2912/next-pwa |
+| İkonlar | Lucide React 0.562.0 |
+| Tarih | date-fns 4.1.0 |
+| PWA | @ducanh2912/next-pwa 10.2.9 |
 
 ### Sistem Gereksinimleri
 
@@ -110,19 +121,29 @@ npm run build-mac
 npm run build-linux
 ```
 
-Tarayıcıda [http://localhost:3000](http://localhost:3000) adresini açın.
+TaCanvas Modu**
+1. "+ New Canvas" ile yeni canvas oluşturun
+2. Canvas Mode'a geçin
+3. Araçları kullanın:
+   - **Drag Tool**: Şekil sürükle-bırak (dikdörtgen, daire, elips)
+   - **Text Tool**: Hızlı metin kutusu ekle
+   - **Markdown**: CodeMirror markdown editörü ekle
+4. **Ctrl+S** ile manuel kaydetme yapın
+5. **Export** ile canvas'ı JSON olarak dışa aktarın
+6. **Import** ile kayıtlı canvas'ı içe aktarın
 
-### Kullanım
-
-**Video Ekleme**
+**Video Notları**
 1. "+ Add New Video" butonuna tıklayın
 2. YouTube URL yapıştırın
 3. "Add Video" ile ekleyin
+4. Video kartına tıklayın
+5. Editör araç çubuğunu kullanın
+6. Notlar otomatik kaydedilir
 
-**Klasör Oluşturma**
+**Klasör Yönetimi**
 1. Kenar çubuğunda "+ Add Folder" tıklayın
 2. Klasör adı girin, Enter basın
-
+3. Canvas veya notları klasörlere taşıyın
 **Not Alma**
 1. Video kartına tıklayın
 2. Editör araç çubuğunu kullanın
@@ -141,10 +162,14 @@ Tarayıcıda [http://localhost:3000](http://localhost:3000) adresini açın.
 
 **Tema Özelleştirme**
 
-`app/globals.css` dosyasını düzenleyin:
+`apindows: `%APPDATA%/tubenotes/tubenotes.db` (SQLite)
+- macOS: `~/Library/Application Support/tubenotes/tubenotes.db`
+- Linux: `~/.config/tubenotes/tubenotes.db`
 
-```css
-:root[data-theme="dark"] {
+**Veritabanı**
+- SQLite veritabanı kullanır (better-sqlite3)
+- Canvas verileri JSON string olarak saklanır
+- Video notları ve klasörler ilişkisel tablolarda tutulur
   --color-bg: #0a0a0a;
   --color-primary: #ff0000;
 }
@@ -162,41 +187,48 @@ Tarayıcıda [http://localhost:3000](http://localhost:3000) adresini açın.
 2. Feature branch oluşturun (`git checkout -b feature/yeni-ozellik`)
 3. Commit yapın (`git commit -m 'Yeni özellik'`)
 4. Push edin (`git push origin feature/yeni-ozellik`)
-5. Pull Request açın
-
-### Lisans
-
-MIT Lisansı - [LICENSE](LICENSE) dosyasına bakın.
-
----
-
-<a id="english"></a>
-
-## English
-
-### Overview
-
-TubeNotes is a modern knowledge management system for YouTube videos. Organize your videos in folders, take rich-formatted notes, and manage your content effectively. Available as desktop (Windows, macOS, Linux) and web application.
+5. Pull Request açınvisual knowledge management system for YouTube videos. Take video notes, visualize your ideas on infinite canvas, draw shapes, and add markdown notes. Available as desktop application (Windows, macOS, Linux).
 
 ### Key Features
 
-**YouTube Integration**
-- Automatic video metadata fetching (title, channel, thumbnail)
-- Direct links to YouTube videos
-- Thumbnail preview cards
+**🎨 Canvas Mode (New!)**
+- React Flow based infinite canvas
+- Drag-and-drop shape creation (rectangle, circle, ellipse)
+- Text boxes for quick notes
+- CodeMirror markdown editor nodes
+- Manual save (Ctrl+S) - data safety
+- Canvas export/import (.json)
+- Zoom and pan features
 
-**Rich Text Editor**
-- Professional note-taking with Tiptap editor
+**📝 YouTube Video Notes**
+- Automatic video metadata fetching (title, channel, thumbnail)
+- Tiptap rich text editor
 - Bold, italic, underline, strikethrough text
 - Headings, lists, blockquotes, links, code blocks
 - Character counter
-- Auto-save (3 seconds)
+- Direct links to YouTube
 
-**Organization System**
+**📁 Organization System**
+- Folder structure for canvas and notes
 - Unlimited folders and subfolders
 - Folder tree navigation
 - Quick filters (Important, Completed)
 
+**🎨 Theme Support**
+- Dark Theme: Black background, red accents
+- Navy Theme: Navy background, orange accents
+- Light Theme: Cream background, burgundy accents
+
+**🔍 Search & Filtering**
+- Real-time search across titles, channels, and note content
+- Status filtering (Unwatched, Watching, Watched)
+- Folder-based filtering
+
+**💾 Data Management**
+- SQLite database (better-sqlite3)
+- Local storage (no cloud dependency)
+- Privacy-focused
+- Secure canvas data storage
 **Theme Support**
 - Dark Theme: Black background, red accents
 - Navy Theme: Navy background, orange accents
@@ -207,13 +239,17 @@ TubeNotes is a modern knowledge management system for YouTube videos. Organize y
 - Status filtering (Unwatched, Watching, Watched)
 - Folder-based filtering
 
-**Data Management**
-- Local storage (no cloud dependency)
-- JSON-based structure
-- Privacy-focused
-
-### Technologies
-
+**Database | SQLite (better-sqlite3 12.6.2) |
+| ORM | Prisma 7.3.0 (schema definition) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS 4 |
+| Canvas | @xyflow/react 12.10.0 (React Flow) |
+| Editor (Notes) | Tiptap 3.15.3 (StarterKit, Link, Placeholder, CharacterCount) |
+| Editor (Markdown) | CodeMirror 4.25.4 (@uiw/react-codemirror) |
+| Animation | Framer Motion 12.26.2 |
+| Icons | Lucide React 0.562.0 |
+| Date | date-fns 4.1.0 |
+| PWA | @ducanh2912/next-pwa 10.2.9
 | Category | Technology |
 |----------|------------|
 | Framework | Next.js 16.1.3 (App Router, Turbopack) |
@@ -255,19 +291,29 @@ npm run dev
 
 # Development for desktop
 npm run electron-dev
+Canvas Mode**
+1. Create new canvas with "+ New Canvas"
+2. Switch to Canvas Mode
+3. Use tools:
+   - **Drag Tool**: Drag-and-drop shapes (rectangle, circle, ellipse)
+   - **Text Tool**: Add quick text boxes
+   - **Markdown**: Add CodeMirror markdown editor
+4. **Ctrl+S** for manual save
+5. **Export** canvas as JSON
+6. **Import** saved canvas from JSON
 
-# Build for Windows
-npm run build-win
+**Video Notes**
+1. Click "+ Add New Video" button
+2. Paste YouTube URL
+3. Click "Add Video"
+4. Click on video card
+5. Use editor toolbar
+6. Notes auto-save
 
-# Build for macOS
-npm run build-mac
-
-# Build for Linux
-npm run build-linux
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
+**Folder Management**
+1. Click "+ Add Folder" in sidebar
+2. Enter folder name, press Enter
+3. Move canvas or notes to folders
 ### Usage
 
 **Adding Videos**
@@ -286,10 +332,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 **Status Management**
 - Hover over video card
-- Select Unwatched / Watching / Watched
-- Toggle Important (star) and Completed (checkmark)
+- Sindows: `%APPDATA%/tubenotes/tubenotes.db` (SQLite)
+- macOS: `~/Library/Application Support/tubenotes/tubenotes.db`
+- Linux: `~/.config/tubenotes/tubenotes.db`
 
-**Search and Theme**
+**Database**
+- Uses SQLite database (better-sqlite3)
+- Canvas data stored as JSON strings
+- Video notes and folders in relational tables
 - Use search box in sidebar
 - Select Dark, Navy or Light from theme dropdown
 
