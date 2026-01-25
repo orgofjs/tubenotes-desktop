@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  parentId  String?
+  parent    Folder?  @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Folder[] @relation("FolderToFolder")
+  notes     VideoNote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VideoNote {
+  id          String   @id @default(uuid())
+  title       String
+  videoUrl    String
+  channelName String?
+  thumbnail   String?
+  content     String   @default("")
+  status      String   @default("unwatched") // unwatched, watching, watched
+  important   Boolean  @default(false)
+  completed   Boolean  @default(false)
+  folderId    String?
+  folder      Folder?  @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Canvas {
+  id        String       @id @default(uuid())
+  name      String
+  data      String       @default("{}") // React Flow data as JSON string
+  nodes     CanvasNode[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model CanvasNode {
+  id        String   @id @default(uuid())
+  canvasId  String
+  canvas    Canvas   @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  type      String   // shape, markdown, text
+  positionX Float
+  positionY Float
+  width     Float?
+  height    Float?
+  content   String   @default("")
+  style     String?  // JSON string for node-specific styles
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

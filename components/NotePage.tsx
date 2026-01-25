@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { ArrowLeft, ExternalLink, Calendar, User, Save } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Calendar, User, Save, Download } from 'lucide-react';
 import { VideoNote } from '@/types';
 import { getYouTubeThumbnail } from '@/lib/youtube';
 import { format } from 'date-fns';
 import Editor from '@/components/Editor';
+import { downloadFile } from '@/lib/fileSystem';
 
 interface NotePageProps {
   note: VideoNote;
@@ -20,21 +21,37 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
   const [content, setContent] = useState(note.content);
   const [isSaving, setIsSaving] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
 
   useEffect(() => {
     const saveInterval = setInterval(() => {
       if (content !== note.content) {
-        handleSave();
+        handleAutoSave();
       }
     }, 3000); // Auto-save every 3 seconds
 
     return () => clearInterval(saveInterval);
   }, [content, note.content]);
 
-  const handleSave = async () => {
-    setIsSaving(true);
+  const handleAutoSave = async () => {
+    setSaveStatus('saving');
     onUpdate(content);
-    setTimeout(() => setIsSaving(false), 500);
+    setTimeout(() => setSaveStatus('saved'), 500);
+  };
+
+  const handleManualSave = async () => {
+    setIsSaving(true);
+    setSaveStatus('saving');
+    onUpdate(content);
+    setTimeout(() => {
+      setIsSaving(false);
+      setSaveStatus('saved');
+    }, 500);
+  };
+
+  const handleExport = () => {
+    const filename = `${note.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_note.md`;
+    downloadFile(content, filename, 'text/markdown');
   };
 
   return (
@@ -101,12 +118,30 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
                   <ExternalLink size={16} />
                   <span>WATCH ON YOUTUBE</span>
                 </a>
-                {isSaving && (
-                  <div className="flex items-center gap-2 text-[var(--accent-secondary)]">
-                    <Save size={16} />
-                    <span>SAVING...</span>
-                  </div>
-                )}
+                <div className="flex-1" />
+                {/* Save Status & Controls */}
+                <div className="flex items-center gap-3">
+                  <span className={`save-status ${saveStatus} text-xs`}>
+                    {saveStatus === 'saved' && '✓ Saved'}
+                    {saveStatus === 'saving' && '⏳ Saving...'}
+                    {saveStatus === 'unsaved' && '• Unsaved'}
+                  </span>
+                  <button
+                    onClick={handleManualSave}
+                    disabled={isSaving}
+                    className="btn-brutal flex items-center gap-2 text-xs px-2 py-1 disabled:opacity-50"
+                  >
+                    <Save size={14} />
+                    <span>SAVE</span>
+                  </button>
+                  <button
+                    onClick={handleExport}
+                    className="btn-brutal-secondary flex items-center gap-2 text-xs px-2 py-1"
+                  >
+                    <Download size={14} />
+                    <span>EXPORT</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

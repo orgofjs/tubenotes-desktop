@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+jspm_packages/
 /.pnp
 .pnp.*
 .yarn/*
@@ -14,6 +15,8 @@
 /coverage
 
 # next.js
+.next/
+out/
 /.next/
 /out/
 
@@ -24,6 +27,10 @@
 .DS_Store
 *.pem
 
+# Logs
+logs/
+*.log
+
 # debug
 npm-debug.log*
 yarn-debug.log*
@@ -31,10 +38,40 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
+.env
 .env*
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
+
+# Electron Build & Release
+dist/
+dist-electron/
+release/
+*.exe
+*.app
+*.dmg
+
+# Database files (Local user data should NEVER be pushed)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+prisma/dev.db
+data/data.json  
+
+
+# Prisma generated files (optional - regenerable)
+prisma/dev.db
+prisma/migrations/**/migration.sql.backup
+/lib/generated/prisma/
 
 # typescript
 *.tsbuildinfo
@@ -71,3 +108,36 @@ QUICKSTART.md
 
 # github internal folder
 .github/
+
+/lib/generated/prisma
+
+build/
+# SQLite ekstra dosyaları
+*.db-shm
+*.db-wal
+
+# OS & System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.directory
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.code-workspace
+
+# Temporary / Cache
+.cache/
+tmp/
+temp/
+*.tsbuildinfo
+
+# Build artifacts
+build/

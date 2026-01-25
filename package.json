@@ -1,6 +1,6 @@
 {
   "name": "tubenotes",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "TubeNotes Team",
   "description": "Visual Video Knowledge Base - YouTube video note-taking application",
   "main": "main.js",
@@ -15,16 +15,27 @@
     "build-electron": "next build && electron-builder",
     "build-win": "next build && electron-builder --win",
     "build-mac": "next build && electron-builder --mac",
-    "build-linux": "next build && electron-builder --linux"
+    "build-linux": "next build && electron-builder --linux",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@codemirror/lang-markdown": "^6.5.0",
+    "@codemirror/theme-one-dark": "^6.1.3",
     "@ducanh2912/next-pwa": "^10.2.9",
+    "@prisma/adapter-better-sqlite3": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "@tiptap/extension-character-count": "^3.15.3",
     "@tiptap/extension-link": "^3.15.3",
     "@tiptap/extension-placeholder": "^3.15.3",
     "@tiptap/react": "^3.15.3",
     "@tiptap/starter-kit": "^3.15.3",
+    "@types/better-sqlite3": "^7.6.13",
+    "@uiw/react-codemirror": "^4.25.4",
+    "@xyflow/react": "^12.10.0",
+    "better-sqlite3": "^12.6.2",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "framer-motion": "^12.26.2",
     "lucide-react": "^0.562.0",
     "next": "16.1.3",
@@ -32,6 +43,7 @@
     "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.0.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -42,6 +54,7 @@
     "electron-builder": "^26.4.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.3",
+    "prisma": "^7.3.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wait-on": "^9.0.3"
@@ -52,7 +65,11 @@
     "files": [
       "out/**/*",
       "main.js",
+      "preload.js",
       "public/**/*",
+      "prisma/**/*",
+      "node_modules/@prisma/**/*",
+      "node_modules/.prisma/**/*",
       "package.json"
     ],
     "extraResources": [
