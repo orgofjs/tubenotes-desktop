@@ -2,7 +2,7 @@
 
 <div align="center">
 
-## 📸 Screenshots
+##  Screenshots
 
 <table>
   <tr>
@@ -45,7 +45,7 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 
 ### Ana Özellikler
 
-**🎨 Canvas Mode (Yeni!)**
+**Canvas Mode (Yeni!)**
 - React Flow tabanlı sonsuz canvas
 - Metin kutuları ile hızlı not alma
 - CodeMirror ile markdown editör node'ları
@@ -53,7 +53,7 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 - Canvas export/import (.json)
 - Zoom ve pan özellikleri
 
-**📝 YouTube Video Notları**
+**YouTube Video Notları**
 - Otomatik video metadata çekme (başlık, kanal, thumbnail)
 - Tiptap zengin metin editörü
 - Kalın, italik, altı çizili, üstü çizili metin
@@ -61,23 +61,23 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 - Karakter sayacı
 - YouTube'a direkt bağlantılar
 
-**📁 Organizasyon Sistemi**
+**Organizasyon Sistemi**
 - Canvas ve notlar için klasör yapısı
 - Sınırsız klasör ve alt klasör
 - Klasör ağacı navigasyonu
 - Hızlı filtreler (Önemli, Tamamlanan)
 
-**🎨 Tema Desteği**
+**Tema Desteği**
 - Dark Theme: Siyah arka plan, kırmızı vurgular
 - Navy Theme: Lacivert arka plan, turuncu vurgular
 - Light Theme: Krem arka plan, bordo vurgular
 
-**🔍 Arama ve Filtreleme**
+**Arama ve Filtreleme**
 - Başlık, kanal ve not içeriklerinde gerçek zamanlı arama
 - Durum filtreleme (İzlenmedi, İzleniyor, İzlendi)
 - Klasör bazlı filtreleme
 
-**💾 Veri Yönetimi**
+**Veri Yönetimi**
 - SQLite veritabanı (better-sqlite3)
 - Yerel depolama (bulut bağımlılığı yok)
 - Gizlilik odaklı
@@ -219,7 +219,7 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 
 ### Key Features
 
-**🎨 Canvas Mode (New!)**
+**Canvas Mode (New!)**
 - React Flow based infinite canvas
 - Text boxes for quick notes
 - CodeMirror markdown editor nodes
@@ -227,7 +227,7 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 - Canvas export/import (.json)
 - Zoom and pan features
 
-**📝 YouTube Video Notes**
+**YouTube Video Notes**
 - Automatic video metadata fetching (title, channel, thumbnail)
 - Tiptap rich text editor
 - Bold, italic, underline, strikethrough text
@@ -235,23 +235,23 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 - Character counter
 - Direct links to YouTube
 
-**📁 Organization System**
+**Organization System**
 - Folder structure for canvas and notes
 - Unlimited folders and subfolders
 - Folder tree navigation
 - Quick filters (Important, Completed)
 
-**🎨 Theme Support**
+**Theme Support**
 - Dark Theme: Black background, red accents
 - Navy Theme: Navy background, orange accents
 - Light Theme: Cream background, burgundy accents
 
-**🔍 Search & Filtering**
+**Search & Filtering**
 - Real-time search across titles, channels, and note content
 - Status filtering (Unwatched, Watching, Watched)
 - Folder-based filtering
 
-**💾 Data Management**
+**Data Management**
 - SQLite database (better-sqlite3)
 - Local storage (no cloud dependency)
 - Privacy-focused
