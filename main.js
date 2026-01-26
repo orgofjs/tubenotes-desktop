@@ -125,18 +125,20 @@ ipcMain.handle('canvas:getAll', async () => {
 // Canvas: ID'ye göre canvas getir
 ipcMain.handle('canvas:getById', async (event, id) => {
   try {
-    console.log(`IPC: Getting canvas by id: ${id}`);
+    console.log(`[IPC GETBYID] Fetching canvas: ${id}`);
     const canvas = await prisma.canvas.findUnique({
       where: { id },
     });
     if (!canvas) {
-      console.warn(`IPC: Canvas not found: ${id}`);
+      console.warn(`[IPC GETBYID] Canvas not found: ${id}`);
       return null;
     }
-    console.log(`IPC: Found canvas: ${canvas.name}`);
+    console.log(`[IPC GETBYID] Found: ${canvas.name}`);
+    console.log(`[IPC GETBYID] Data length:`, canvas.data?.length || 0);
+    console.log(`[IPC GETBYID] Data preview:`, canvas.data?.substring(0, 200));
     return canvas;
   } catch (error) {
-    console.error(`IPC Error - canvas:getById(${id}):`, error);
+    console.error(`[IPC GETBYID ERROR] Canvas ${id}:`, error);
     throw error;
   }
 });
@@ -162,7 +164,9 @@ ipcMain.handle('canvas:create', async (event, canvasData) => {
 // Canvas: Canvas güncelle
 ipcMain.handle('canvas:update', async (event, id, updates) => {
   try {
-    console.log(`IPC: Updating canvas ${id} with:`, updates);
+    console.log(`[IPC UPDATE] Canvas ${id}`);
+    console.log(`[IPC UPDATE] Updates:`, JSON.stringify(updates).substring(0, 300));
+    
     const updateData = {};
     if (updates.name !== undefined) updateData.name = updates.name;
     if (updates.data !== undefined) updateData.data = updates.data;
@@ -173,19 +177,20 @@ ipcMain.handle('canvas:update', async (event, id, updates) => {
     });
     
     if (!canvas) {
-      console.warn(`IPC: Canvas not found during update: ${id}`);
+      console.warn(`[IPC UPDATE] Canvas not found: ${id}`);
       return null;
     }
     
-    console.log(`IPC: Canvas updated: ${canvas.id}`);
+    console.log(`[IPC UPDATE] Success - Canvas ${canvas.id} updated`);
+    console.log(`[IPC UPDATE] Saved data length:`, canvas.data?.length || 0);
     return canvas;
   } catch (error) {
-    // Canvas silinmişse sessiçe geç
+    // Canvas silinmişse sessizce geç
     if (error.code === 'P2025' || error.message.includes('not found')) {
-      console.warn(`IPC: Canvas ${id} does not exist (probably deleted)`);
+      console.warn(`[IPC UPDATE] Canvas ${id} does not exist (probably deleted)`);
       return null;
     }
-    console.error(`IPC Error - canvas:update(${id}):`, error);
+    console.error(`[IPC UPDATE ERROR] Canvas ${id}:`, error);
     throw error;
   }
 });

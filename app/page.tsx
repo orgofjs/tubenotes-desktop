@@ -145,16 +145,20 @@ export default function Home() {
   // Handle canvas selection
   const handleCanvasSelect = async (canvasId: string) => {
     try {
-      console.log(`Switching to canvas ${canvasId}`);
+      console.log(`[LOAD] Switching to canvas ${canvasId}`);
       
       setViewMode('canvas');
       setSelectedCanvasId(canvasId);
       setSelectedNoteId(null); // Clear note selection
       
       const canvas = await canvasAPI.getById(canvasId);
+      console.log(`[LOAD] Canvas data from DB:`, canvas);
+      
       if (canvas) {
-        const flowData = JSON.parse(canvas.data || '{}');
-        console.log(`Loaded canvas ${canvasId} with ${flowData.nodes?.length || 0} nodes`);
+        console.log(`[LOAD] Raw data field:`, canvas.data?.substring(0, 200));
+        const flowData = JSON.parse(canvas.data || '{"nodes":[],"edges":[]}');
+        console.log(`[LOAD] Parsed: ${flowData.nodes?.length || 0} nodes, ${flowData.edges?.length || 0} edges`);
+        
         setCanvasData({ 
           canvasId: canvasId, 
           nodes: flowData.nodes || [], 
@@ -162,14 +166,14 @@ export default function Home() {
         });
       } else {
         // Canvas silinmiş, dashboard'a dön
-        console.warn('Canvas not found, returning to dashboard');
+        console.warn('[LOAD] Canvas not found, returning to dashboard');
         setViewMode('notes');
         setSelectedCanvasId(null);
         setCanvasData(null);
       }
     } catch (err) {
       setError('Failed to load canvas. Please try again.');
-      console.error('Error loading canvas:', err);
+      console.error('[LOAD ERROR] Error loading canvas:', err);
       // Hata durumunda da dashboard'a dön
       setViewMode('notes');
       setSelectedCanvasId(null);
@@ -196,8 +200,11 @@ export default function Home() {
       }
 
       const flowData = JSON.stringify({ nodes, edges });
-      console.log(`Saving canvas ${canvasIdToSave} with ${nodes.length} nodes and ${edges.length} edges`);
-      await canvasAPI.update(canvasIdToSave, { data: flowData });
+      console.log(`[SAVE] Canvas ${canvasIdToSave}: ${nodes.length} nodes, ${edges.length} edges`);
+      console.log(`[SAVE] Data to save:`, flowData.substring(0, 200)); // İlk 200 karakter log
+      
+      const result = await canvasAPI.update(canvasIdToSave, { data: flowData });
+      console.log(`[SAVE] Update result:`, result ? 'success' : 'failed');
       
       // Sadece aktif canvas'ta state'i güncelle
       if (canvasIdToSave === selectedCanvasId) {
@@ -207,7 +214,7 @@ export default function Home() {
       }
     } catch (err) {
       // Canvas silinmişse hata verme, sadece log yaz
-      console.warn(`Failed to save canvas ${canvasIdToSave}:`, err);
+      console.error(`[SAVE ERROR] Failed to save canvas ${canvasIdToSave}:`, err);
       setSaveStatus('unsaved');
     }
   };

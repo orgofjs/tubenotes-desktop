@@ -67,8 +67,46 @@ function CanvasViewInner({
   onAddNode,
   canvasRef,
 }: CanvasViewProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [internalNodes, setInternalNodes, onNodesChange] = useNodesState(initialNodes);
+  const [internalEdges, setInternalEdges, onEdgesChange] = useEdgesState(initialEdges);
+  
+  // Ref ile güncel nodes ve edges'i tut
+  const nodesRef = React.useRef(internalNodes);
+  const edgesRef = React.useRef(internalEdges);
+  
+  // internalNodes/internalEdges değişince ref'i güncelle (drag, resize, vb. için)
+  React.useEffect(() => {
+    nodesRef.current = internalNodes;
+    console.log('[NODES SYNCED] Ref updated, count:', internalNodes.length);
+  }, [internalNodes]);
+  
+  React.useEffect(() => {
+    edgesRef.current = internalEdges;
+  }, [internalEdges]);
+  
+  // Wrapper: setNodes çağrıldığında ref'i de güncelle
+  const setNodes = React.useCallback((update: any) => {
+    setInternalNodes((prevNodes) => {
+      const newNodes = typeof update === 'function' ? update(prevNodes) : update;
+      nodesRef.current = newNodes; // Ref'i ANINDA güncelle
+      console.log('[SET NODES] Updated ref, count:', newNodes.length);
+      return newNodes;
+    });
+  }, [setInternalNodes]);
+  
+  // Wrapper: setEdges çağrıldığında ref'i de güncelle
+  const setEdges = React.useCallback((update: any) => {
+    setInternalEdges((prevEdges) => {
+      const newEdges = typeof update === 'function' ? update(prevEdges) : update;
+      edgesRef.current = newEdges; // Ref'i ANINDA güncelle
+      return newEdges;
+    });
+  }, [setInternalEdges]);
+  
+  // nodes ve edges alias'ları (backward compatibility)
+  const nodes = internalNodes;
+  const edges = internalEdges;
+  
   const saveStatus = externalSaveStatus || 'saved';
   const selectedTool = externalSelectedTool || null;
   const setSelectedTool = onToolChange || (() => {});
@@ -91,20 +129,24 @@ function CanvasViewInner({
   // Manual save - Ctrl+S ile çalışır
   const handleManualSave = useCallback(() => {
     if (onSave) {
-      console.log(`Manual save: ${canvasId} with ${nodes.length} nodes`);
-      onSave(nodes, edges, canvasId);
+      // Ref'ten güncel değerleri al (stale closure sorununu önler)
+      const currentNodes = nodesRef.current;
+      const currentEdges = edgesRef.current;
+      
+      console.log(`Manual save: ${canvasId} with ${currentNodes.length} nodes, ${currentEdges.length} edges`);
+      onSave(currentNodes, currentEdges, canvasId);
       onUnsavedChanges?.(false);
     }
-  }, [nodes, edges, onSave, canvasId, onUnsavedChanges]);
+  }, [onSave, canvasId, onUnsavedChanges]);
 
   // Manuel kayıt - değişiklikleri takip et
   React.useEffect(() => {
     // İlk mount'ta saved olarak başla
-    if (nodes.length === initialNodes.length && edges.length === initialEdges.length) {
+    if (internalNodes.length === initialNodes.length && internalEdges.length === initialEdges.length) {
       return; // İlk render, değişiklik yok
     }
     onUnsavedChanges?.(true);
-  }, [nodes, edges, onUnsavedChanges]);
+  }, [internalNodes, internalEdges, onUnsavedChanges, initialNodes.length, initialEdges.length]);
 
   // Ctrl+S keyboard shortcut
   React.useEffect(() => {
@@ -149,21 +191,31 @@ function CanvasViewInner({
   );
 
   const addMarkdownNode = useCallback(() => {
+    console.log('[ADD MARKDOWN] Creating new markdown node');
     const newNode = {
       id: `markdown-${Date.now()}`,
       type: 'markdown',
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: { content: '# New Note\n\nStart writing...' },
     };
-    setNodes((nds) => [...nds, newNode]);
+    console.log('[ADD MARKDOWN] New node:', newNode);
+    setNodes((nds) => {
+      console.log('[ADD MARKDOWN] Current nodes:', nds.length);
+      const updatedNodes = [...nds, newNode];
+      console.log('[ADD MARKDOWN] Updated nodes:', updatedNodes.length);
+      return updatedNodes;
+    });
     onAddNode?.(newNode);
   }, [setNodes, onAddNode]);
 
   // Export/Import with file system
   const exportCanvas = useCallback(async () => {
     const { saveCanvasToFile } = await import('@/lib/fileSystem');
-    await saveCanvasToFile(canvasName, { nodes, edges });
-  }, [canvasName, nodes, edges]);
+    // Ref'ten güncel değerleri al
+    const currentNodes = nodesRef.current;
+    const currentEdges = edgesRef.current;
+    await saveCanvasToFile(canvasName, { nodes: currentNodes, edges: currentEdges });
+  }, [canvasName]);
 
   const importCanvas = useCallback(async () => {
     const { openCanvasFromFile } = await import('@/lib/fileSystem');
@@ -213,6 +265,8 @@ function CanvasViewInner({
       const width = Math.abs(dragEnd.x - dragStart.x);
       const height = Math.abs(dragEnd.y - dragStart.y);
       
+      console.log('[DRAG CREATE] Mouse up - width:', width, 'height:', height);
+      
       if (width > 30 && height > 30) {
         const finalWidth = Math.max(width, 100);
         const finalHeight = Math.max(height, 80);
@@ -235,15 +289,22 @@ function CanvasViewInner({
           }
         };
         
-        setNodes((nds) => [...nds, newNode]);
+        console.log('[DRAG CREATE] Creating shape node:', newNode);
+        setNodes((nds) => {
+          console.log('[DRAG CREATE] Current nodes:', nds.length);
+          const updated = [...nds, newNode];
+          console.log('[DRAG CREATE] Updated nodes:', updated.length);
+          return updated;
+        });
         setSelectedTool(null);
+        onUnsavedChanges?.(true);
       }
     }
     
     setIsDragging(false);
     setDragStart(null);
     setDragEnd(null);
-  }, [isDragging, dragStart, dragEnd, setNodes, reactFlowInstance]);
+  }, [isDragging, dragStart, dragEnd, setNodes, reactFlowInstance, onUnsavedChanges]);
 
   return (
     <div className="h-full w-full relative">
@@ -267,6 +328,7 @@ function CanvasViewInner({
           proOptions={{ hideAttribution: true }}
           onPaneClick={(event) => {
             if (selectedTool === 'text') {
+              console.log('[TEXT CREATE] Text tool clicked');
               // Screen koordinatlarını flow koordinatlarına çevir
               const position = reactFlowInstance.screenToFlowPosition({ 
                 x: event.clientX, 
@@ -288,8 +350,15 @@ function CanvasViewInner({
                   height: '60px',
                 }
               };
-              setNodes((nds) => [...nds, newNode]);
+              console.log('[TEXT CREATE] Creating text node:', newNode);
+              setNodes((nds) => {
+                console.log('[TEXT CREATE] Current nodes:', nds.length);
+                const updated = [...nds, newNode];
+                console.log('[TEXT CREATE] Updated nodes:', updated.length);
+                return updated;
+              });
               setSelectedTool(null);
+              onUnsavedChanges?.(true);
             }
           }}
           selectionOnDrag={selectedTool !== 'selection'}

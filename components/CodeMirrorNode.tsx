@@ -21,7 +21,7 @@ export default function CodeMirrorNode({ id, data, selected }: CodeMirrorNodePro
 
   const handleChange = (value: string) => {
     setContent(value);
-    data.content = value;
+    data.content = value; // Immediate update for React Flow
   };
 
   return (

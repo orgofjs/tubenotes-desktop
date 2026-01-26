@@ -1,6 +1,6 @@
 {
   "name": "tubenotes",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "TubeNotes Team",
   "description": "Visual Video Knowledge Base - YouTube video note-taking application",
   "main": "main.js",

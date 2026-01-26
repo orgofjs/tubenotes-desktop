@@ -1,7 +1,28 @@
 # TubeNotes - Visual Video Knowledge Base
 
 <div align="center">
-  
+
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td width="33%">
+      <img src="public/pics/pic1.png" alt="Canvas Mode - Infinite canvas with shapes and markdown nodes" />
+      <p align="center"><em>Canvas Mode - Visual Note Taking</em></p>
+    </td>
+    <td width="33%">
+      <img src="public/pics/pic2.png" alt="Video Note Editor - Rich text editing with markdown support" />
+      <p align="center"><em>Video Note Editor</em></p>
+    </td>
+    <td width="33%">
+      <img src="public/pics/pic3.png" alt="Video Library - Organize your YouTube notes" />
+      <p align="center"><em>Video Library</em></p>
+    </td>
+  </tr>
+</table>
+
+---
+
 **[Türkçe](#türkçe)** | **[English](#english)**
 
 </div>
