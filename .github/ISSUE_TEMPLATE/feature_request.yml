@@ -1,0 +1,70 @@
+name: Feature request
+description: Suggest an improvement or a new feature for TubeNotes
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / missing functionality
+      description: Describe what is currently missing or inconvenient.
+      placeholder: |
+        Text editing inside the canvas lacks common editor behaviors and keyboard shortcuts, which makes writing longer notes slower and less comfortable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+      description: Describe how you think this feature should work.
+      placeholder: |
+        Improve the canvas text editor to support common text editing behaviors:
+        - Enable standard formatting shortcuts (bold, italic, underline, etc.)
+        - Pressing Tab should create paragraph indentation
+        - When using numbered or bulleted lists, pressing Enter should automatically create the next list item
+        - General writing-assist behaviors similar to common text editors
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_cases
+    attributes:
+      label: Use cases
+      description: Explain who benefits from this feature and how.
+      placeholder: |
+        - Writing structured notes on the canvas
+        - Taking lecture or meeting notes
+        - Creating outlines, lists, and long-form text
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe any alternative solutions or workarounds you considered.
+      placeholder: |
+        Using external editors and pasting content back into the canvas, which breaks the writing flow.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any screenshots, references, or related ideas.
+      placeholder: |
+        This feature would make the canvas editor feel closer to a full-featured note editor and reduce friction during writing.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: This feature is not currently implemented.
+          required: false
+        - label: I searched existing issues to avoid duplicates.
+          required: false
