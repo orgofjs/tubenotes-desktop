@@ -7,7 +7,7 @@
 <table>
   <tr>
     <td width="33%">
-      <img src="public/pics/pic1.png" alt="Canvas Mode - Infinite canvas with shapes and markdown nodes" />
+      <img src="public/pics/pic11.png" alt="Canvas Mode - Infinite canvas with shapes and markdown nodes" />
       <p align="center"><em>Canvas Mode - Visual Note Taking</em></p>
     </td>
     <td width="33%">
