@@ -119,8 +119,7 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 
 ```bash
 # Depoyu klonlayın
-git clone https://github.com/orgofjs/tubenotes.git
-cd tubenotes
+git clone https://github.com/orgofjs/tubenotes-desktop.git
 
 # Bağımlılıkları yükleyin
 npm install
@@ -293,8 +292,7 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 
 ```bash
 # Clone repository
-git clone https://github.com/orgofjs/tubenotes.git
-cd tubenotes
+git clone https://github.com/orgofjs/tubenotes-desktop.git
 
 # Install dependencies
 npm install
