@@ -29,8 +29,10 @@
 ---
 
 > **TR:** Bu proje hem hobi hem ihtiyaç olarak AI ile geliştirilmektedir. Geliştirmeler devam edecektir.
+> **TR:** Planlanan özellikleri ve proje yönlendirmesi [ROADMAP.md](./ROADMAP.md). içinde bulunabilir
 >
 > **EN:** This project is being developed with AI as both a hobby and a necessity. Development will continue.
+> **EN:** Planned features and project direction can be found in [ROADMAP.md](./ROADMAP.md).
 
 ---
 
