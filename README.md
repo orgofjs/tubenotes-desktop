@@ -28,9 +28,10 @@
 
 ---
 
-> **TR:** Bu proje hem hobi hem ihtiyaç olarak AI ile geliştirilmektedir. Geliştirmeler devam edecektir. Planlanan özellikleri ve proje yönlendirmesi [ROADMAP.md](./ROADMAP.md). içinde bulunabilir
+> **TR:** Bu proje hem hobi hem ihtiyaç olarak AI ile geliştirilmektedir. Geliştirmeler devam edecektir. Planlanan özellikleri ve proje yönlendirmesi [ROADMAP.md](./ROADMAP.md). içinde bulunabilir. Geliştirme sürecinin güncel ilerleyişini [GitHub Projeler panosu](https://github.com/users/orgofjs/projects/1/views/1) üzerinden takip edebilirsiniz.
 >
-> **EN:** This project is being developed with AI as both a hobby and a necessity. Development will continue. Planned features and project direction can be found in [ROADMAP.md](./ROADMAP.md).
+> **EN:** This project is being developed with AI as both a hobby and a necessity. Development will continue. Planned features and project direction can be found in [ROADMAP.md](./ROADMAP.md). Current development progress can be tracked via the
+[GitHub Projects board](https://github.com/users/orgofjs/projects/1/views/1).
 
 ---
 
