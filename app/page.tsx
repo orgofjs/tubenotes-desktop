@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Sidebar from '@/components/Sidebar';
 import Dashboard from '@/components/Dashboard';
 import NotePage from '@/components/NotePage';
@@ -15,6 +16,7 @@ import { canvasAPI } from '@/lib/electronAPI';
 import { Layers, Grid3x3, Download, Upload } from 'lucide-react';
 
 export default function Home() {
+  const { t } = useTranslation('common');
   const [folders, setFolders] = useState<Folder[]>([]);
   const [notes, setNotes] = useState<VideoNote[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState('root');
@@ -23,7 +25,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [quickFilter, setQuickFilter] = useState<'all' | 'important' | 'completed' | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // New canvas state
   const [viewMode, setViewMode] = useState<'notes' | 'canvas'>('notes');
   const [selectedCanvasId, setSelectedCanvasId] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function Home() {
       setFolders(data.folders);
       setNotes(data.notes);
     } catch (err) {
-      setError('Failed to load data. Please refresh the page.');
+      setError(t('failedToLoadData'));
     } finally {
       setIsLoading(false);
     }
@@ -59,14 +61,14 @@ export default function Home() {
       const newFolder = storage.addFolder({ name, parentId });
       setFolders([...folders, newFolder]);
     } catch (err) {
-      setError('Failed to create folder. Please try again.');
+      setError(t('failedToCreateFolder'));
     }
   };
 
   // Delete folder
   const handleDeleteFolder = (folderId: string) => {
     if (folderId === 'root') return;
-    if (confirm('Are you sure you want to delete this folder and all its notes?')) {
+    if (confirm(t('confirmDeleteFolder'))) {
       try {
         storage.deleteFolder(folderId);
         const data = storage.getData();
@@ -76,7 +78,7 @@ export default function Home() {
           setSelectedFolderId('root');
         }
       } catch (err) {
-        setError('Failed to delete folder. Please try again.');
+        setError(t('failedToCreateFolder')); // reusing, could make separate
       }
     }
   };
@@ -86,7 +88,7 @@ export default function Home() {
     try {
       const metadata = await fetchYouTubeMetadata(url);
       if (!metadata) {
-        setError('Failed to fetch video metadata. Please check the URL and try again.');
+        setError(t('failedToFetchMetadata'));
         return;
       }
 
@@ -101,7 +103,7 @@ export default function Home() {
 
       setNotes([...notes, newNote]);
     } catch (err) {
-      setError('Failed to add video. Please check the URL and try again.');
+      setError(t('failedToAddVideo'));
       console.error('Error adding note:', err);
     }
   };
@@ -112,7 +114,7 @@ export default function Home() {
       storage.updateNote(noteId, updates);
       setNotes(notes.map(n => n.id === noteId ? { ...n, ...updates } : n));
     } catch (err) {
-      setError('Failed to update note. Please try again.');
+      setError(t('failedToUpdateNote'));
     }
   };
 
@@ -127,7 +129,7 @@ export default function Home() {
       storage.deleteNote(noteId);
       setNotes(notes.filter(n => n.id !== noteId));
     } catch (err) {
-      setError('Failed to delete note. Please try again.');
+      setError(t('failedToDeleteNote'));
     }
   };
 
@@ -172,7 +174,7 @@ export default function Home() {
         setCanvasData(null);
       }
     } catch (err) {
-      setError('Failed to load canvas. Please try again.');
+      setError(t('failedToLoadCanvas'));
       console.error('[LOAD ERROR] Error loading canvas:', err);
       // Hata durumunda da dashboard'a dön
       setViewMode('notes');
@@ -215,6 +217,7 @@ export default function Home() {
     } catch (err) {
       // Canvas silinmişse hata verme, sadece log yaz
       console.error(`[SAVE ERROR] Failed to save canvas ${canvasIdToSave}:`, err);
+      setError(t('failedToSaveCanvas'));
       setSaveStatus('unsaved');
     }
   };
@@ -254,7 +257,7 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-        <LoadingSpinner size="lg" text="LOADING TUBENOTES..." />
+        <LoadingSpinner size="lg" text={t('loadingTubeNotes')} />
       </div>
     );
   }
@@ -310,7 +313,7 @@ export default function Home() {
                   className="px-4 py-2 bg-[var(--surface-hover)] hover:bg-[var(--accent-primary)] hover:text-[var(--background)] border-2 border-[var(--border)] transition-all font-mono text-sm flex items-center gap-2"
                 >
                   <Layers size={16} />
-                  BACK
+                  {t('back')}
                 </button>
                 
                 <div className="h-10 w-px bg-[var(--border)]" />
@@ -321,11 +324,11 @@ export default function Home() {
                   <button
                     onClick={() => setSelectedTool(selectedTool === 'selection' ? null : 'selection')}
                     className={`group p-3 rounded-xl transition-all ${
-                      selectedTool === 'selection' 
-                        ? 'bg-[var(--color-accent)]/30 ring-2 ring-[var(--color-accent)]' 
+                      selectedTool === 'selection'
+                        ? 'bg-[var(--color-accent)]/30 ring-2 ring-[var(--color-accent)]'
                         : 'hover:bg-[var(--surface-hover)]'
                     }`}
-                    title="Drag to Create Rectangle"
+                    title={t('dragToCreateRectangle')}
                   >
                     <svg className={`w-6 h-6 stroke-2 fill-none ${selectedTool === 'selection' ? 'stroke-[var(--color-accent)]' : 'stroke-[var(--foreground)]'}`} viewBox="0 0 24 24">
                       <path d="M3 3 L3 21 L21 21" strokeLinecap="round"/>
@@ -337,11 +340,11 @@ export default function Home() {
                   <button
                     onClick={() => setSelectedTool(selectedTool === 'text' ? null : 'text')}
                     className={`group p-3 rounded-xl transition-all ${
-                      selectedTool === 'text' 
-                        ? 'bg-[var(--color-accent)]/30 ring-2 ring-[var(--color-accent)]' 
+                      selectedTool === 'text'
+                        ? 'bg-[var(--color-accent)]/30 ring-2 ring-[var(--color-accent)]'
                         : 'hover:bg-[var(--surface-hover)]'
                     }`}
-                    title="Click to Add Text"
+                    title={t('clickToAddText')}
                   >
                     <svg className={`w-6 h-6 stroke-2 fill-none ${selectedTool === 'text' ? 'stroke-[var(--color-accent)]' : 'stroke-[var(--foreground)]'}`} viewBox="0 0 24 24">
                       <path d="M17 4 L17 2 L7 2 L7 4" strokeLinecap="round"/>
@@ -356,7 +359,7 @@ export default function Home() {
                   <button
                     onClick={() => canvasViewRef.current?.addMarkdownNode()}
                     className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all"
-                    title="Add Markdown Note"
+                    title={t('addMarkdownNote')}
                   >
                     <svg className="w-6 h-6 stroke-[var(--color-accent)] stroke-2 fill-none group-hover:fill-[var(--color-accent)]/10" viewBox="0 0 24 24">
                       <path d="M3 8 L3 16 L6 16 L6 11 L8 13 L10 11 L10 16 L13 16 L13 8 Z M15 8 L15 16 L18 16 L21 13 M18 16 L18 8"/>
@@ -368,14 +371,14 @@ export default function Home() {
               {/* Right Side - Save Controls */}
               <div className="flex items-center gap-3">
                 {/* Save Status Indicator */}
-                <div className={`px-4 py-2 rounded-lg text-sm font-mono flex items-center gap-2 
+                <div className={`px-4 py-2 rounded-lg text-sm font-mono flex items-center gap-2
                   ${saveStatus === 'saved' ? 'bg-green-500/10 text-green-500 border-2 border-green-500/30' : ''}
                   ${saveStatus === 'saving' ? 'bg-yellow-500/10 text-yellow-500 border-2 border-yellow-500/30' : ''}
                   ${saveStatus === 'unsaved' ? 'bg-red-500/10 text-red-500 border-2 border-red-500/30' : ''}
                 `}>
-                  {saveStatus === 'saved' && '✓ Saved'}
-                  {saveStatus === 'saving' && '⏳ Saving...'}
-                  {saveStatus === 'unsaved' && '• Unsaved'}
+                  {saveStatus === 'saved' && t('saved')}
+                  {saveStatus === 'saving' && t('saving')}
+                  {saveStatus === 'unsaved' && t('unsaved')}
                 </div>
 
                 {/* Action Buttons */}
@@ -386,7 +389,7 @@ export default function Home() {
                         handleCanvasSave(canvasData.nodes, canvasData.edges, canvasData.canvasId);
                       }
                     }}
-                    title="Save Now (Ctrl+S)"
+                    title={t('saveNow')}
                     className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)]"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,14 +401,14 @@ export default function Home() {
                   
                   <button
                     onClick={() => canvasViewRef.current?.exportCanvas()}
-                    title="Export to File"
+                    title={t('exportToFile')}
                     className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)]"
                   >
                     <Download size={18} />
                   </button>
                   <button
                     onClick={() => canvasViewRef.current?.importCanvas()}
-                    title="Import from File"
+                    title={t('importFromFile')}
                     className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)]"
                   >
                     <Upload size={18} />
@@ -414,7 +417,7 @@ export default function Home() {
                 
                 <div className="flex items-center gap-2 text-[var(--foreground-muted)]">
                   <Grid3x3 size={20} />
-                  <span className="font-mono text-sm">CANVAS MODE</span>
+                  <span className="font-mono text-sm">{t('canvasMode')}</span>
                 </div>
               </div>
             </div>

@@ -202,6 +202,40 @@ npm run build-linux
 - Canvas verileri JSON string olarak saklanır
 - Video notları ve klasörler ilişkisel tablolarda tutulur
 
+### Uluslararasılaştırma (i18n)
+
+TubeNotes çoklu dil desteği sağlar. İngilizce kaynak dil olarak kullanılır ve diğer diller ayrı JSON dosyaları ile yönetilir.
+
+**Yeni Dil Ekleme**
+
+1. `public/locales/` dizinine yeni dil klasörü oluşturun (örneğin `fr` Fransızca için)
+2. `common.json` dosyasını oluşturun ve İngilizce çevirileri temel alarak doldurun
+3. `next-i18next.config.js` dosyasında `locales` dizisine yeni dili ekleyin
+4. `components/LanguageSwitcher.tsx` dosyasında yeni dili `languages` dizisine ekleyin
+
+**Çeviri Dosyası Örneği** (`public/locales/tr/common.json`):
+
+```json
+{
+  "loadingTubeNotes": "TUBENOTES YÜKLENİYOR...",
+  "addVideo": "VİDEO EKLE",
+  "save": "KAYDET"
+}
+```
+
+**Çeviri Anahtarlarını Kullanma**
+
+React bileşenlerinde `useTranslation` hook'u ile çevirilere erişin:
+
+```tsx
+import { useTranslation } from 'react-i18next';
+
+function MyComponent() {
+  const { t } = useTranslation('common');
+  return <button>{t('addVideo')}</button>;
+}
+```
+
 ### Katkıda Bulunma
 
 1. Depoyu fork edin
@@ -374,6 +408,40 @@ Edit `app/globals.css`:
 - Uses SQLite database (better-sqlite3)
 - Canvas data stored as JSON strings
 - Video notes and folders in relational tables
+
+### Internationalization (i18n)
+
+TubeNotes supports multiple languages. English is used as the source language and other languages are managed through separate JSON files.
+
+**Adding a New Language**
+
+1. Create a new language folder in `public/locales/` (e.g., `fr` for French)
+2. Create a `common.json` file and fill it based on English translations
+3. Add the new language to the `locales` array in `next-i18next.config.js`
+4. Add the new language to the `languages` array in `components/LanguageSwitcher.tsx`
+
+**Translation File Example** (`public/locales/tr/common.json`):
+
+```json
+{
+  "loadingTubeNotes": "TUBENOTES YÜKLENİYOR...",
+  "addVideo": "VİDEO EKLE",
+  "save": "KAYDET"
+}
+```
+
+**Using Translation Keys**
+
+Use the `useTranslation` hook in React components:
+
+```tsx
+import { useTranslation } from 'react-i18next';
+
+function MyComponent() {
+  const { t } = useTranslation('common');
+  return <button>{t('addVideo')}</button>;
+}
+```
 
 ### Contributing
 

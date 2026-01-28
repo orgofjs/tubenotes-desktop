@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Plus, Link as LinkIcon } from 'lucide-react';
 import { VideoNote } from '@/types';
 import VideoCard from './VideoCard';
@@ -15,6 +16,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChange, onDeleteNote }: DashboardProps) {
+  const { t } = useTranslation('common');
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [newNoteUrl, setNewNoteUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -41,14 +43,14 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
           <div className="flex items-end justify-between mb-8">
             <div>
               <h1 className="text-display text-6xl text-[var(--foreground)] mb-2 tracking-wider">
-                VIDEO LIBRARY
+                {t('videoLibrary')}
               </h1>
               <div className="flex items-center gap-4 text-sm font-mono text-[var(--foreground-muted)]">
-                <span>{notes.length} VIDEO{notes.length !== 1 ? 'S' : ''}</span>
+                <span>{notes.length} {notes.length !== 1 ? t('videos') : t('video')}</span>
                 <span className="text-[var(--accent-primary)]">•</span>
-                <span>{notes.filter(n => n.status === 'watched').length} WATCHED</span>
+                <span>{notes.filter(n => n.status === 'watched').length} {t('watched')}</span>
                 <span className="text-[var(--accent-primary)]">•</span>
-                <span>{notes.filter(n => n.status === 'important').length} IMPORTANT</span>
+                <span>{notes.filter(n => n.status === 'important').length} {t('important')}</span>
               </div>
             </div>
 
@@ -70,7 +72,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
               "
             >
               <Plus size={24} />
-              ADD VIDEO
+              {t('addVideo')}
             </motion.button>
           </div>
 
@@ -86,7 +88,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                 <LinkIcon className="text-[var(--accent-primary)]" size={24} />
                 <input
                   type="text"
-                  placeholder="PASTE YOUTUBE URL HERE..."
+                  placeholder={t('pasteYouTubeUrl')}
                   value={newNoteUrl}
                   onChange={(e) => setNewNoteUrl(e.target.value)}
                   onKeyDown={(e) => {
@@ -99,8 +101,8 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   autoFocus
                   disabled={isLoading}
                   className="
-                    flex-1 px-4 py-3 
-                    bg-[var(--background)] 
+                    flex-1 px-4 py-3
+                    bg-[var(--background)]
                     border-2 border-[var(--border)]
                     text-mono text-sm
                     focus:border-[var(--accent-secondary)] focus:outline-none
@@ -112,8 +114,8 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   onClick={handleAddNote}
                   disabled={isLoading}
                   className="
-                    px-6 py-3 
-                    bg-[var(--accent-secondary)] 
+                    px-6 py-3
+                    bg-[var(--accent-secondary)]
                     text-[var(--background)]
                     text-display text-lg
                     hover:bg-[var(--accent-primary)]
@@ -121,7 +123,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                     transition-colors
                   "
                 >
-                  {isLoading ? 'LOADING...' : 'ADD'}
+                  {isLoading ? t('loading') : t('add')}
                 </button>
                 <button
                   onClick={() => {
@@ -130,7 +132,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   }}
                   disabled={isLoading}
                   className="
-                    px-6 py-3 
+                    px-6 py-3
                     border-2 border-[var(--border)]
                     text-display text-lg
                     hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]
@@ -138,11 +140,11 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                     transition-colors
                   "
                 >
-                  CANCEL
+                  {t('cancel')}
                 </button>
               </div>
               <p className="mt-3 text-xs font-mono text-[var(--foreground-muted)]">
-                SUPPORTED: youtube.com/watch?v=... | youtu.be/...
+                {t('supportedUrls')}
               </p>
             </motion.div>
           )}
@@ -156,15 +158,15 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
             className="flex flex-col items-center justify-center py-20 text-center"
           >
             <div className="text-8xl mb-6">📹</div>
-            <h2 className="text-display text-4xl mb-3">NO VIDEOS YET</h2>
+            <h2 className="text-display text-4xl mb-3">{t('noVideosYet')}</h2>
             <p className="text-mono text-sm text-[var(--foreground-muted)] mb-8">
-              Start building your visual knowledge base by adding your first video
+              {t('startBuildingKnowledgeBase')}
             </p>
             <button
               onClick={() => setIsAddingNote(true)}
               className="
-                px-8 py-4 
-                bg-[var(--accent-primary)] 
+                px-8 py-4
+                bg-[var(--accent-primary)]
                 text-[var(--background)]
                 border-3 border-[var(--background)]
                 text-display text-2xl
@@ -174,7 +176,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                 transition-all duration-200
               "
             >
-              ADD YOUR FIRST VIDEO
+              {t('addYourFirstVideo')}
             </button>
           </motion.div>
         ) : (

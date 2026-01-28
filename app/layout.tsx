@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Space_Mono } from "next/font/google";
 import "./globals.css";
+import I18nProvider from '../components/I18nProvider';
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -36,7 +37,7 @@ export const viewport = {
   ],
 };
 
-export default function RootLayout({
+function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -53,8 +54,12 @@ export default function RootLayout({
       <body
         className={`${bebasNeue.variable} ${spaceMono.variable} antialiased`}
       >
-        {children}
+        <I18nProvider>
+          {children}
+        </I18nProvider>
       </body>
     </html>
   );
 }
+
+export default RootLayout;

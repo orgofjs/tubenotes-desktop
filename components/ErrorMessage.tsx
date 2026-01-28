@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { AlertCircle } from 'lucide-react';
 
 interface ErrorMessageProps {
@@ -9,6 +10,7 @@ interface ErrorMessageProps {
 }
 
 export default function ErrorMessage({ message, onDismiss }: ErrorMessageProps) {
+  const { t } = useTranslation('common');
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -20,7 +22,7 @@ export default function ErrorMessage({ message, onDismiss }: ErrorMessageProps) 
         <div className="flex items-start gap-3">
           <AlertCircle className="text-[var(--accent-primary)] flex-shrink-0" size={24} />
           <div className="flex-1">
-            <h3 className="text-display text-lg text-[var(--accent-primary)] mb-1">ERROR</h3>
+            <h3 className="text-display text-lg text-[var(--accent-primary)] mb-1">{t('error')}</h3>
             <p className="text-mono text-sm text-[var(--foreground-muted)]">{message}</p>
           </div>
           {onDismiss && (
