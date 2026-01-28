@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { Clock, Eye, EyeOff, Star, Trash2 } from 'lucide-react';
 import { VideoNote } from '@/types';
@@ -16,6 +17,7 @@ interface VideoCardProps {
 }
 
 export default function VideoCard({ note, onClick, onStatusChange, onDelete }: VideoCardProps) {
+  const { t } = useTranslation('common');
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -37,7 +39,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onDelete && confirm('Bu notu silmek istediğinizden emin misiniz?')) {
+    if (onDelete && confirm(t('confirmDeleteNote'))) {
       onDelete(note.id);
     }
   };
@@ -66,7 +68,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
           <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)]">
             <div className="text-center">
               <div className="text-4xl mb-2">📹</div>
-              <div className="text-xs font-mono">NO THUMBNAIL</div>
+              <div className="text-xs font-mono">{t('noThumbnail')}</div>
             </div>
           </div>
         )}
@@ -120,7 +122,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
             color: statusColors[note.status],
           }}
         >
-          {note.status.toUpperCase()}
+          {t(note.status + 'Status').toUpperCase()}
         </div>
       </div>
 
@@ -131,7 +133,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
         </h3>
 
         <div className="flex items-center justify-between text-xs text-[var(--foreground-muted)] font-mono">
-          <span>{note.channelName || 'Unknown Channel'}</span>
+          <span>{note.channelName || t('unknownChannel')}</span>
           <div className="flex items-center gap-1">
             <Clock size={12} />
             <span>{format(new Date(note.createdAt), 'dd MMM')}</span>

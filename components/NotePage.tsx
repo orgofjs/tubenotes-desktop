@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import { ArrowLeft, ExternalLink, Calendar, User, Save, Download } from 'lucide-react';
 import { VideoNote } from '@/types';
@@ -18,6 +19,7 @@ interface NotePageProps {
 }
 
 export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
+  const { t } = useTranslation('common');
   const [content, setContent] = useState(note.content);
   const [isSaving, setIsSaving] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -89,7 +91,7 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
                 className="flex items-center gap-2 mb-6 text-[var(--foreground-muted)] hover:text-[var(--accent-primary)] transition-colors"
               >
                 <ArrowLeft size={20} />
-                <span className="font-mono text-sm">BACK TO LIBRARY</span>
+                <span className="font-mono text-sm">{t('backToLibrary')}</span>
               </motion.button>
 
               {/* Title */}
@@ -116,15 +118,15 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
                   className="flex items-center gap-2 hover:text-[var(--accent-primary)] transition-colors"
                 >
                   <ExternalLink size={16} />
-                  <span>WATCH ON YOUTUBE</span>
+                  <span>{t('watchOnYouTube')}</span>
                 </a>
                 <div className="flex-1" />
                 {/* Save Status & Controls */}
                 <div className="flex items-center gap-3">
                   <span className={`save-status ${saveStatus} text-xs`}>
-                    {saveStatus === 'saved' && '✓ Saved'}
-                    {saveStatus === 'saving' && '⏳ Saving...'}
-                    {saveStatus === 'unsaved' && '• Unsaved'}
+                    {saveStatus === 'saved' && t('saved')}
+                    {saveStatus === 'saving' && t('saving')}
+                    {saveStatus === 'unsaved' && t('unsaved')}
                   </span>
                   <button
                     onClick={handleManualSave}
@@ -132,14 +134,14 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
                     className="btn-brutal flex items-center gap-2 text-xs px-2 py-1 disabled:opacity-50"
                   >
                     <Save size={14} />
-                    <span>SAVE</span>
+                    <span>{t('save')}</span>
                   </button>
                   <button
                     onClick={handleExport}
                     className="btn-brutal-secondary flex items-center gap-2 text-xs px-2 py-1"
                   >
                     <Download size={14} />
-                    <span>EXPORT</span>
+                    <span>{t('export')}</span>
                   </button>
                 </div>
               </div>
