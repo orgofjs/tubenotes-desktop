@@ -43,6 +43,7 @@ export interface CanvasViewHandle {
   addMarkdownNode: () => void;
   exportCanvas: () => void;
   importCanvas: () => void;
+  getCurrentData: () => { nodes: any[]; edges: any[] };
 }
 
 const nodeTypes: NodeTypes = {
@@ -70,40 +71,22 @@ function CanvasViewInner({
   const [internalNodes, setInternalNodes, onNodesChange] = useNodesState(initialNodes);
   const [internalEdges, setInternalEdges, onEdgesChange] = useEdgesState(initialEdges);
   
-  // Ref ile güncel nodes ve edges'i tut
+  // SORUN 5 FIX: Ref otomatik senkronizasyonu - useEffect ile state değiştiğinde ref'i güncelle
   const nodesRef = React.useRef(internalNodes);
   const edgesRef = React.useRef(internalEdges);
   
-  // internalNodes/internalEdges değişince ref'i güncelle (drag, resize, vb. için)
+  // State değişince ref'i otomatik güncelle (React Flow'un kendi güncellemeleri dahil)
   React.useEffect(() => {
     nodesRef.current = internalNodes;
-    console.log('[NODES SYNCED] Ref updated, count:', internalNodes.length);
+    console.log('[SYNC] Nodes ref auto-updated, count:', internalNodes.length);
   }, [internalNodes]);
   
   React.useEffect(() => {
     edgesRef.current = internalEdges;
+    console.log('[SYNC] Edges ref auto-updated, count:', internalEdges.length);
   }, [internalEdges]);
   
-  // Wrapper: setNodes çağrıldığında ref'i de güncelle
-  const setNodes = React.useCallback((update: any) => {
-    setInternalNodes((prevNodes) => {
-      const newNodes = typeof update === 'function' ? update(prevNodes) : update;
-      nodesRef.current = newNodes; // Ref'i ANINDA güncelle
-      console.log('[SET NODES] Updated ref, count:', newNodes.length);
-      return newNodes;
-    });
-  }, [setInternalNodes]);
-  
-  // Wrapper: setEdges çağrıldığında ref'i de güncelle
-  const setEdges = React.useCallback((update: any) => {
-    setInternalEdges((prevEdges) => {
-      const newEdges = typeof update === 'function' ? update(prevEdges) : update;
-      edgesRef.current = newEdges; // Ref'i ANINDA güncelle
-      return newEdges;
-    });
-  }, [setInternalEdges]);
-  
-  // nodes ve edges alias'ları (backward compatibility)
+  // nodes ve edges alias'ları
   const nodes = internalNodes;
   const edges = internalEdges;
   
@@ -120,10 +103,21 @@ function CanvasViewInner({
   React.useEffect(() => {
     console.log(`Canvas ${canvasId} mounted with ${initialNodes?.length || 0} nodes`);
   }, []);
+  
+  // SORUN 10 FIX: initialNodes/initialEdges değiştiğinde güncelle (key prop yerine)
+  React.useEffect(() => {
+    if (initialNodes && initialEdges) {
+      console.log(`[CANVAS UPDATE] Updating canvas ${canvasId} with new data:`, initialNodes.length, 'nodes');
+      setInternalNodes(initialNodes);
+      setInternalEdges(initialEdges);
+      // Initial data ref'i de güncelle
+      initialDataRef.current = JSON.stringify({ nodes: initialNodes, edges: initialEdges });
+    }
+  }, [canvasId, initialNodes, initialEdges, setInternalNodes, setInternalEdges]);
 
   const onConnect = useCallback(
-    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    (params: Connection | Edge) => setInternalEdges((eds) => addEdge(params, eds)),
+    [setInternalEdges]
   );
 
   // Manual save - Ctrl+S ile çalışır
@@ -139,14 +133,24 @@ function CanvasViewInner({
     }
   }, [onSave, canvasId, onUnsavedChanges]);
 
-  // Manuel kayıt - değişiklikleri takip et
+  // SORUN 7 FIX: Derin karşılaştırma ile değişiklik tespiti (uzunluk değil, içerik)
+  const initialDataRef = React.useRef<string>(JSON.stringify({ nodes: initialNodes, edges: initialEdges }));
+  
   React.useEffect(() => {
-    // İlk mount'ta saved olarak başla
-    if (internalNodes.length === initialNodes.length && internalEdges.length === initialEdges.length) {
-      return; // İlk render, değişiklik yok
+    // İlk mount'ta referansı güncelle
+    initialDataRef.current = JSON.stringify({ nodes: initialNodes, edges: initialEdges });
+  }, []);
+  
+  React.useEffect(() => {
+    // Derin karşılaştırma: JSON string karşılaştırması
+    const currentDataStr = JSON.stringify({ nodes: internalNodes, edges: internalEdges });
+    const hasChanges = currentDataStr !== initialDataRef.current;
+    
+    if (hasChanges) {
+      console.log('[CHANGE DETECTION] Data changed detected via deep comparison');
+      onUnsavedChanges?.(true);
     }
-    onUnsavedChanges?.(true);
-  }, [internalNodes, internalEdges, onUnsavedChanges, initialNodes.length, initialEdges.length]);
+  }, [internalNodes, internalEdges, onUnsavedChanges]);
 
   // Ctrl+S keyboard shortcut
   React.useEffect(() => {
@@ -185,9 +189,9 @@ function CanvasViewInner({
           height: '120px',
         },
       };
-      setNodes((nds) => [...nds, newNode]);
+      setInternalNodes((nds) => [...nds, newNode]);
     },
-    [setNodes]
+    [setInternalNodes]
   );
 
   const addMarkdownNode = useCallback(() => {
@@ -199,14 +203,14 @@ function CanvasViewInner({
       data: { content: '# New Note\n\nStart writing...' },
     };
     console.log('[ADD MARKDOWN] New node:', newNode);
-    setNodes((nds) => {
+    setInternalNodes((nds) => {
       console.log('[ADD MARKDOWN] Current nodes:', nds.length);
       const updatedNodes = [...nds, newNode];
       console.log('[ADD MARKDOWN] Updated nodes:', updatedNodes.length);
       return updatedNodes;
     });
     onAddNode?.(newNode);
-  }, [setNodes, onAddNode]);
+  }, [setInternalNodes, onAddNode]);
 
   // Export/Import with file system
   const exportCanvas = useCallback(async () => {
@@ -221,19 +225,32 @@ function CanvasViewInner({
     const { openCanvasFromFile } = await import('@/lib/fileSystem');
     const data = await openCanvasFromFile();
     if (data) {
-      setNodes(data.nodes);
-      setEdges(data.edges);
+      // SORUN 6 FIX: Önce UI'yı güncelle (top-down data flow)
+      setInternalNodes(data.nodes);
+      setInternalEdges(data.edges);
+      
+      // Sonra onAddNode ile parent'a bildir (eğer varsa)
+      if (onAddNode && data.nodes.length > 0) {
+        data.nodes.forEach((node: any) => onAddNode(node));
+      }
+      
+      // En son veritabanına kaydet (asenkron)
       if (onSave) {
+        console.log('[IMPORT] Saving imported data to database');
         onSave(data.nodes, data.edges, canvasId);
       }
     }
-  }, [setNodes, setEdges, onSave, canvasId]);
+  }, [setInternalNodes, setInternalEdges, onSave, onAddNode, canvasId]);
 
   // Expose methods to parent via ref
   React.useImperativeHandle(canvasRef, () => ({
     addMarkdownNode,
     exportCanvas,
     importCanvas,
+    getCurrentData: () => ({
+      nodes: nodesRef.current,
+      edges: edgesRef.current,
+    }),
   }), [addMarkdownNode, exportCanvas, importCanvas]);
 
   // Drag-to-create functionality - Flow koordinatlarında çalışır
@@ -290,7 +307,7 @@ function CanvasViewInner({
         };
         
         console.log('[DRAG CREATE] Creating shape node:', newNode);
-        setNodes((nds) => {
+        setInternalNodes((nds) => {
           console.log('[DRAG CREATE] Current nodes:', nds.length);
           const updated = [...nds, newNode];
           console.log('[DRAG CREATE] Updated nodes:', updated.length);
@@ -304,7 +321,7 @@ function CanvasViewInner({
     setIsDragging(false);
     setDragStart(null);
     setDragEnd(null);
-  }, [isDragging, dragStart, dragEnd, setNodes, reactFlowInstance, onUnsavedChanges]);
+  }, [isDragging, dragStart, dragEnd, setInternalNodes, setSelectedTool, reactFlowInstance, onUnsavedChanges]);
 
   return (
     <div className="h-full w-full relative">
@@ -351,7 +368,7 @@ function CanvasViewInner({
                 }
               };
               console.log('[TEXT CREATE] Creating text node:', newNode);
-              setNodes((nds) => {
+              setInternalNodes((nds) => {
                 console.log('[TEXT CREATE] Current nodes:', nds.length);
                 const updated = [...nds, newNode];
                 console.log('[TEXT CREATE] Updated nodes:', updated.length);

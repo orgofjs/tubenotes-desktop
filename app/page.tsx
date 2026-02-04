@@ -34,6 +34,7 @@ export default function Home() {
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
   const [selectedTool, setSelectedTool] = useState<'selection' | 'text' | null>(null);
   const canvasViewRef = useRef<CanvasViewHandle>(null);
+  const [hasDataLoadError, setHasDataLoadError] = useState(false);
 
   // Track unsaved changes effect
   useEffect(() => {
@@ -41,6 +42,19 @@ export default function Home() {
       setSaveStatus('unsaved');
     }
   }, [hasUnsavedChanges]);
+  
+  // SORUN 4 FIX: Node eklenince parent state'i güncelle
+  const handleAddNode = (node: any) => {
+    if (canvasData) {
+      const updatedNodes = [...canvasData.nodes, node];
+      setCanvasData({
+        ...canvasData,
+        nodes: updatedNodes,
+      });
+      setHasUnsavedChanges(true);
+      console.log('[ADD NODE] Parent state updated, new count:', updatedNodes.length);
+    }
+  };
 
   // Load initial data
   useEffect(() => {
@@ -152,13 +166,32 @@ export default function Home() {
       setViewMode('canvas');
       setSelectedCanvasId(canvasId);
       setSelectedNoteId(null); // Clear note selection
+      setHasDataLoadError(false); // Reset error state
       
       const canvas = await canvasAPI.getById(canvasId);
       console.log(`[LOAD] Canvas data from DB:`, canvas);
       
       if (canvas) {
         console.log(`[LOAD] Raw data field:`, canvas.data?.substring(0, 200));
-        const flowData = JSON.parse(canvas.data || '{"nodes":[],"edges":[]}');
+        
+        // SORUN 3 FIX: Güvenli JSON parse - hata durumunda kullanıcıyı uyar, boş veri kaydetmeyi engelle
+        let flowData;
+        try {
+          flowData = JSON.parse(canvas.data || '{"nodes":[],"edges":[]}');
+          
+          // Parse başarılı olsa bile verinin geçerliliğini kontrol et
+          if (!flowData || typeof flowData !== 'object' || !Array.isArray(flowData.nodes) || !Array.isArray(flowData.edges)) {
+            throw new Error('Invalid canvas data structure');
+          }
+          
+        } catch (parseError) {
+          console.error('[LOAD ERROR] JSON parse failed:', parseError);
+          setError(t('canvasDataCorrupted'));
+          setHasDataLoadError(true);
+          // Boş veri yerine hata durumunu göster - kullanıcı bozuk verinin üstüne yazmasın
+          flowData = { nodes: [], edges: [] };
+        }
+        
         console.log(`[LOAD] Parsed: ${flowData.nodes?.length || 0} nodes, ${flowData.edges?.length || 0} edges`);
         
         setCanvasData({ 
@@ -176,6 +209,7 @@ export default function Home() {
     } catch (err) {
       setError(t('failedToLoadCanvas'));
       console.error('[LOAD ERROR] Error loading canvas:', err);
+      setHasDataLoadError(true);
       // Hata durumunda da dashboard'a dön
       setViewMode('notes');
       setSelectedCanvasId(null);
@@ -202,6 +236,15 @@ export default function Home() {
       }
 
       const flowData = JSON.stringify({ nodes, edges });
+      
+      // SORUN 9 FIX: Boş string tuzağını önle - validation
+      if (!flowData || flowData === '' || flowData === '{}' || flowData === '{"nodes":[],"edges":[]}') {
+        console.warn('[SAVE] Preventing empty data save - data validation failed');
+        setSaveStatus('unsaved');
+        setError(t('cannotSaveEmptyCanvas'));
+        return;
+      }
+      
       console.log(`[SAVE] Canvas ${canvasIdToSave}: ${nodes.length} nodes, ${edges.length} edges`);
       console.log(`[SAVE] Data to save:`, flowData.substring(0, 200)); // İlk 200 karakter log
       
@@ -385,12 +428,18 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => {
-                      if (canvasData) {
-                        handleCanvasSave(canvasData.nodes, canvasData.edges, canvasData.canvasId);
+                      if (canvasViewRef.current && selectedCanvasId) {
+                        // Ref üzerinden güncel veriyi al (stale closure sorununu önler)
+                        const currentData = canvasViewRef.current.getCurrentData();
+                        console.log('[MANUAL SAVE] Getting data from ref:', currentData.nodes.length, 'nodes');
+                        handleCanvasSave(currentData.nodes, currentData.edges, selectedCanvasId);
                       }
                     }}
-                    title={t('saveNow')}
-                    className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)]"
+                    disabled={hasDataLoadError}
+                    title={hasDataLoadError ? t('cannotSaveCorruptedData') : t('saveNow')}
+                    className={`group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)] ${
+                      hasDataLoadError ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -425,13 +474,13 @@ export default function Home() {
             {/* Canvas View */}
             <div className="flex-1">
               <CanvasView
-                key={canvasData.canvasId}
                 canvasId={canvasData.canvasId}
                 canvasName={`Canvas ${canvasData.canvasId.slice(0, 8)}`}
                 initialNodes={canvasData.nodes}
                 initialEdges={canvasData.edges}
                 onSave={handleCanvasSave}
                 onUnsavedChanges={(hasChanges) => setHasUnsavedChanges(hasChanges)}
+                onAddNode={handleAddNode}
                 saveStatus={saveStatus}
                 selectedTool={selectedTool}
                 onToolChange={setSelectedTool}

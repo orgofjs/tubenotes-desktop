@@ -54,5 +54,8 @@
   "backToLibrary": "BACK TO LIBRARY",
   "watchOnYouTube": "WATCH ON YOUTUBE",
   "export": "EXPORT",
-  "error": "ERROR"
+  "error": "ERROR",
+  "canvasDataCorrupted": "Canvas data is corrupted. Cannot load properly.",
+  "cannotSaveEmptyCanvas": "Cannot save empty canvas data.",
+  "cannotSaveCorruptedData": "Cannot save - data is corrupted"
 }

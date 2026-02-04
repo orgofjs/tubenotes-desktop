@@ -39,23 +39,7 @@ model VideoNote {
 model Canvas {
   id        String       @id @default(uuid())
   name      String
-  data      String       @default("{}") // React Flow data as JSON string
-  nodes     CanvasNode[]
+  data      String       @default("{}") // React Flow data as JSON string (nodes + edges)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
-}
-
-model CanvasNode {
-  id        String   @id @default(uuid())
-  canvasId  String
-  canvas    Canvas   @relation(fields: [canvasId], references: [id], onDelete: Cascade)
-  type      String   // shape, markdown, text
-  positionX Float
-  positionY Float
-  width     Float?
-  height    Float?
-  content   String   @default("")
-  style     String?  // JSON string for node-specific styles
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }

@@ -54,5 +54,8 @@
   "backToLibrary": "ZURÜCK ZUR BIBLIOTHEK",
   "watchOnYouTube": "AUF YOUTUBE ANSCHAUEN",
   "export": "EXPORTIEREN",
-  "error": "FEHLER"
+  "error": "FEHLER",
+  "canvasDataCorrupted": "Canvas-Daten sind beschädigt. Kann nicht ordnungsgemäß geladen werden.",
+  "cannotSaveEmptyCanvas": "Leere Canvas-Daten können nicht gespeichert werden.",
+  "cannotSaveCorruptedData": "Speichern nicht möglich - Daten sind beschädigt"
 }

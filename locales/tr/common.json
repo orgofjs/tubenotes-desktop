@@ -54,5 +54,8 @@
   "backToLibrary": "KÜTÜPHANEYE GERİ DÖN",
   "watchOnYouTube": "YOUTUBE'DA İZLE",
   "export": "AKTAR",
-  "error": "HATA"
+  "error": "HATA",
+  "canvasDataCorrupted": "Canvas verisi bozuk. Düzgün yüklenemiyor.",
+  "cannotSaveEmptyCanvas": "Boş canvas verisi kaydedilemez.",
+  "cannotSaveCorruptedData": "Kaydedilemez - veri bozuk"
 }

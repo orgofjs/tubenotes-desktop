@@ -111,9 +111,6 @@ export async function deleteNote(id: string) {
 // Canvas operations
 export async function getCanvases() {
   return await prisma.canvas.findMany({
-    include: {
-      nodes: true,
-    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -123,9 +120,6 @@ export async function getCanvases() {
 export async function getCanvasById(id: string) {
   return await prisma.canvas.findUnique({
     where: { id },
-    include: {
-      nodes: true,
-    },
   });
 }
 
@@ -139,6 +133,14 @@ export async function createCanvas(params: { name: string; folderId?: string | n
 }
 
 export async function updateCanvas(id: string, data: { name?: string; data?: string }) {
+  // SORUN 9 FIX: Boş string kontrolü - veritabanına boş veri göndermeyi engelle
+  if (data.data !== undefined) {
+    if (data.data === '' || data.data === '{}' || data.data === '{"nodes":[],"edges":[]}') {
+      console.warn('[DB] Preventing empty data save - validation failed');
+      throw new Error('Cannot save empty canvas data');
+    }
+  }
+  
   return await prisma.canvas.update({
     where: { id },
     data,
@@ -147,45 +149,6 @@ export async function updateCanvas(id: string, data: { name?: string; data?: str
 
 export async function deleteCanvas(id: string) {
   return await prisma.canvas.delete({
-    where: { id },
-  });
-}
-
-// CanvasNode operations
-export async function createCanvasNode(data: {
-  canvasId: string;
-  type: string;
-  positionX: number;
-  positionY: number;
-  width?: number;
-  height?: number;
-  content?: string;
-  style?: string;
-}) {
-  return await prisma.canvasNode.create({
-    data,
-  });
-}
-
-export async function updateCanvasNode(
-  id: string,
-  data: {
-    positionX?: number;
-    positionY?: number;
-    width?: number;
-    height?: number;
-    content?: string;
-    style?: string;
-  }
-) {
-  return await prisma.canvasNode.update({
-    where: { id },
-    data,
-  });
-}
-
-export async function deleteCanvasNode(id: string) {
-  return await prisma.canvasNode.delete({
     where: { id },
   });
 }
