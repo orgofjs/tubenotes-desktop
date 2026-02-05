@@ -1,4 +1,4 @@
-# Katkıda Bulunanlar
+# CONTRIBUTORS
 
 Thank you to everyone who has contributed to the development of the tubenotes-desktop project.
 
