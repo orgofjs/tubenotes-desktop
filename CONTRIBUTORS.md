@@ -9,6 +9,6 @@ Thank you to everyone who has contributed to the development of the tubenotes-de
 
 The following people have supported the project with code, design, or ideas:
 
-* **[@midhunadarvin]**
+* **@midhunadarvin**
   * Manuel Merged
   * Set up the i18n
