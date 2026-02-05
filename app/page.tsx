@@ -306,7 +306,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden theme-aware-layout">
       <AnimatePresence>
         {error && (
           <ErrorMessage

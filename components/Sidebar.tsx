@@ -238,14 +238,31 @@ export default function Sidebar({
       <motion.aside
         initial={{ x: -300 }}
         animate={{ 
-          x: 0,
-          width: isCollapsed ? '64px' : '288px'
+          x: 0
         }}
         transition={{ type: "spring", damping: 20, stiffness: 150 }}
-        className="h-screen bg-[var(--surface)] border-r-3 border-[var(--border)] flex flex-col"
+        className="h-screen bg-[var(--surface)] theme-border flex flex-col sidebar-transition"
+        style={{
+          width: isCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)',
+          borderRightWidth: 'var(--border-width)',
+          borderLeftWidth: '0',
+          borderTopWidth: '0',
+          borderBottomWidth: '0',
+          borderColor: 'var(--border)',
+          borderStyle: 'solid'
+        }}
       >
         {/* Header */}
-        <div className="border-b-3 border-[var(--border)]">
+        <div className="theme-border"
+          style={{
+            borderBottomWidth: 'var(--border-width)',
+            borderColor: 'var(--border)',
+            borderStyle: 'solid',
+            borderLeft: '0',
+            borderRight: '0',
+            borderTop: '0'
+          }}
+        >
           <AnimatePresence mode="wait">
             {!isCollapsed ? (
               <motion.div
@@ -254,7 +271,7 @@ export default function Sidebar({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-6"
+                className="p-4 border-b-2 border-[var(--border)]"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -299,8 +316,10 @@ export default function Sidebar({
           </AnimatePresence>
         </div>
 
-        {/* Search - Only visible when expanded */}
-        <AnimatePresence>
+        {/* Main Content - Scrollable Container */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Search - Only visible when expanded */}
+          <AnimatePresence>
           {!isCollapsed && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -338,7 +357,7 @@ export default function Sidebar({
         </AnimatePresence>
 
         {/* Quick Actions */}
-        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4'} pb-4 ${isCollapsed ? 'space-y-4' : 'space-y-2'}`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} ${isCollapsed ? 'space-y-4' : 'space-y-2'} border-b-2 border-[var(--border)]`}>
           <QuickActionButton
             icon={<Star size={isCollapsed ? 22 : 16} />}
             label={t('important')}
@@ -356,7 +375,7 @@ export default function Sidebar({
         </div>
 
         {/* Folders */}
-        <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'px-2' : 'px-4'}`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'}`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center mb-4' : 'justify-between mb-3'}`}>
             {!isCollapsed && (
               <h2 className="text-xs font-mono text-[var(--foreground-muted)] uppercase">
@@ -419,7 +438,7 @@ export default function Sidebar({
         </div>
 
         {/* Canvases Section */}
-        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4'} pb-4 border-t-3 border-[var(--border)] pt-4`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} border-t-2 border-[var(--border)]`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center mb-4' : 'justify-between mb-3'}`}>
             {!isCollapsed && (
               <h2 className="text-xs font-mono text-[var(--foreground-muted)] uppercase">
@@ -476,7 +495,7 @@ export default function Sidebar({
             </motion.div>
           )}
 
-          <div className="space-y-1 max-h-48 overflow-y-auto">
+          <div className="space-y-1">
             {canvases.map((canvas, index) => (
               <motion.div
                 key={canvas.id}
@@ -522,7 +541,7 @@ export default function Sidebar({
                 ) : (
                   <div
                     className={`
-                      flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-4 py-3'} cursor-pointer
+                      flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-3 py-2'} cursor-pointer
                       transition-all duration-200
                       ${selectedCanvasId === canvas.id
                         ? 'bg-[var(--accent-primary)] text-[var(--background)]'
@@ -566,9 +585,10 @@ export default function Sidebar({
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Footer - Total Notes & Settings */}
-        <div className="border-t-3 border-[var(--border)]">
+      {/* Footer - Total Notes & Settings */}
+      <div className="border-t-2 border-[var(--border)]">
           {/* Total Notes - Only visible when expanded */}
           <AnimatePresence>
             {!isCollapsed && (

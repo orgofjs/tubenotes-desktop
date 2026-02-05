@@ -33,7 +33,12 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
 
   return (
     <div className="flex-1 h-screen overflow-y-auto bg-[var(--background)] grid-noise">
-      <div className="max-w-[1600px] mx-auto p-8 pl-12">
+      <div className="max-w-[1600px] mx-auto" 
+        style={{ 
+          padding: 'calc(var(--spacing-unit) * 4)',
+          paddingLeft: 'calc(var(--spacing-unit) * 6)'
+        }}
+      >
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -62,14 +67,17 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                 px-6 py-3 
                 bg-[var(--accent-primary)] 
                 text-[var(--background)]
-                border-3 border-[var(--background)]
+                theme-border
                 text-display text-xl
-                shadow-[4px_4px_0px_var(--accent-secondary)]
-                hover:shadow-[6px_6px_0px_var(--accent-secondary)]
-                hover:translate-x-[-2px] hover:translate-y-[-2px]
+                hover:brightness-110
                 transition-all duration-200
                 flex items-center gap-2
               "
+              style={{
+                borderColor: 'var(--border)',
+                borderStyle: 'solid',
+                boxShadow: 'var(--shadow-brutal)'
+              }}
             >
               <Plus size={24} />
               {t('addVideo')}
@@ -180,7 +188,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
             </button>
           </motion.div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="theme-aware-grid">
             {notes.map((note, index) => (
               <motion.div
                 key={note.id}

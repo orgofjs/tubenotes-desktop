@@ -1,7 +1,12 @@
 @import "tailwindcss";
 
 /* Theme Variables */
-:root[data-theme="dark"] {
+
+/* ============================================ */
+/* CYBERPUNK THEME - Brutalist & Bold */
+/* ============================================ */
+
+:root[data-theme="cyberpunk-dark"] {
   /* Brutalist Editorial Color Palette - Dark */
   --background: #0a0a0a;
   --surface: #1a1a1a;
@@ -35,9 +40,23 @@
   --color-bg: #0a0a0a;
   --color-text: #ffffff;
   --color-border: #333333;
+  
+  /* Layout Variables - CYBERPUNK STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
 }
 
-:root[data-theme="navy"] {
+:root[data-theme="cyberpunk-navy"] {
   /* Navy Blue Theme */
   --background: #0d1b2a;
   --surface: #1b263b;
@@ -71,9 +90,23 @@
   --color-bg: #0d1b2a;
   --color-text: #e0e1dd;
   --color-border: #415a77;
+  
+  /* Layout Variables - CYBERPUNK STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
 }
 
-:root[data-theme="light"] {
+:root[data-theme="cyberpunk-light"] {
   /* Light Theme */
   --background: #f8f9fa;
   --surface: #ffffff;
@@ -107,11 +140,179 @@
   --color-bg: #f8f9fa;
   --color-text: #212529;
   --color-border: #dee2e6;
+  
+  /* Layout Variables - CYBERPUNK STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
+}
+
+/* ============================================ */
+/* EDITORIAL REFINED THEME - Minimal & Sophisticated */
+/* ============================================ */
+
+:root[data-theme="editorial-dark"] {
+  /* Editorial Dark - Sophisticated & Clean */
+  --background: #0f0f0f;
+  --surface: #1c1c1c;
+  --surface-hover: #272727;
+  --foreground: #e8e8e8;
+  --foreground-muted: #9a9a9a;
+  
+  /* Accent Colors - Refined & Subtle */
+  --accent-primary: #c9a77c;
+  --accent-secondary: #7c9cb5;
+  --accent-tertiary: #a8937d;
+  --accent-blue: #6b8fa3;
+  
+  /* Status Colors */
+  --status-watching: #d4a574;
+  --status-watched: #8fae9d;
+  --status-important: #c9a77c;
+  
+  /* Borders & Lines */
+  --border: #2a2a2a;
+  --border-accent: #c9a77c;
+  
+  /* Shadows */
+  --shadow-brutal: 2px 2px 12px rgba(0, 0, 0, 0.3);
+  --shadow-brutal-hover: 2px 4px 16px rgba(0, 0, 0, 0.4);
+  
+  /* Canvas-specific Colors */
+  --color-primary: #c9a77c;
+  --color-secondary: #7c9cb5;
+  --color-accent: #a8937d;
+  --color-bg: #0f0f0f;
+  --color-text: #e8e8e8;
+  --color-border: #2a2a2a;
+  
+  /* Layout Variables - EDITORIAL STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 320px;
+  --sidebar-collapsed-width: 72px;
+  --border-width: 1px;
+  --border-radius: 8px;
+  --spacing-unit: 16px;
+  --grid-gap: 32px;
+  --grid-columns: repeat(auto-fill, minmax(360px, 1fr));
+  --card-padding: 16px;
+  --button-transform: translateY(-2px);
+  --font-weight-display: 400;
+  --letter-spacing: 0.02em;
+}
+
+:root[data-theme="editorial-navy"] {
+  /* Editorial Navy - Deep & Elegant */
+  --background: #1a1f2e;
+  --surface: #252b3d;
+  --surface-hover: #303749;
+  --foreground: #d4d8e1;
+  --foreground-muted: #8691a8;
+  
+  /* Accent Colors - Refined & Subtle */
+  --accent-primary: #b8956a;
+  --accent-secondary: #6b91b3;
+  --accent-tertiary: #9d8669;
+  --accent-blue: #5c8099;
+  
+  /* Status Colors */
+  --status-watching: #c69967;
+  --status-watched: #7fa390;
+  --status-important: #b8956a;
+  
+  /* Borders & Lines */
+  --border: #3a4052;
+  --border-accent: #b8956a;
+  
+  /* Shadows */
+  --shadow-brutal: 2px 2px 12px rgba(0, 0, 0, 0.4);
+  --shadow-brutal-hover: 2px 4px 16px rgba(0, 0, 0, 0.5);
+  
+  /* Canvas-specific Colors */
+  --color-primary: #b8956a;
+  --color-secondary: #6b91b3;
+  --color-accent: #9d8669;
+  --color-bg: #1a1f2e;
+  --color-text: #d4d8e1;
+  --color-border: #3a4052;
+  
+  /* Layout Variables - EDITORIAL STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 320px;
+  --sidebar-collapsed-width: 72px;
+  --border-width: 1px;
+  --border-radius: 8px;
+  --spacing-unit: 16px;
+  --grid-gap: 32px;
+  --grid-columns: repeat(auto-fill, minmax(360px, 1fr));
+  --card-padding: 16px;
+  --button-transform: translateY(-2px);
+  --font-weight-display: 400;
+  --letter-spacing: 0.02em;
+}
+
+:root[data-theme="editorial-light"] {
+  /* Editorial Light - Crisp & Minimalist */
+  --background: #fafaf9;
+  --surface: #ffffff;
+  --surface-hover: #f5f5f4;
+  --foreground: #1c1c1c;
+  --foreground-muted: #737373;
+  
+  /* Accent Colors - Refined & Subtle */
+  --accent-primary: #8b6f47;
+  --accent-secondary: #4a6fa5;
+  --accent-tertiary: #7d6b53;
+  --accent-blue: #3d5a73;
+  
+  /* Status Colors */
+  --status-watching: #b8935d;
+  --status-watched: #6b9382;
+  --status-important: #8b6f47;
+  
+  /* Borders & Lines */
+  --border: #e7e5e4;
+  --border-accent: #8b6f47;
+  
+  /* Shadows */
+  --shadow-brutal: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-brutal-hover: 0 2px 8px rgba(0, 0, 0, 0.12);
+  
+  /* Canvas-specific Colors */
+  --color-primary: #8b6f47;
+  --color-secondary: #4a6fa5;
+  --color-accent: #7d6b53;
+  --color-bg: #fafaf9;
+  --color-text: #1c1c1c;
+  --color-border: #e7e5e4;
+  
+  /* Layout Variables - EDITORIAL STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 320px;
+  --sidebar-collapsed-width: 72px;
+  --border-width: 1px;
+  --border-radius: 8px;
+  --spacing-unit: 16px;
+  --grid-gap: 32px;
+  --grid-columns: repeat(auto-fill, minmax(360px, 1fr));
+  --card-padding: 16px;
+  --button-transform: translateY(-2px);
+  --font-weight-display: 400;
+  --letter-spacing: 0.02em;
 }
 
 /* Default theme */
 :root {
-  /* Brutalist Editorial Color Palette */
+  /* Brutalist Editorial Color Palette - Default to Cyberpunk Dark */
   --background: #0a0a0a;
   --surface: #1a1a1a;
   --surface-hover: #252525;
@@ -144,6 +345,20 @@
   --color-bg: #0a0a0a;
   --color-text: #ffffff;
   --color-border: #333333;
+  
+  /* Layout Variables - Default Cyberpunk */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
 }
 
 @theme inline {
@@ -246,9 +461,25 @@ body {
 
 /* Typography Utilities */
 .text-display {
-  font-family: var(--font-display), sans-serif;
-  letter-spacing: 0.02em;
+  letter-spacing: var(--letter-spacing);
   text-transform: uppercase;
+  font-weight: var(--font-weight-display);
+}
+
+/* Cyberpunk Theme Typography */
+:root[data-theme^="cyberpunk"] .text-display {
+  font-family: var(--font-display), sans-serif;
+}
+
+/* Editorial Theme Typography */
+:root[data-theme^="editorial"] .text-display {
+  font-family: var(--font-editorial-display), serif;
+  text-transform: none;
+}
+
+:root[data-theme^="editorial"] .text-mono {
+  font-family: var(--font-editorial-body), sans-serif;
+  font-weight: 300;
 }
 
 .text-mono {
@@ -270,6 +501,51 @@ body {
 /* Sidebar Smooth Transitions */
 .sidebar-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme-Aware Layout */
+:root[data-theme^="cyberpunk"] .theme-aware-layout,
+:root[data-theme^="editorial"] .theme-aware-layout {
+  flex-direction: row; /* Her iki tema da sidebar solda */
+}
+
+/* Theme-Aware Grid */
+.theme-aware-grid {
+  display: grid;
+  grid-template-columns: var(--grid-columns);
+  gap: var(--grid-gap);
+}
+
+/* Theme-Aware Border */
+.theme-border {
+  border-width: var(--border-width);
+  border-radius: var(--border-radius);
+}
+
+/* Theme-Aware Card */
+.theme-card {
+  border-width: var(--border-width);
+  border-radius: var(--border-radius);
+  padding: var(--card-padding);
+  transition: all 0.3s ease;
+}
+
+:root[data-theme^="cyberpunk"] .theme-card {
+  box-shadow: var(--shadow-brutal);
+}
+
+:root[data-theme^="cyberpunk"] .theme-card:hover {
+  box-shadow: var(--shadow-brutal-hover);
+  transform: var(--button-transform);
+}
+
+:root[data-theme^="editorial"] .theme-card {
+  box-shadow: var(--shadow-brutal);
+}
+
+:root[data-theme^="editorial"] .theme-card:hover {
+  box-shadow: var(--shadow-brutal-hover);
+  transform: var(--button-transform);
 }
 
 .sidebar-tooltip {

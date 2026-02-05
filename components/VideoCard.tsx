@@ -51,11 +51,13 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
       whileHover={{ y: -4 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className="group cursor-pointer"
+      className="group cursor-pointer theme-card"
       onClick={onClick}
     >
       {/* Thumbnail Container */}
-      <div className="relative aspect-video bg-[var(--surface)] border-3 border-[var(--border)] overflow-hidden">
+      <div className="relative aspect-video bg-[var(--surface)] theme-border overflow-hidden"
+        style={{ borderColor: 'var(--border)', borderStyle: 'solid' }}
+      >
         {!imageError ? (
           <Image
             src={getYouTubeThumbnail(note.url)}

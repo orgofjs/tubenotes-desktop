@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Space_Mono } from "next/font/google";
+import { Bebas_Neue, Space_Mono, Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import I18nProvider from '../components/I18nProvider';
 
@@ -12,6 +12,18 @@ const bebasNeue = Bebas_Neue({
 const spaceMono = Space_Mono({
   weight: ['400', '700'],
   variable: "--font-mono",
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  weight: ['400', '500', '600', '700'],
+  variable: "--font-editorial-display",
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  weight: ['300', '400', '500', '600'],
+  variable: "--font-editorial-body",
   subsets: ["latin"],
 });
 
@@ -52,7 +64,7 @@ function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body
-        className={`${bebasNeue.variable} ${spaceMono.variable} antialiased`}
+        className={`${bebasNeue.variable} ${spaceMono.variable} ${playfairDisplay.variable} ${inter.variable} antialiased`}
       >
         <I18nProvider>
           {children}

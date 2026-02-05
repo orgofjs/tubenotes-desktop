@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Palette, Check } from 'lucide-react';
 
-type Theme = 'dark' | 'navy' | 'light';
+type ThemeFamily = 'cyberpunk' | 'editorial';
+type ThemeVariant = 'dark' | 'navy' | 'light';
+type Theme = `${ThemeFamily}-${ThemeVariant}`;
 
 interface ThemeSwitcherProps {
   onThemeChange?: (theme: Theme) => void;
@@ -13,7 +15,7 @@ interface ThemeSwitcherProps {
 
 export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
+  const [currentTheme, setCurrentTheme] = useState<Theme>('cyberpunk-dark');
 
   useEffect(() => {
     // Load theme from localStorage
@@ -21,6 +23,22 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
     if (savedTheme) {
       setCurrentTheme(savedTheme);
       applyTheme(savedTheme);
+    } else {
+      // Migrate old themes
+      const oldTheme = localStorage.getItem('tubenotes_theme');
+      if (oldTheme === 'dark') {
+        const newTheme = 'cyberpunk-dark';
+        setCurrentTheme(newTheme);
+        applyTheme(newTheme);
+      } else if (oldTheme === 'navy') {
+        const newTheme = 'cyberpunk-navy';
+        setCurrentTheme(newTheme);
+        applyTheme(newTheme);
+      } else if (oldTheme === 'light') {
+        const newTheme = 'cyberpunk-light';
+        setCurrentTheme(newTheme);
+        applyTheme(newTheme);
+      }
     }
   }, []);
 
@@ -38,68 +56,145 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
     onThemeChange?.(theme);
   };
 
-  const themes: { id: Theme; name: string; colors: { primary: string; secondary: string; bg: string } }[] = [
+  const themeGroups: {
+    id: ThemeFamily;
+    name: string;
+    description: string;
+    variants: {
+      id: ThemeVariant;
+      name: string;
+      colors: { primary: string; secondary: string; bg: string };
+    }[];
+  }[] = [
     {
-      id: 'dark',
-      name: 'Karanlık',
-      colors: { primary: '#ff3366', secondary: '#00ff88', bg: '#0a0a0a' }
+      id: 'cyberpunk',
+      name: 'Cyberpunk',
+      description: 'Brutalist & Bold',
+      variants: [
+        {
+          id: 'dark',
+          name: 'Karanlık',
+          colors: { primary: '#ff3366', secondary: '#00ff88', bg: '#0a0a0a' }
+        },
+        {
+          id: 'navy',
+          name: 'Lacivert',
+          colors: { primary: '#415a77', secondary: '#00d4ff', bg: '#0d1b2a' }
+        },
+        {
+          id: 'light',
+          name: 'Açık',
+          colors: { primary: '#d63384', secondary: '#0dcaf0', bg: '#f8f9fa' }
+        },
+      ]
     },
     {
-      id: 'navy',
-      name: 'Lacivert',
-      colors: { primary: '#415a77', secondary: '#00d4ff', bg: '#0d1b2a' }
-    },
-    {
-      id: 'light',
-      name: 'Açık',
-      colors: { primary: '#d63384', secondary: '#0dcaf0', bg: '#f8f9fa' }
-    },
+      id: 'editorial',
+      name: 'Editorial',
+      description: 'Minimal & Sophisticated',
+      variants: [
+        {
+          id: 'dark',
+          name: 'Karanlık',
+          colors: { primary: '#c9a77c', secondary: '#7c9cb5', bg: '#0f0f0f' }
+        },
+        {
+          id: 'navy',
+          name: 'Lacivert',
+          colors: { primary: '#b8956a', secondary: '#6b91b3', bg: '#1a1f2e' }
+        },
+        {
+          id: 'light',
+          name: 'Açık',
+          colors: { primary: '#8b6f47', secondary: '#4a6fa5', bg: '#fafaf9' }
+        },
+      ]
+    }
   ];
 
-  // Inline mode - just show the list directly
+  const getCurrentThemeFamily = (): ThemeFamily => {
+    return currentTheme.split('-')[0] as ThemeFamily;
+  };
+
+  const getCurrentThemeVariant = (): ThemeVariant => {
+    return currentTheme.split('-')[1] as ThemeVariant;
+  };
+
+  // Inline mode - show theme groups with variants
   if (inline) {
     return (
-      <div className="space-y-2">
-        {themes.map((theme) => (
-          <motion.button
-            key={theme.id}
-            whileHover={{ x: 4 }}
-            onClick={() => handleThemeChange(theme.id)}
-            className={`
-              w-full p-3 
-              border-2 
-              ${currentTheme === theme.id 
-                ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
-                : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
-              }
-              transition-all
-              flex items-center justify-between
-              group
-            `}
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex gap-1">
-                <div 
-                  className="w-3 h-3" 
-                  style={{ backgroundColor: theme.colors.primary }}
-                />
-                <div 
-                  className="w-3 h-3" 
-                  style={{ backgroundColor: theme.colors.secondary }}
-                />
-                <div 
-                  className="w-3 h-3 border border-[var(--border)]" 
-                  style={{ backgroundColor: theme.colors.bg }}
-                />
-              </div>
-              <span className="text-sm font-mono">
-                {theme.name}
+      <div className="space-y-6">{themeGroups.map((group) => (
+          <div key={group.id} className="space-y-3">
+            {/* Theme Group Header */}
+            <div className="flex items-baseline gap-2 border-b-2 border-[var(--border)] pb-2">
+              <h4 className="text-base font-mono font-bold text-[var(--foreground)]">
+                {group.name}
+              </h4>
+              <span className="text-xs text-[var(--foreground-muted)]">
+                {group.description}
               </span>
             </div>
-            {currentTheme === theme.id && (
-              <Check size={16} className="text-[var(--accent-primary)]" />
-            )}
-          </motion.button>
+
+            {/* Variants Grid */}
+            <div className="grid grid-cols-3 gap-2">
+              {group.variants.map((variant) => {
+                const themeId: Theme = `${group.id}-${variant.id}`;
+                const isActive = currentTheme === themeId;
+                
+                return (
+                  <motion.button
+                    key={themeId}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleThemeChange(themeId)}
+                    className={`
+                      relative p-3 
+                      border-2 
+                      ${isActive 
+                        ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
+                        : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+                      }
+                      transition-all
+                      flex flex-col items-center gap-2
+                      group
+                    `}
+                  >
+                    {/* Color Preview */}
+                    <div className="flex gap-1">
+                      <div 
+                        className="w-4 h-4 border border-[var(--border)]" 
+                        style={{ backgroundColor: variant.colors.primary }}
+                      />
+                      <div 
+                        className="w-4 h-4 border border-[var(--border)]" 
+                        style={{ backgroundColor: variant.colors.secondary }}
+                      />
+                      <div 
+                        className="w-4 h-4 border border-[var(--border)]" 
+                        style={{ backgroundColor: variant.colors.bg }}
+                      />
+                    </div>
+
+                    {/* Variant Name */}
+                    <span className="text-xs font-mono">
+                      {variant.name}
+                    </span>
+
+                    {/* Active Indicator */}
+                    {isActive && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute top-1 right-1"
+                      >
+                        <Check size={14} className="text-[var(--accent-primary)]" />
+                      </motion.div>
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
         ))}
       </div>
     );
@@ -135,55 +230,73 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
               bg-[var(--surface)]
               border-3 border-[var(--border)]
               shadow-[6px_6px_0px_var(--accent-primary)]
-              p-3
-              min-w-[200px]
+              p-4
+              min-w-[280px]
               z-50
             "
           >
-            <div className="text-xs font-mono text-[var(--foreground-muted)] mb-2 uppercase">
+            <div className="text-xs font-mono text-[var(--foreground-muted)] mb-3 uppercase">
               Tema Seç
             </div>
-            <div className="space-y-2">
-              {themes.map((theme) => (
-                <motion.button
-                  key={theme.id}
-                  whileHover={{ x: 4 }}
-                  onClick={() => handleThemeChange(theme.id)}
-                  className={`
-                    w-full p-3 
-                    border-2 
-                    ${currentTheme === theme.id 
-                      ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
-                      : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
-                    }
-                    transition-all
-                    flex items-center justify-between
-                    group
-                  `}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex gap-1">
-                      <div 
-                        className="w-3 h-3" 
-                        style={{ backgroundColor: theme.colors.primary }}
-                      />
-                      <div 
-                        className="w-3 h-3" 
-                        style={{ backgroundColor: theme.colors.secondary }}
-                      />
-                      <div 
-                        className="w-3 h-3 border border-[var(--border)]" 
-                        style={{ backgroundColor: theme.colors.bg }}
-                      />
-                    </div>
-                    <span className="text-sm font-mono">
-                      {theme.name}
-                    </span>
+            
+            <div className="space-y-4">
+              {themeGroups.map((group) => (
+                <div key={group.id} className="space-y-2">
+                  {/* Theme Group Label */}
+                  <div className="text-xs font-mono text-[var(--foreground)] uppercase">
+                    {group.name}
                   </div>
-                  {currentTheme === theme.id && (
-                    <Check size={16} className="text-[var(--accent-primary)]" />
-                  )}
-                </motion.button>
+                  
+                  {/* Variants */}
+                  <div className="space-y-1">
+                    {group.variants.map((variant) => {
+                      const themeId: Theme = `${group.id}-${variant.id}`;
+                      const isActive = currentTheme === themeId;
+                      
+                      return (
+                        <motion.button
+                          key={themeId}
+                          whileHover={{ x: 4 }}
+                          onClick={() => handleThemeChange(themeId)}
+                          className={`
+                            w-full p-2 
+                            border-2 
+                            ${isActive 
+                              ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
+                              : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+                            }
+                            transition-all
+                            flex items-center justify-between
+                            group
+                          `}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="flex gap-1">
+                              <div 
+                                className="w-3 h-3 border border-[var(--border)]" 
+                                style={{ backgroundColor: variant.colors.primary }}
+                              />
+                              <div 
+                                className="w-3 h-3 border border-[var(--border)]" 
+                                style={{ backgroundColor: variant.colors.secondary }}
+                              />
+                              <div 
+                                className="w-3 h-3 border border-[var(--border)]" 
+                                style={{ backgroundColor: variant.colors.bg }}
+                              />
+                            </div>
+                            <span className="text-xs font-mono">
+                              {variant.name}
+                            </span>
+                          </div>
+                          {isActive && (
+                            <Check size={14} className="text-[var(--accent-primary)]" />
+                          )}
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                </div>
               ))}
             </div>
           </motion.div>
