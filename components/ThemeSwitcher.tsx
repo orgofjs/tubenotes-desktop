@@ -8,9 +8,10 @@ type Theme = 'dark' | 'navy' | 'light';
 
 interface ThemeSwitcherProps {
   onThemeChange?: (theme: Theme) => void;
+  inline?: boolean; // inline mode for modals - shows list directly without dropdown
 }
 
-export default function ThemeSwitcher({ onThemeChange }: ThemeSwitcherProps) {
+export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<Theme>('dark');
 
@@ -31,7 +32,9 @@ export default function ThemeSwitcher({ onThemeChange }: ThemeSwitcherProps) {
   const handleThemeChange = (theme: Theme) => {
     setCurrentTheme(theme);
     applyTheme(theme);
-    setIsOpen(false);
+    if (!inline) {
+      setIsOpen(false);
+    }
     onThemeChange?.(theme);
   };
 
@@ -52,6 +55,55 @@ export default function ThemeSwitcher({ onThemeChange }: ThemeSwitcherProps) {
       colors: { primary: '#d63384', secondary: '#0dcaf0', bg: '#f8f9fa' }
     },
   ];
+
+  // Inline mode - just show the list directly
+  if (inline) {
+    return (
+      <div className="space-y-2">
+        {themes.map((theme) => (
+          <motion.button
+            key={theme.id}
+            whileHover={{ x: 4 }}
+            onClick={() => handleThemeChange(theme.id)}
+            className={`
+              w-full p-3 
+              border-2 
+              ${currentTheme === theme.id 
+                ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
+                : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+              }
+              transition-all
+              flex items-center justify-between
+              group
+            `}
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1">
+                <div 
+                  className="w-3 h-3" 
+                  style={{ backgroundColor: theme.colors.primary }}
+                />
+                <div 
+                  className="w-3 h-3" 
+                  style={{ backgroundColor: theme.colors.secondary }}
+                />
+                <div 
+                  className="w-3 h-3 border border-[var(--border)]" 
+                  style={{ backgroundColor: theme.colors.bg }}
+                />
+              </div>
+              <span className="text-sm font-mono">
+                {theme.name}
+              </span>
+            </div>
+            {currentTheme === theme.id && (
+              <Check size={16} className="text-[var(--accent-primary)]" />
+            )}
+          </motion.button>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="relative">

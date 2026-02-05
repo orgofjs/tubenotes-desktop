@@ -2,18 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Globe } from 'lucide-react';
+import { Globe, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  inline?: boolean; // inline mode for modals - shows list directly without dropdown
+}
+
+export default function LanguageSwitcher({ inline = false }: LanguageSwitcherProps) {
   const { i18n } = useTranslation('common');
   const [isOpen, setIsOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState(i18n.language);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'tr', name: 'Türkçe' },
-    { code: 'de', name: 'Deutsch' },
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   ];
 
   // Update current language when i18n language changes
@@ -42,12 +47,87 @@ export default function LanguageSwitcher() {
     try {
       await i18n.changeLanguage(lang);
       setCurrentLang(lang);
-      setIsOpen(false);
+      if (!inline) {
+        setIsOpen(false);
+      }
     } catch (error) {
       console.error('Failed to change language:', error);
     }
   };
 
+  // Inline mode - just show the list directly
+  if (inline) {
+    return (
+      <div className="space-y-2">
+        {languages.map((lang) => (
+          <motion.button
+            key={lang.code}
+            whileHover={{ x: 4 }}
+            onClick={() => handleLanguageChange(lang.code)}
+            className={`
+              w-full p-3 
+              border-2 
+              ${currentLang === lang.code 
+                ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
+                : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+              }
+              transition-all
+              flex items-center justify-between
+              group
+            `}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">{lang.flag}</span>
+              <span className="text-sm font-mono">
+                {lang.name}
+              </span>
+            </div>
+            {currentLang === lang.code && (
+              <Check size={16} className="text-[var(--accent-primary)]" />
+            )}
+          </motion.button>
+        ))}
+      </div>
+    );
+  }
+
+  // Inline mode - just show the list directly
+  if (inline) {
+    return (
+      <div className="space-y-2">
+        {languages.map((lang) => (
+          <motion.button
+            key={lang.code}
+            whileHover={{ x: 4 }}
+            onClick={() => handleLanguageChange(lang.code)}
+            className={`
+              w-full p-3 
+              border-2 
+              ${currentLang === lang.code 
+                ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
+                : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+              }
+              transition-all
+              flex items-center justify-between
+              group
+            `}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">{lang.flag}</span>
+              <span className="text-sm font-mono">
+                {lang.name}
+              </span>
+            </div>
+            {currentLang === lang.code && (
+              <Check size={16} className="text-[var(--accent-primary)]" />
+            )}
+          </motion.button>
+        ))}
+      </div>
+    );
+  }
+
+  // Regular dropdown mode
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -66,6 +146,7 @@ export default function LanguageSwitcher() {
                 currentLang === lang.code ? 'text-[var(--accent-primary)]' : 'text-[var(--foreground-muted)]'
               }`}
             >
+              <span className="mr-2">{lang.flag}</span>
               {lang.name}
             </button>
           ))}

@@ -57,5 +57,13 @@
   "error": "HATA",
   "canvasDataCorrupted": "Canvas verisi bozuk. Düzgün yüklenemiyor.",
   "cannotSaveEmptyCanvas": "Boş canvas verisi kaydedilemez.",
-  "cannotSaveCorruptedData": "Kaydedilemez - veri bozuk"
+  "cannotSaveCorruptedData": "Kaydedilemez - veri bozuk",
+  "settings": "AYARLAR",
+  "themeSettings": "Tema Ayarları",
+  "languageSettings": "Dil Ayarları",
+  "close": "KAPAT",
+  "collapseSidebar": "Kenar Çubuğunu Daralt",
+  "expandSidebar": "Kenar Çubuğunu Genişlet",
+  "addFolder": "Klasör Ekle",
+  "addCanvas": "Canvas Ekle"
 }

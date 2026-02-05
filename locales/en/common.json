@@ -57,5 +57,13 @@
   "error": "ERROR",
   "canvasDataCorrupted": "Canvas data is corrupted. Cannot load properly.",
   "cannotSaveEmptyCanvas": "Cannot save empty canvas data.",
-  "cannotSaveCorruptedData": "Cannot save - data is corrupted"
+  "cannotSaveCorruptedData": "Cannot save - data is corrupted",
+  "settings": "SETTINGS",
+  "themeSettings": "Theme Settings",
+  "languageSettings": "Language Settings",
+  "close": "CLOSE",
+  "collapseSidebar": "Collapse Sidebar",
+  "expandSidebar": "Expand Sidebar",
+  "addFolder": "Add Folder",
+  "addCanvas": "Add Canvas"
 }

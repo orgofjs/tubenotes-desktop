@@ -57,5 +57,13 @@
   "error": "FEHLER",
   "canvasDataCorrupted": "Canvas-Daten sind beschädigt. Kann nicht ordnungsgemäß geladen werden.",
   "cannotSaveEmptyCanvas": "Leere Canvas-Daten können nicht gespeichert werden.",
-  "cannotSaveCorruptedData": "Speichern nicht möglich - Daten sind beschädigt"
+  "cannotSaveCorruptedData": "Speichern nicht möglich - Daten sind beschädigt",
+  "settings": "EINSTELLUNGEN",
+  "themeSettings": "Theme-Einstellungen",
+  "languageSettings": "Spracheinstellungen",
+  "close": "SCHLIESSEN",
+  "collapseSidebar": "Seitenleiste einklappen",
+  "expandSidebar": "Seitenleiste erweitern",
+  "addFolder": "Ordner hinzufügen",
+  "addCanvas": "Canvas hinzufügen"
 }
