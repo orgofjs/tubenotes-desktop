@@ -64,10 +64,10 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 
 | Kategori | Teknoloji |
 |----------|-----------|
-| Framework | Next.js 16.1.3 (App Router, Turbopack) |
+| Framework | Next.js 16.1.6 (App Router, Turbopack) |
 | Masaüstü | Electron 40.0.0 + electron-builder |
 | Veritabanı | SQLite (better-sqlite3 12.6.2) |
-| ORM | Prisma 7.3.0 (schema tanımı için) |
+| ORM | Prisma 6.19.2 (schema tanımı için) |
 | Dil | TypeScript 5 |
 | Stil | Tailwind CSS 4 |
 | Canvas | @xyflow/react 12.10.0 (React Flow) |
@@ -78,7 +78,7 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 | Tarih | date-fns 4.1.0 |
 | PWA | @ducanh2912/next-pwa 10.2.9 |
 
-- PWA varsayılan olarak kapalıdır, açmak için next.config.ts dosyasına aşağıdaki değişikliği uygula:
+- PWA varsayılan olarak kapalıdır, açmak için `next.config.ts` dosyasına aşağıdaki değişikliği uygula:
 
 ```js
 // Satır 32-34
@@ -179,10 +179,10 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 
 | Category | Technology |
 |----------|------------|
-| Framework | Next.js 16.1.3 (App Router, Turbopack) |
+| Framework | Next.js 16.1.6 (App Router, Turbopack) |
 | Desktop | Electron 40.0.0 + electron-builder |
 | Database | SQLite (better-sqlite3 12.6.2) |
-| ORM | Prisma 7.3.0 (schema definition) |
+| ORM | Prisma 6.19.2 (schema definition) |
 | Language | TypeScript 5 |
 | Styling | Tailwind CSS 4 |
 | Canvas | @xyflow/react 12.10.0 (React Flow) |
@@ -193,7 +193,7 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 | Date | date-fns 4.1.0 |
 | PWA | @ducanh2912/next-pwa 10.2.9 |
 
-- PWA is disabled by default; to enable it, apply the following change in the next.config.ts file:
+- PWA is disabled by default; to enable it, apply the following change in the `next.config.ts` file:
 
 ```js
 // Ln 32-34
