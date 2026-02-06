@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing to TubeNotes. This project is actively developed and contributions of all kinds are welcome. You do not need to write code to contribute. Bug reports, feature ideas, testing, and feedback are all valuable.
 
+Please comply with the terms and conditions here to contribute.
+
 ---
 
 ### How You Can Contribute

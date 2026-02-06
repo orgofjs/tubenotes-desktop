@@ -2,6 +2,34 @@
 
 All notable changes to TubeNotes will be documented in this file.
 
+## [0.2.2] - 2026-02-07
+
+### Major Features
+- **Kanban Task View**
+- **Settings Modal**
+- **New Themes**
+
+### Bug Fixes
+- **Production Black Screen**
+- **localStorage Security Error**
+- **Windows Protocol Recognition**
+- **Navigation State Loss**: Eliminated full page reloads during internal navigation
+- **Sidebar Remount Issue**: Fixed sidebar component unmounting during view switches
+- **Theme Reset Bug**: Added inline theme initialization script to prevent flash of default theme
+- **Active Tab Highlight**: Fixed sidebar highlight not updating correctly on Kanban view
+
+### Technical Improvements
+
+### Dependencies & Configuration
+- **PWA**: Completely disabled Service Worker
+- **preload.js**: Exposed `navigation.goto()` API
+
+### User Experience
+- **Smooth Transitions**
+- **Instant Navigation**
+
+---
+
 ## [0.2.1] - 2026-01-26
 
 ###  Bug Fixes
@@ -10,10 +38,6 @@ All notable changes to TubeNotes will be documented in this file.
 - **Data Mutation Prevention**: Removed direct data mutations in ShapeNode and CodeMirrorNode to prevent state corruption
 
 ###  Technical Improvements
-- Added `useEffect` hooks to sync `internalNodes` and `internalEdges` with refs automatically
-- Enhanced `onNodesChange` and `onEdgesChange` handling to ensure position updates are captured
-- Improved state management reliability for all canvas operations
-- Added `[NODES SYNCED]` debug logging for better development tracking
 
 ###  Verified Features
 - Canvas notes now persist correctly across:
@@ -22,6 +46,8 @@ All notable changes to TubeNotes will be documented in this file.
   - Node drag operations
   - Node resize operations
   - Label/content editing
+
+---
 
 ## [0.2.0] - 2026-01-25
 
@@ -40,10 +66,6 @@ All notable changes to TubeNotes will be documented in this file.
 - Next.js 16.1.3 with Turbopack
 - TypeScript 5 strict mode
 
-###  Build System
-- Windows .exe build support
-- Static export for production
-- Electron packaging with electron-builder
 
 ---
 

@@ -35,6 +35,7 @@ Mid-term features that improve daily usability and desktop integration.
 - Backup and restore for local data
 - Improved Windows installer experience (shortcuts, metadata, portability)
 - Optional Windows file association support for supported file types
+- Kanban Task Mode Feature
 
 ---
 
@@ -48,3 +49,4 @@ These are not guaranteed and may evolve over time.
 - Plugin or extension-friendly architecture
 - Sync or multi-device support
 - Advanced export options and templates
+- Self Hosted Feature
