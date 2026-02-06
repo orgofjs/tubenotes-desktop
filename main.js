@@ -1,10 +1,30 @@
 // Load environment variables first
 require('dotenv').config();
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, protocol } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const url = require('url');
 const isDev = process.env.NODE_ENV === 'development';
+
+// CRITICAL: Register protocol as privileged BEFORE app.whenReady
+// This must be done synchronously at startup, not in async callback
+if (!isDev) {
+  protocol.registerSchemesAsPrivileged([
+    {
+      scheme: 'app',
+      privileges: {
+        standard: true,
+        secure: true,
+        supportFetchAPI: true,
+        corsEnabled: false,
+        stream: true,
+        allowServiceWorkers: false,
+        bypassCSP: false
+      }
+    }
+  ]);
+}
 
 // Prisma ve Database değişkenlerini global tanımla
 let prisma;
@@ -26,8 +46,8 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: false,
-      webSecurity: true,
-      preload: path.join(__dirname, 'preload.js'), // Preload script ekledik
+      webSecurity: !isDev, // Disable only in dev for hot reload
+      preload: path.join(__dirname, 'preload.js'),
     },
     backgroundColor: '#0a0a0a',
     title: 'TubeNotes',
@@ -54,37 +74,16 @@ function createWindow() {
       console.error('LoadURL error:', err);
     });
   } else {
-    // Production mode - load from resources
-    console.log('Production mode - Loading from file system');
-    console.log('__dirname:', __dirname);
+    // Production mode - use custom app:// protocol
+    console.log('Production mode - Loading via app:// protocol');
     
-    // Try different possible paths for the built app
-    const possiblePaths = [
-      path.join(__dirname, 'out', 'index.html'),
-      path.join(process.resourcesPath, 'app.asar', 'out', 'index.html'),
-      path.join(process.resourcesPath, 'out', 'index.html'),
-    ];
-    
-    let indexPath = null;
-    for (const p of possiblePaths) {
-      console.log('Checking path:', p);
-      if (fs.existsSync(p)) {
-        indexPath = p;
-        console.log('Found index.html at:', indexPath);
-        break;
-      }
-    }
-    
-    if (indexPath) {
-      mainWindow.loadFile(indexPath).then(() => {
-        console.log('File loaded successfully');
-      }).catch(err => {
-        console.error('Failed to load file:', err);
-      });
-    } else {
-      console.error('Could not find index.html in any expected location');
-      console.error('Searched paths:', possiblePaths);
-    }
+    mainWindow.loadURL('app://./index.html').then(() => {
+      console.log('App loaded successfully via app:// protocol');
+      // Open DevTools only if debugging
+      // mainWindow.webContents.openDevTools();
+    }).catch(err => {
+      console.error('Failed to load app:', err);
+    });
   }
 
   // Debug: Log console messages from renderer
@@ -92,11 +91,47 @@ function createWindow() {
     console.log(`Renderer: ${message}`);
   });
 
+  // Production: Handle external links only, allow internal navigation via IPC
+  if (!isDev) {
+    // Handle new window requests (e.g., target="_blank")
+    mainWindow.webContents.setWindowOpenHandler(({ url: targetUrl }) => {
+      // Open external links in default browser
+      if (targetUrl.startsWith('http://') || targetUrl.startsWith('https://')) {
+        require('electron').shell.openExternal(targetUrl);
+      }
+      return { action: 'deny' }; // Prevent new Electron windows
+    });
+  }
+
   // Pencere kapatıldığında
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
+
+// ============================================
+// IPC HANDLERS: Navigation (Production only)
+// ============================================
+
+// Navigation: Go to page (bypasses Next.js Router in static export)
+ipcMain.handle('navigation:goto', async (event, path) => {
+  if (!mainWindow) return;
+  
+  // Map paths to HTML files (trailingSlash: true structure)
+  const pathMap = {
+    '/': 'app://./index.html',
+    '/kanban': 'app://./kanban/index.html',
+  };
+  
+  const targetUrl = pathMap[path] || `app://.${path}/index.html`;
+  console.log(`[Navigation] Loading: ${path} -> ${targetUrl}`);
+  
+  try {
+    await mainWindow.loadURL(targetUrl);
+  } catch (error) {
+    console.error(`[Navigation] Failed to load ${targetUrl}:`, error);
+  }
+});
 
 // ============================================
 // IPC HANDLERS: Prisma ile Canvas CRUD İşlemleri
@@ -211,12 +246,190 @@ ipcMain.handle('canvas:delete', async (event, id) => {
 });
 
 // ============================================
+// KANBAN IPC HANDLERS
+// ============================================
+
+// Kanban: Tüm task'ları getir
+ipcMain.handle('kanban:getAll', async () => {
+  try {
+    const tasks = await prisma.kanbanTask.findMany({
+      orderBy: { position: 'asc' },
+    });
+    return tasks;
+  } catch (error) {
+    console.error('kanban:getAll error:', error);
+    throw error;
+  }
+});
+
+// Kanban: ID'ye göre task getir
+ipcMain.handle('kanban:getById', async (event, id) => {
+  try {
+    const task = await prisma.kanbanTask.findUnique({
+      where: { id },
+    });
+    return task || null;
+  } catch (error) {
+    console.error(`kanban:getById error (${id}):`, error);
+    throw error;
+  }
+});
+
+// Kanban: Yeni task oluştur
+ipcMain.handle('kanban:create', async (event, taskData) => {
+  try {
+    console.log('IPC: Creating kanban task:', taskData);
+    const task = await prisma.kanbanTask.create({
+      data: taskData,
+    });
+    console.log('IPC: Kanban task created with id:', task.id);
+    return task;
+  } catch (error) {
+    console.error('IPC Error - kanban:create:', error);
+    throw error;
+  }
+});
+
+// Kanban: Task güncelle
+ipcMain.handle('kanban:update', async (event, id, updates) => {
+  try {
+    console.log(`IPC: Updating kanban task ${id}`, updates);
+    const task = await prisma.kanbanTask.update({
+      where: { id },
+      data: updates,
+    });
+    console.log(`IPC: Kanban task updated: ${task.id}`);
+    return task;
+  } catch (error) {
+    console.error(`IPC Error - kanban:update(${id}):`, error);
+    throw error;
+  }
+});
+
+// Kanban: Task sil
+ipcMain.handle('kanban:delete', async (event, id) => {
+  try {
+    console.log(`IPC: Deleting kanban task: ${id}`);
+    await prisma.kanbanTask.delete({
+      where: { id },
+    });
+    console.log(`IPC: Kanban task deleted: ${id}`);
+    return { success: true };
+  } catch (error) {
+    console.error(`IPC Error - kanban:delete(${id}):`, error);
+    throw error;
+  }
+});
+
+// ============================================
+// FOLDERS IPC HANDLERS
+// ============================================
+
+// Folders: Tüm folder'ları getir
+ipcMain.handle('folders:getAll', async () => {
+  try {
+    const folders = await prisma.folder.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+    return folders;
+  } catch (error) {
+    console.error('folders:getAll error:', error);
+    throw error;
+  }
+});
+
+// Folders: ID'ye göre folder getir
+ipcMain.handle('folders:getById', async (event, id) => {
+  try {
+    const folder = await prisma.folder.findUnique({
+      where: { id },
+    });
+    return folder || null;
+  } catch (error) {
+    console.error(`folders:getById error (${id}):`, error);
+    throw error;
+  }
+});
+
+// Folders: Yeni folder oluştur
+ipcMain.handle('folders:create', async (event, folderData) => {
+  try {
+    console.log('IPC: Creating folder:', folderData);
+    const folder = await prisma.folder.create({
+      data: folderData,
+    });
+    console.log('IPC: Folder created with id:', folder.id);
+    return folder;
+  } catch (error) {
+    console.error('IPC Error - folders:create:', error);
+    throw error;
+  }
+});
+
+// Folders: Folder güncelle
+ipcMain.handle('folders:update', async (event, id, updates) => {
+  try {
+    console.log(`IPC: Updating folder ${id}`, updates);
+    const folder = await prisma.folder.update({
+      where: { id },
+      data: updates,
+    });
+    console.log(`IPC: Folder updated: ${folder.id}`);
+    return folder;
+  } catch (error) {
+    console.error(`IPC Error - folders:update(${id}):`, error);
+    throw error;
+  }
+});
+
+// Folders: Folder sil
+ipcMain.handle('folders:delete', async (event, id) => {
+  try {
+    console.log(`IPC: Deleting folder: ${id}`);
+    await prisma.folder.delete({
+      where: { id },
+    });
+    console.log(`IPC: Folder deleted: ${id}`);
+    return { success: true };
+  } catch (error) {
+    console.error(`IPC Error - folders:delete(${id}):`, error);
+    throw error;
+  }
+});
+
+// ============================================
 // APP LIFECYCLE
 // ============================================
 
 // Electron hazır olduğunda pencereyi oluştur
 app.whenReady().then(async () => {
   try {
+    // Register custom protocol BEFORE creating window (production only)
+    if (!isDev) {
+      protocol.registerFileProtocol('app', (request, callback) => {
+      // Tell Windows this app handles app:// protocol
+      if (process.defaultApp) {
+        if (process.argv.length >= 2) {
+          app.setAsDefaultProtocolClient('app', process.execPath, [path.resolve(process.argv[1])]);
+        }
+      } else {
+        app.setAsDefaultProtocolClient('app');
+      }
+
+      // Register file protocol handler
+        let requestedUrl = request.url.replace('app://', '');
+        // Remove leading ./ if present
+        requestedUrl = requestedUrl.replace(/^\.\//, '');
+        
+        // Resolve path relative to out directory
+        const filePath = path.normalize(path.join(__dirname, 'out', requestedUrl));
+        
+        console.log(`[Protocol] Requested: ${request.url} -> Resolved: ${filePath}`);
+        
+        callback({ path: filePath });
+      });
+    }
+
     // SQLite veritabanını kullanıcının AppData klasöründe saklayalım
     const userDataPath = app.getPath('userData');
     const dbPath = path.join(userDataPath, 'tubenotes.db');
@@ -236,7 +449,37 @@ app.whenReady().then(async () => {
         createdAt TEXT DEFAULT (datetime('now')),
         updatedAt TEXT DEFAULT (datetime('now'))
       );
+      
+      CREATE TABLE IF NOT EXISTS Folder (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        parentId TEXT,
+        createdAt TEXT DEFAULT (datetime('now')),
+        updatedAt TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (parentId) REFERENCES Folder(id) ON DELETE CASCADE
+      );
+      
+      CREATE TABLE IF NOT EXISTS KanbanTask (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        description TEXT,
+        status TEXT NOT NULL DEFAULT 'todo',
+        position INTEGER NOT NULL DEFAULT 0,
+        priority TEXT DEFAULT 'medium',
+        dueDate TEXT,
+        createdAt TEXT DEFAULT (datetime('now')),
+        updatedAt TEXT DEFAULT (datetime('now'))
+      );
     `);
+    
+    // Root folder'ı ekle (yoksa)
+    const checkRoot = db.prepare('SELECT * FROM Folder WHERE id = ?').get('root');
+    if (!checkRoot) {
+      const now = new Date().toISOString();
+      db.prepare('INSERT INTO Folder (id, name, parentId, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)')
+        .run('root', 'Tüm Notlar', null, now, now);
+      console.log('✅ Root folder created');
+    }
     
     // Global prisma yerine db objesi kullanacağız
     prisma = {
@@ -279,6 +522,148 @@ app.whenReady().then(async () => {
         },
         delete: (options) => {
           const stmt = db.prepare('DELETE FROM Canvas WHERE id = ?');
+          stmt.run(options.where.id);
+          return { id: options.where.id };
+        }
+      },
+      folder: {
+        findMany: (options = {}) => {
+          const stmt = db.prepare('SELECT * FROM Folder ORDER BY createdAt DESC');
+          return stmt.all();
+        },
+        findUnique: (options) => {
+          const stmt = db.prepare('SELECT * FROM Folder WHERE id = ?');
+          const result = stmt.get(options.where.id);
+          return result || null;
+        },
+        create: (options) => {
+          const id = require('crypto').randomUUID();
+          const now = new Date().toISOString();
+          const stmt = db.prepare(
+            'INSERT INTO Folder (id, name, parentId, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?)'
+          );
+          stmt.run(id, options.data.name, options.data.parentId || null, now, now);
+          const created = { 
+            id, 
+            name: options.data.name,
+            parentId: options.data.parentId || null,
+            createdAt: now, 
+            updatedAt: now 
+          };
+          console.log('Folder created:', created);
+          return created;
+        },
+        update: (options) => {
+          const now = new Date().toISOString();
+          const fields = [];
+          const values = [];
+          if (options.data.name !== undefined) {
+            fields.push('name = ?');
+            values.push(options.data.name);
+          }
+          if (options.data.parentId !== undefined) {
+            fields.push('parentId = ?');
+            values.push(options.data.parentId);
+          }
+          fields.push('updatedAt = ?');
+          values.push(now);
+          values.push(options.where.id);
+          
+          const stmt = db.prepare(`UPDATE Folder SET ${fields.join(', ')} WHERE id = ?`);
+          stmt.run(...values);
+          const selectStmt = db.prepare('SELECT * FROM Folder WHERE id = ?');
+          return selectStmt.get(options.where.id);
+        },
+        delete: (options) => {
+          const stmt = db.prepare('DELETE FROM Folder WHERE id = ?');
+          stmt.run(options.where.id);
+          return { id: options.where.id };
+        }
+      },
+      kanbanTask: {
+        findMany: (options = {}) => {
+          const stmt = db.prepare('SELECT * FROM KanbanTask ORDER BY position ASC');
+          return stmt.all();
+        },
+        findUnique: (options) => {
+          const stmt = db.prepare('SELECT * FROM KanbanTask WHERE id = ?');
+          const result = stmt.get(options.where.id);
+          return result || null;
+        },
+        create: (options) => {
+          const id = require('crypto').randomUUID();
+          const now = new Date().toISOString();
+          const data = options.data;
+          const stmt = db.prepare(
+            'INSERT INTO KanbanTask (id, title, description, status, position, priority, dueDate, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+          );
+          stmt.run(
+            id, 
+            data.title, 
+            data.description || null, 
+            data.status || 'todo', 
+            data.position || 0,
+            data.priority || 'medium',
+            data.dueDate || null,
+            now, 
+            now
+          );
+          const created = { 
+            id, 
+            title: data.title,
+            description: data.description || null,
+            status: data.status || 'todo',
+            position: data.position || 0,
+            priority: data.priority || 'medium',
+            dueDate: data.dueDate || null,
+            createdAt: now, 
+            updatedAt: now 
+          };
+          console.log('KanbanTask created:', created);
+          return created;
+        },
+        update: (options) => {
+          const now = new Date().toISOString();
+          const fields = [];
+          const values = [];
+          const data = options.data;
+          
+          if (data.title !== undefined) {
+            fields.push('title = ?');
+            values.push(data.title);
+          }
+          if (data.description !== undefined) {
+            fields.push('description = ?');
+            values.push(data.description);
+          }
+          if (data.status !== undefined) {
+            fields.push('status = ?');
+            values.push(data.status);
+          }
+          if (data.position !== undefined) {
+            fields.push('position = ?');
+            values.push(data.position);
+          }
+          if (data.priority !== undefined) {
+            fields.push('priority = ?');
+            values.push(data.priority);
+          }
+          if (data.dueDate !== undefined) {
+            fields.push('dueDate = ?');
+            values.push(data.dueDate);
+          }
+          
+          fields.push('updatedAt = ?');
+          values.push(now);
+          values.push(options.where.id);
+          
+          const stmt = db.prepare(`UPDATE KanbanTask SET ${fields.join(', ')} WHERE id = ?`);
+          stmt.run(...values);
+          const selectStmt = db.prepare('SELECT * FROM KanbanTask WHERE id = ?');
+          return selectStmt.get(options.where.id);
+        },
+        delete: (options) => {
+          const stmt = db.prepare('DELETE FROM KanbanTask WHERE id = ?');
           stmt.run(options.where.id);
           return { id: options.where.id };
         }

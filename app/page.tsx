@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import Sidebar from '@/components/Sidebar';
 import Dashboard from '@/components/Dashboard';
 import NotePage from '@/components/NotePage';
 import CanvasView, { CanvasViewHandle } from '@/components/CanvasView';
@@ -11,13 +10,13 @@ import ErrorMessage from '@/components/ErrorMessage';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { storage } from '@/lib/storage';
 import { fetchYouTubeMetadata } from '@/lib/youtube';
-import { VideoNote, Folder } from '@/types';
+import { VideoNote } from '@/types';
 import { canvasAPI } from '@/lib/electronAPI';
-import { Layers, Grid3x3, Download, Upload } from 'lucide-react';
+import { Layers, Grid3x3, Download, Upload, ArrowLeft } from 'lucide-react';
+import KanbanBoard from '@/components/KanbanBoard';
 
 export default function Home() {
   const { t } = useTranslation('common');
-  const [folders, setFolders] = useState<Folder[]>([]);
   const [notes, setNotes] = useState<VideoNote[]>([]);
   const [selectedFolderId, setSelectedFolderId] = useState('root');
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
@@ -27,7 +26,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // New canvas state
-  const [viewMode, setViewMode] = useState<'notes' | 'canvas'>('notes');
+  const [viewMode, setViewMode] = useState<'notes' | 'canvas' | 'kanban'>('notes');
   const [selectedCanvasId, setSelectedCanvasId] = useState<string | null>(null);
   const [canvasData, setCanvasData] = useState<{ canvasId: string; nodes: any[]; edges: any[] } | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -42,6 +41,12 @@ export default function Home() {
       setSaveStatus('unsaved');
     }
   }, [hasUnsavedChanges]);
+  
+  // Handle unsaved changes - useCallback ile sarmalanmalı ki ref'ler stabil kalsın
+  const handleUnsavedChanges = useCallback((hasChanges: boolean) => {
+    console.log('[UNSAVED CHANGES] Setting unsaved changes to:', hasChanges);
+    setHasUnsavedChanges(hasChanges);
+  }, []);
   
   // SORUN 4 FIX: Node eklenince parent state'i güncelle
   const handleAddNode = (node: any) => {
@@ -60,8 +65,9 @@ export default function Home() {
   useEffect(() => {
     try {
       const data = storage.getData();
-      setFolders(data.folders);
       setNotes(data.notes);
+      // Emit notes count to MainLayout
+      window.dispatchEvent(new CustomEvent('updateNotesCount', { detail: { count: data.notes.length } }));
     } catch (err) {
       setError(t('failedToLoadData'));
     } finally {
@@ -69,33 +75,54 @@ export default function Home() {
     }
   }, []);
 
-  // Add new folder
-  const handleAddFolder = (name: string, parentId: string | null) => {
-    try {
-      const newFolder = storage.addFolder({ name, parentId });
-      setFolders([...folders, newFolder]);
-    } catch (err) {
-      setError(t('failedToCreateFolder'));
-    }
-  };
+  // Update notes count whenever notes change
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('updateNotesCount', { detail: { count: notes.length } }));
+  }, [notes.length]);
 
-  // Delete folder
-  const handleDeleteFolder = (folderId: string) => {
-    if (folderId === 'root') return;
-    if (confirm(t('confirmDeleteFolder'))) {
-      try {
-        storage.deleteFolder(folderId);
-        const data = storage.getData();
-        setFolders(data.folders);
-        setNotes(data.notes);
-        if (selectedFolderId === folderId) {
-          setSelectedFolderId('root');
-        }
-      } catch (err) {
-        setError(t('failedToCreateFolder')); // reusing, could make separate
-      }
-    }
-  };
+  // Listen for sidebar events
+  useEffect(() => {
+    const handleSelectCanvas = (e: CustomEvent) => {
+      const { canvasId } = e.detail;
+      handleCanvasSelect(canvasId);
+    };
+
+    const handleSelectFolder = (e: CustomEvent) => {
+      const { folderId } = e.detail;
+      setSelectedFolderId(folderId);
+      setQuickFilter(null);
+      setViewMode('notes');
+      setSelectedCanvasId(null);
+    };
+
+    const handleQuickFilterEvent = (e: CustomEvent) => {
+      const { filter } = e.detail;
+      handleQuickFilter(filter);
+    };
+
+    const handleSearchEvent = (e: CustomEvent) => {
+      const { query } = e.detail;
+      handleSearch(query);
+    };
+
+    const handleKanbanOpen = () => {
+      setViewMode('kanban');
+    };
+
+    window.addEventListener('selectCanvas', handleSelectCanvas as EventListener);
+    window.addEventListener('selectFolder', handleSelectFolder as EventListener);
+    window.addEventListener('quickFilter', handleQuickFilterEvent as EventListener);
+    window.addEventListener('search', handleSearchEvent as EventListener);
+    window.addEventListener('openKanban', handleKanbanOpen as EventListener);
+
+    return () => {
+      window.removeEventListener('selectCanvas', handleSelectCanvas as EventListener);
+      window.removeEventListener('selectFolder', handleSelectFolder as EventListener);
+      window.removeEventListener('quickFilter', handleQuickFilterEvent as EventListener);
+      window.removeEventListener('search', handleSearchEvent as EventListener);
+      window.removeEventListener('openKanban', handleKanbanOpen as EventListener);
+    };
+  }, []);
 
   // Add new note
   const handleAddNote = async (url: string) => {
@@ -163,6 +190,11 @@ export default function Home() {
     try {
       console.log(`[LOAD] Switching to canvas ${canvasId}`);
       
+      // Önce eski state'i temizle
+      setHasUnsavedChanges(false);
+      setSaveStatus('saved');
+      setCanvasData(null);
+      
       setViewMode('canvas');
       setSelectedCanvasId(canvasId);
       setSelectedNoteId(null); // Clear note selection
@@ -217,11 +249,11 @@ export default function Home() {
     }
   };
 
-  // Handle canvas save
-  const handleCanvasSave = async (nodes: any[], edges: any[], targetCanvasId?: string) => {
+  // Handle canvas save - useCallback ile sarmalanmalı ki ref'ler stabil kalsın
+  const handleCanvasSave = useCallback(async (nodes: any[], edges: any[], targetCanvasId?: string) => {
     const canvasIdToSave = targetCanvasId || selectedCanvasId;
     if (!canvasIdToSave) {
-      console.warn('No canvas ID to save');
+      console.warn('[SAVE] No canvas ID to save');
       return;
     }
     
@@ -231,31 +263,38 @@ export default function Home() {
       // Canvas hala var mı kontrol et (silinmiş olabilir)
       const canvas = await canvasAPI.getById(canvasIdToSave);
       if (!canvas) {
-        console.warn(`Canvas ${canvasIdToSave} not found, skipping save`);
+        console.warn(`[SAVE] Canvas ${canvasIdToSave} not found, skipping save`);
+        setSaveStatus('saved');
         return;
       }
 
       const flowData = JSON.stringify({ nodes, edges });
       
-      // SORUN 9 FIX: Boş string tuzağını önle - validation
-      if (!flowData || flowData === '' || flowData === '{}' || flowData === '{"nodes":[],"edges":[]}') {
-        console.warn('[SAVE] Preventing empty data save - data validation failed');
+      // SORUN 4 FIX: Boş canvas geçerli bir durumdur - sadece null/undefined/bozuk veriyi engelle
+      if (!flowData || flowData === '' || flowData === '{}') {
+        console.warn('[SAVE] Invalid data format - cannot save malformed data');
         setSaveStatus('unsaved');
         setError(t('cannotSaveEmptyCanvas'));
         return;
       }
       
+      // ✅ Boş array'ler artık kaydedilebilir: {"nodes":[],"edges":[]}
       console.log(`[SAVE] Canvas ${canvasIdToSave}: ${nodes.length} nodes, ${edges.length} edges`);
       console.log(`[SAVE] Data to save:`, flowData.substring(0, 200)); // İlk 200 karakter log
       
       const result = await canvasAPI.update(canvasIdToSave, { data: flowData });
       console.log(`[SAVE] Update result:`, result ? 'success' : 'failed');
       
-      // Sadece aktif canvas'ta state'i güncelle
+      if (!result) {
+        throw new Error('Canvas update returned false');
+      }
+      
+      // Başarılı kaydetme sonrası - parent state'i GÜNCELLEME!
+      // CanvasView zaten doğru state'e sahip, parent'ı güncellemek gereksiz re-render yaratır
       if (canvasIdToSave === selectedCanvasId) {
-        setCanvasData({ canvasId: canvasIdToSave, nodes, edges });
+        console.log('[SAVE] Save successful, not updating parent state (child already has correct data)');
         setHasUnsavedChanges(false);
-        setTimeout(() => setSaveStatus('saved'), 500);
+        setSaveStatus('saved');
       }
     } catch (err) {
       // Canvas silinmişse hata verme, sadece log yaz
@@ -263,7 +302,7 @@ export default function Home() {
       setError(t('failedToSaveCanvas'));
       setSaveStatus('unsaved');
     }
-  };
+  }, [selectedCanvasId, t]);
 
   // Get notes for selected folder with filters
   const getFilteredNotes = () => {
@@ -306,7 +345,7 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden theme-aware-layout">
+    <div className="flex-1 flex flex-col overflow-hidden theme-aware-layout">
       <AnimatePresence>
         {error && (
           <ErrorMessage
@@ -316,25 +355,48 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <Sidebar
-        folders={folders}
-        selectedFolderId={selectedFolderId}
-        onFolderSelect={(id) => {
-          setSelectedFolderId(id);
-          setQuickFilter(null); // Clear quick filter when selecting folder
-          setViewMode('notes'); // Switch to notes view
-          setSelectedCanvasId(null); // Clear canvas selection
-        }}
-        onAddFolder={handleAddFolder}
-        onDeleteFolder={handleDeleteFolder}
-        totalNotes={notes.length}
-        onQuickFilter={handleQuickFilter}
-        onSearch={handleSearch}
-        onCanvasSelect={handleCanvasSelect}
-      />
-
       <AnimatePresence mode="wait">
-        {viewMode === 'canvas' && selectedCanvasId && canvasData ? (
+        {viewMode === 'kanban' ? (
+          <motion.div
+            key="kanban"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex-1 flex flex-col overflow-hidden"
+          >
+            {/* Kanban Header */}
+            <motion.header
+              initial={{ y: -100 }}
+              animate={{ y: 0 }}
+              className="border-b-2 border-[var(--border)] p-6"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => setViewMode('notes')}
+                    className="p-2 hover:bg-[var(--surface-hover)] transition-colors"
+                    title={t('back')}
+                  >
+                    <ArrowLeft size={24} />
+                  </button>
+                  <div>
+                    <h1 className="text-3xl font-display font-bold uppercase tracking-wider">
+                      {t('kanbanBoard')}
+                    </h1>
+                    <p className="text-sm font-mono text-[var(--foreground-muted)] mt-1">
+                      {t('kanbanBoardDescription')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.header>
+
+            {/* Kanban Content */}
+            <main className="flex-1 overflow-hidden bg-[var(--background)]">
+              <KanbanBoard />
+            </main>
+          </motion.div>
+        ) : viewMode === 'canvas' && selectedCanvasId && canvasData ? (
           <motion.div
             key="canvas"
             initial={{ opacity: 0, x: 100 }}
@@ -474,12 +536,13 @@ export default function Home() {
             {/* Canvas View */}
             <div className="flex-1">
               <CanvasView
+                key={canvasData.canvasId}
                 canvasId={canvasData.canvasId}
                 canvasName={`Canvas ${canvasData.canvasId.slice(0, 8)}`}
                 initialNodes={canvasData.nodes}
                 initialEdges={canvasData.edges}
                 onSave={handleCanvasSave}
-                onUnsavedChanges={(hasChanges) => setHasUnsavedChanges(hasChanges)}
+                onUnsavedChanges={handleUnsavedChanges}
                 onAddNode={handleAddNode}
                 saveStatus={saveStatus}
                 selectedTool={selectedTool}

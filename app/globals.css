@@ -365,8 +365,11 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-foreground: var(--foreground);
-  --font-display: var(--font-display);
-  --font-mono: var(--font-mono);
+  /* Using system fonts for better offline support */
+  --font-display: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+  --font-editorial-display: ui-serif, Georgia, serif;
+  --font-editorial-body: ui-sans-serif, system-ui, sans-serif;
 }
 
 * {
@@ -399,6 +402,16 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-secondary);
+}
+
+/* Hidden Scrollbar */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 /* Custom Selection */
@@ -820,4 +833,73 @@ body {
 .btn-brutal-secondary:hover {
   box-shadow: 6px 6px 0px var(--border);
   transform: translate(-2px, -2px);
+}
+
+/* Kanban Board Specific Styles */
+.kanban-column-header {
+  font-family: var(--font-mono), monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kanban-task-card {
+  transition: all 0.2s ease;
+  cursor: grab;
+  border-radius: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.kanban-task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.kanban-task-card:active {
+  cursor: grabbing;
+}
+
+.kanban-task-card.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.kanban-column-dropzone {
+  transition: all 0.2s;
+}
+
+.kanban-column-dropzone.drag-over {
+  background-color: var(--surface-hover);
+  border-color: var(--accent-primary);
+}
+
+/* Kanban Priority Indicators */
+.priority-low {
+  background-color: var(--accent-blue);
+}
+
+.priority-medium {
+  background-color: var(--accent-tertiary);
+}
+
+.priority-high {
+  background-color: var(--accent-primary);
+}
+
+/* Scrollbar styling for Kanban columns */
+.kanban-column-dropzone::-webkit-scrollbar {
+  width: 8px;
+}
+
+.kanban-column-dropzone::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.kanban-column-dropzone::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 0;
+}
+
+.kanban-column-dropzone::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
 }

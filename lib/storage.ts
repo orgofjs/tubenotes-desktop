@@ -8,29 +8,39 @@ export const storage = {
       return { notes: [], folders: [] };
     }
     
-    const data = localStorage.getItem(DATA_KEY);
-    if (!data) {
-      const initialData: AppData = {
-        notes: [],
-        folders: [
-          {
-            id: 'root',
-            name: 'Tüm Notlar',
-            parentId: null,
-            createdAt: new Date().toISOString(),
-          },
-        ],
-      };
-      localStorage.setItem(DATA_KEY, JSON.stringify(initialData));
-      return initialData;
+    try {
+      const data = localStorage.getItem(DATA_KEY);
+      if (!data) {
+        const initialData: AppData = {
+          notes: [],
+          folders: [
+            {
+              id: 'root',
+              name: 'Tüm Notlar',
+              parentId: null,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        };
+        localStorage.setItem(DATA_KEY, JSON.stringify(initialData));
+        return initialData;
+      }
+      
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('localStorage error:', error);
+      // Return minimal data instead of crashing
+      return { notes: [], folders: [{ id: 'root', name: 'Tüm Notlar', parentId: null, createdAt: new Date().toISOString() }] };
     }
-    
-    return JSON.parse(data);
   },
 
   saveData: (data: AppData): void => {
     if (typeof window === 'undefined') return;
-    localStorage.setItem(DATA_KEY, JSON.stringify(data));
+    try {
+      localStorage.setItem(DATA_KEY, JSON.stringify(data));
+    } catch (error) {
+      console.error('localStorage save error:', error);
+    }
   },
 
   addNote: (note: Omit<VideoNote, 'id' | 'createdAt' | 'updatedAt'>): VideoNote => {

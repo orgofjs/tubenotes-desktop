@@ -105,6 +105,7 @@ data/data.json
 # optional docs (not needed for users)
 DEMO_DATA.md
 QUICKSTART.md
+AGENTS.md
 
 # github internal folder
 .github/UPDATES/

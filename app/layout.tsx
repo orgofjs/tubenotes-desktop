@@ -1,31 +1,9 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Space_Mono, Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import I18nProvider from '../components/I18nProvider';
+import MainLayout from '../components/MainLayout';
 
-const bebasNeue = Bebas_Neue({
-  weight: '400',
-  variable: "--font-display",
-  subsets: ["latin"],
-});
-
-const spaceMono = Space_Mono({
-  weight: ['400', '700'],
-  variable: "--font-mono",
-  subsets: ["latin"],
-});
-
-const playfairDisplay = Playfair_Display({
-  weight: ['400', '500', '600', '700'],
-  variable: "--font-editorial-display",
-  subsets: ["latin"],
-});
-
-const inter = Inter({
-  weight: ['300', '400', '500', '600'],
-  variable: "--font-editorial-body",
-  subsets: ["latin"],
-});
+// Using system fonts instead of Google Fonts for better offline support in Electron
 
 export const metadata: Metadata = {
   title: "TubeNotes - Visual Video Knowledge Base",
@@ -62,12 +40,27 @@ function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="mobile-web-app-capable" content="yes" />
+        {/* Initialize theme before paint to prevent flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('tubenotes_theme') || 'cyberpunk-dark';
+                  document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {
+                  document.documentElement.setAttribute('data-theme', 'cyberpunk-dark');
+                }
+              })();
+            `,
+          }}
+        />
       </head>
-      <body
-        className={`${bebasNeue.variable} ${spaceMono.variable} ${playfairDisplay.variable} ${inter.variable} antialiased`}
-      >
+      <body className="antialiased">
         <I18nProvider>
-          {children}
+          <MainLayout>
+            {children}
+          </MainLayout>
         </I18nProvider>
       </body>
     </html>

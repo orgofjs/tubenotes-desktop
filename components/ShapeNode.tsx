@@ -38,14 +38,22 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
 
   const handleBlur = () => {
     setIsEditing(false);
-    // Data mutasyonu kaldırıldı - React Flow otomatik olarak data'yı senkronize eder
+    // KRİTİK: Blur'da data'yı güncelle
+    data.label = label;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newLabel = e.target.value;
+    setLabel(newLabel);
+    // KRİTİK: Her değişiklikte data'yı güncelle - blur'u bekleme
+    data.label = newLabel;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       setIsEditing(false);
-      // Data mutasyonu kaldırıldı - React Flow otomatik olarak data'yı senkronize eder
+      // Data zaten onChange'de güncelleniyor
     }
   };
 
@@ -152,11 +160,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           {isEditing ? (
             <textarea
               value={label}
-              onChange={(e) => {
-                const newLabel = e.target.value;
-                setLabel(newLabel);
-                data.label = newLabel; // Immediate update for React Flow
-              }}
+              onChange={handleChange}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               autoFocus

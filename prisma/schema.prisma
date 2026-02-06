@@ -7,6 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model Folder {
@@ -42,4 +43,18 @@ model Canvas {
   data      String       @default("{}") // React Flow data as JSON string (nodes + edges)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+}
+
+model KanbanTask {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @default("")
+  status      String   @default("todo") // todo, in-progress, on-hold, done
+  position    Int      @default(0) // For ordering within column
+  priority    String   @default("medium") // low, medium, high
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([status, position])
 }

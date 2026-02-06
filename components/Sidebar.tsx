@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Search, Folder, FolderPlus, ChevronRight, ChevronDown, Star, Clock, Trash2, Grid3x3, Plus, Edit2, Settings, Menu, X } from 'lucide-react';
+import { Search, Folder, FolderPlus, ChevronRight, ChevronDown, Star, Clock, Trash2, Grid3x3, Plus, Edit2, Settings, Menu, X, Kanban } from 'lucide-react';
 import { Folder as FolderType } from '@/types';
 import SettingsModal from './SettingsModal';
 import { canvasAPI } from '@/lib/electronAPI';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface Canvas {
   id: string;
@@ -41,6 +42,8 @@ export default function Sidebar({
   onCanvasSelect,
 }: SidebarProps) {
   const { t } = useTranslation('common');
+  const router = useRouter();
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['root']));
   const [isAddingFolder, setIsAddingFolder] = useState(false);
@@ -53,6 +56,26 @@ export default function Sidebar({
   const [editingCanvasId, setEditingCanvasId] = useState<string | null>(null);
   const [editingCanvasName, setEditingCanvasName] = useState('');
   const [selectedCanvasId, setSelectedCanvasId] = useState<string | null>(null);
+
+  // Global active selection state
+  type SelectionType = 'folder' | 'canvas' | 'quickAction';
+  const [activeSelection, setActiveSelection] = useState<{
+    type: SelectionType;
+    id: string;
+  } | null>(() => {
+    // Load from localStorage on mount
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sidebarActiveSelection');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          // Fallback to default
+        }
+      }
+    }
+    return { type: 'folder', id: selectedFolderId };
+  });
 
   // Collapsible sidebar state
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -72,6 +95,13 @@ export default function Sidebar({
       localStorage.setItem('sidebarCollapsed', isCollapsed.toString());
     }
   }, [isCollapsed]);
+
+  // Save active selection to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined' && activeSelection) {
+      localStorage.setItem('sidebarActiveSelection', JSON.stringify(activeSelection));
+    }
+  }, [activeSelection]);
 
   // Load canvases on mount
   useEffect(() => {
@@ -153,6 +183,7 @@ export default function Sidebar({
 
   const handleCanvasClick = (canvasId: string) => {
     setSelectedCanvasId(canvasId);
+    setActiveSelection({ type: 'canvas', id: canvasId });
     if (onCanvasSelect) {
       onCanvasSelect(canvasId);
     }
@@ -178,14 +209,17 @@ export default function Sidebar({
             className={`
               flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-4 py-3'} cursor-pointer
               transition-all duration-200
-              ${isSelected
+              ${activeSelection?.type === 'folder' && activeSelection?.id === folder.id
                 ? 'bg-[var(--accent-primary)] text-[var(--background)]'
                 : 'hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)]'
               }
-              border-l-3 ${isSelected ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
+              border-l-3 ${activeSelection?.type === 'folder' && activeSelection?.id === folder.id ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
             `}
             style={{ paddingLeft: isCollapsed ? undefined : `${depth * 20 + 12}px` }}
-            onClick={() => onFolderSelect(folder.id)}
+            onClick={() => {
+              onFolderSelect(folder.id);
+              setActiveSelection({ type: 'folder', id: folder.id });
+            }}
             title={isCollapsed ? folder.name : undefined}
           >
             {!isCollapsed && hasChildren && (
@@ -361,16 +395,24 @@ export default function Sidebar({
           <QuickActionButton
             icon={<Star size={isCollapsed ? 22 : 16} />}
             label={t('important')}
-            onClick={() => onQuickFilter('important')}
+            onClick={() => {
+              onQuickFilter('important');
+              setActiveSelection({ type: 'quickAction', id: 'important' });
+            }}
             isCollapsed={isCollapsed}
             tooltip={t('important')}
+            isActive={activeSelection?.type === 'quickAction' && activeSelection?.id === 'important'}
           />
           <QuickActionButton
             icon={<Clock size={isCollapsed ? 22 : 16} />}
             label={t('completed')}
-            onClick={() => onQuickFilter('completed')}
+            onClick={() => {
+              onQuickFilter('completed');
+              setActiveSelection({ type: 'quickAction', id: 'completed' });
+            }}
             isCollapsed={isCollapsed}
             tooltip={t('completed')}
+            isActive={activeSelection?.type === 'quickAction' && activeSelection?.id === 'completed'}
           />
         </div>
 
@@ -543,11 +585,11 @@ export default function Sidebar({
                     className={`
                       flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-3 py-2'} cursor-pointer
                       transition-all duration-200
-                      ${selectedCanvasId === canvas.id
+                      ${activeSelection?.type === 'canvas' && activeSelection?.id === canvas.id
                         ? 'bg-[var(--accent-primary)] text-[var(--background)]'
                         : 'hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)]'
                       }
-                      border-l-3 ${selectedCanvasId === canvas.id ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
+                      border-l-3 ${activeSelection?.type === 'canvas' && activeSelection?.id === canvas.id ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
                     `}
                     onClick={() => handleCanvasClick(canvas.id)}
                     title={isCollapsed ? canvas.name : undefined}
@@ -585,6 +627,44 @@ export default function Sidebar({
             ))}
           </div>
         </div>
+
+        {/* Kanban Board Section */}
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} border-t-2 border-[var(--border)]`}>
+          <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
+            {!isCollapsed && (
+              <h2 className="text-xs font-mono text-[var(--foreground-muted)] uppercase">
+                {t('kanbanBoard')}
+              </h2>
+            )}
+          </div>
+          <div className="mt-3">
+            <div
+              className={`
+                flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-3 py-2'} cursor-pointer
+                transition-all duration-200
+                ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'kanban'
+                  ? 'bg-[var(--accent-primary)] text-[var(--background)]'
+                  : 'hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)]'
+                }
+                border-l-3 ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'kanban' ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
+              `}
+              onClick={() => {
+                // Save current selection for return (no longer needed since no navigation)
+                // Dispatch event to open Kanban view
+                window.dispatchEvent(new CustomEvent('openKanban'));
+                setActiveSelection({ type: 'quickAction', id: 'kanban' });
+              }}
+              title={isCollapsed ? t('kanbanBoard') : undefined}
+            >
+              <Kanban size={isCollapsed ? 22 : 16} />
+              {!isCollapsed && (
+                <span className="flex-1 text-sm font-mono truncate">
+                  {t('kanbanBoard')}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Footer - Total Notes & Settings */}
@@ -608,25 +688,26 @@ export default function Sidebar({
           </AnimatePresence>
 
           {/* Settings Button */}
-          <div className={`p-4 ${!isCollapsed && 'border-t-2 border-[var(--border)]'}`}>
+          <div className={`${!isCollapsed && 'border-t-2 border-[var(--border)]'}`}>
             <button
-              onClick={() => setIsSettingsOpen(true)}
+              onClick={() => {
+                setIsSettingsOpen(true);
+                setActiveSelection({ type: 'quickAction', id: 'settings' });
+              }}
               className={`
                 w-full flex items-center ${isCollapsed ? 'justify-center py-5' : 'gap-3 py-3'}
-                bg-[var(--accent-primary)] text-[var(--background)]
-                hover:bg-[var(--accent-secondary)]
-                transition-colors
-                shadow-[4px_4px_0px_var(--border)]
-                hover:shadow-[6px_6px_0px_var(--border)]
-                active:shadow-[2px_2px_0px_var(--border)]
-                active:translate-x-[2px] active:translate-y-[2px]
-                transition-all duration-150
+                transition-all duration-200
+                text-sm font-mono
+                ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'settings'
+                  ? 'bg-[var(--accent-primary)] text-[var(--background)] border-l-3 border-[var(--accent-secondary)]'
+                  : 'text-[var(--foreground-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] border-l-3 border-transparent'
+                }
               `}
               title={isCollapsed ? t('settings') : undefined}
             >
               <Settings size={isCollapsed ? 24 : 18} />
               {!isCollapsed && (
-                <span className="text-sm font-mono uppercase">{t('settings')}</span>
+                <span className="uppercase">{t('settings')}</span>
               )}
             </button>
           </div>
@@ -644,23 +725,27 @@ function QuickActionButton({
   label, 
   onClick,
   isCollapsed,
-  tooltip
+  tooltip,
+  isActive = false
 }: { 
   icon: React.ReactNode; 
   label: string; 
   onClick: () => void;
   isCollapsed: boolean;
   tooltip: string;
+  isActive?: boolean;
 }) {
   return (
     <button
       onClick={onClick}
       className={`
         w-full flex items-center ${isCollapsed ? 'justify-center py-5' : 'gap-2 px-4 py-3'}
-        text-[var(--foreground-muted)]
-        hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]
         transition-all duration-200
         text-sm font-mono
+        ${isActive
+          ? 'bg-[var(--accent-primary)] text-[var(--background)] border-l-3 border-[var(--accent-secondary)]'
+          : 'text-[var(--foreground-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] border-l-3 border-transparent'
+        }
       `}
       title={isCollapsed ? tooltip : undefined}
     >

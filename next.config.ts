@@ -3,7 +3,8 @@ import withPWA from "@ducanh2912/next-pwa";
 
 const nextConfig: NextConfig = {
   output: 'export', // Static export for Electron
-  assetPrefix: './', // Use relative paths for assets
+  distDir: 'out', // Output directory
+  trailingSlash: true, // Required for client-side navigation in file:// protocol
   images: {
     unoptimized: true, // Required for static export
     remotePatterns: [
@@ -29,6 +30,6 @@ const nextConfig: NextConfig = {
 
 export default withPWA({
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
-  register: true,
+  disable: true, // Disabled in both dev and production (Electron doesn't need PWA)
+  register: false,
 })(nextConfig);

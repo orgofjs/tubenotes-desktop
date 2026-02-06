@@ -71,20 +71,20 @@ function CanvasViewInner({
   const [internalNodes, setInternalNodes, onNodesChange] = useNodesState(initialNodes);
   const [internalEdges, setInternalEdges, onEdgesChange] = useEdgesState(initialEdges);
   
-  // SORUN 5 FIX: Ref otomatik senkronizasyonu - useEffect ile state değiştiğinde ref'i güncelle
+  // SORUN 1-3 FIX: Latest Ref Pattern - Render sırasında güncellenen ref'ler
+  // Ref'leri useEffect yerine render gövdesinde güncelle (race condition önlenir)
   const nodesRef = React.useRef(internalNodes);
   const edgesRef = React.useRef(internalEdges);
+  nodesRef.current = internalNodes;
+  edgesRef.current = internalEdges;
   
-  // State değişince ref'i otomatik güncelle (React Flow'un kendi güncellemeleri dahil)
-  React.useEffect(() => {
-    nodesRef.current = internalNodes;
-    console.log('[SYNC] Nodes ref auto-updated, count:', internalNodes.length);
-  }, [internalNodes]);
-  
-  React.useEffect(() => {
-    edgesRef.current = internalEdges;
-    console.log('[SYNC] Edges ref auto-updated, count:', internalEdges.length);
-  }, [internalEdges]);
+  // SORUN 1-2 FIX: Props'ları ref'lerde tut (stale closure önlenir)
+  const onSaveRef = React.useRef(onSave);
+  const canvasIdRef = React.useRef(canvasId);
+  const onUnsavedChangesRef = React.useRef(onUnsavedChanges);
+  onSaveRef.current = onSave;
+  canvasIdRef.current = canvasId;
+  onUnsavedChangesRef.current = onUnsavedChanges;
   
   // nodes ve edges alias'ları
   const nodes = internalNodes;
@@ -99,71 +99,127 @@ function CanvasViewInner({
   const reactFlowInstance = useReactFlow();
   const viewport = useViewport();
 
+  // SORUN 5-6 FIX: InitialDataRef - canvas başlangıç durumunu saklar (tüm useEffect'lerden ÖNCE tanımlanmalı)
+  // React Flow'un internal field'larını temizleyen helper
+  const cleanNodeData = (node: any) => {
+    const { measured, selected, dragging, ...cleanNode } = node;
+    return cleanNode;
+  };
+  
+  const cleanEdgeData = (edge: any) => {
+    const { selected, ...cleanEdge } = edge;
+    return cleanEdge;
+  };
+  
+  const getCleanDataString = (nodes: any[], edges: any[]) => {
+    const cleanNodes = nodes.map(cleanNodeData);
+    const cleanEdges = edges.map(cleanEdgeData);
+    return JSON.stringify({ nodes: cleanNodes, edges: cleanEdges });
+  };
+  
+  const initialDataRef = React.useRef<string>(getCleanDataString(initialNodes, initialEdges));
+
   // Component mount olduğunda log
   React.useEffect(() => {
     console.log(`Canvas ${canvasId} mounted with ${initialNodes?.length || 0} nodes`);
   }, []);
   
-  // SORUN 10 FIX: initialNodes/initialEdges değiştiğinde güncelle (key prop yerine)
+  // SORUN 5-6 FIX: Canvas switch'te state ve initialDataRef'i senkronize güncelle
   React.useEffect(() => {
     if (initialNodes && initialEdges) {
       console.log(`[CANVAS UPDATE] Updating canvas ${canvasId} with new data:`, initialNodes.length, 'nodes');
       setInternalNodes(initialNodes);
       setInternalEdges(initialEdges);
-      // Initial data ref'i de güncelle
-      initialDataRef.current = JSON.stringify({ nodes: initialNodes, edges: initialEdges });
+      // Initial data ref'i de senkronize güncelle - canvas değiştiğinde yeni başlangıç noktası
+      const newInitialData = getCleanDataString(initialNodes, initialEdges);
+      initialDataRef.current = newInitialData;
+      console.log('[CANVAS SWITCH] InitialDataRef synchronized (clean data)');
     }
-  }, [canvasId, initialNodes, initialEdges, setInternalNodes, setInternalEdges]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canvasId]); // Sadece canvasId değişince - initialNodes/initialEdges dependency eklenirse double mount olur!
 
   const onConnect = useCallback(
     (params: Connection | Edge) => setInternalEdges((eds) => addEdge(params, eds)),
     [setInternalEdges]
   );
 
-  // Manual save - Ctrl+S ile çalışır
+  // SORUN 1-2 FIX: handleManualSave Latest Ref Pattern - hiç değişmeyen stabil fonksiyon
   const handleManualSave = useCallback(() => {
-    if (onSave) {
+    console.log('[MANUAL SAVE] Starting save process...');
+    
+    // KRİTİK FIX: Aktif elementi blur et - node içindeki input/textarea değişikliklerini commit et
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement && activeElement !== document.body) {
+      console.log('[MANUAL SAVE] Blurring active element:', activeElement.tagName, activeElement.className);
+      activeElement.blur();
+      
+      // Blur işleminin tamamlanması ve React Flow state'inin güncellenmesi için kısa gecikme
+      // CodeMirror gibi ağır editor'lar için 100ms yeterli
+      setTimeout(() => {
+        performSave();
+      }, 100);
+    } else {
+      performSave();
+    }
+  }, []); // ✅ Empty dependency - fonksiyon asla yeniden oluşturulmaz
+  
+  // Asıl kaydetme işlemi - blur sonrası çağrılır
+  const performSave = useCallback(() => {
+    if (onSaveRef.current) {
       // Ref'ten güncel değerleri al (stale closure sorununu önler)
       const currentNodes = nodesRef.current;
       const currentEdges = edgesRef.current;
+      const currentCanvasId = canvasIdRef.current;
       
-      console.log(`Manual save: ${canvasId} with ${currentNodes.length} nodes, ${currentEdges.length} edges`);
-      onSave(currentNodes, currentEdges, canvasId);
-      onUnsavedChanges?.(false);
+      console.log(`[MANUAL SAVE] Canvas ${currentCanvasId}: ${currentNodes.length} nodes, ${currentEdges.length} edges`);
+      console.log('[MANUAL SAVE] Current nodes:', JSON.stringify(currentNodes).substring(0, 150));
+      
+      // onSave çağır - bu async olabilir, await edemeyiz ama Promise döndürebilir
+      const saveResult = onSaveRef.current(currentNodes, currentEdges, currentCanvasId);
+      
+      // Kayıt başlatıldı - initialDataRef'i hemen güncelle (temiz veri ile)
+      const savedData = getCleanDataString(currentNodes, currentEdges);
+      initialDataRef.current = savedData;
+      console.log('[MANUAL SAVE] InitialDataRef updated after save (clean data)');
+      
+      // Unsaved changes'i kapat
+      onUnsavedChangesRef.current?.(false);
+      console.log('[MANUAL SAVE] Save completed');
+    } else {
+      console.warn('[MANUAL SAVE] onSaveRef.current is null or undefined');
     }
-  }, [onSave, canvasId, onUnsavedChanges]);
-
-  // SORUN 7 FIX: Derin karşılaştırma ile değişiklik tespiti (uzunluk değil, içerik)
-  const initialDataRef = React.useRef<string>(JSON.stringify({ nodes: initialNodes, edges: initialEdges }));
-  
-  React.useEffect(() => {
-    // İlk mount'ta referansı güncelle
-    initialDataRef.current = JSON.stringify({ nodes: initialNodes, edges: initialEdges });
   }, []);
   
   React.useEffect(() => {
-    // Derin karşılaştırma: JSON string karşılaştırması
-    const currentDataStr = JSON.stringify({ nodes: internalNodes, edges: internalEdges });
+    // Derin karşılaştırma: JSON string karşılaştırması (React Flow internal field'ları olmadan)
+    const currentDataStr = getCleanDataString(internalNodes, internalEdges);
     const hasChanges = currentDataStr !== initialDataRef.current;
     
     if (hasChanges) {
       console.log('[CHANGE DETECTION] Data changed detected via deep comparison');
-      onUnsavedChanges?.(true);
+      console.log('[CHANGE DETECTION] Current:', currentDataStr.substring(0, 100));
+      console.log('[CHANGE DETECTION] Initial:', initialDataRef.current.substring(0, 100));
+      onUnsavedChangesRef.current?.(true);
     }
-  }, [internalNodes, internalEdges, onUnsavedChanges]);
+  }, [internalNodes, internalEdges]);
 
-  // Ctrl+S keyboard shortcut
+  // SORUN 1 FIX: Ctrl+S keyboard shortcut - event listener artık asla yeniden takılmaz
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
+        console.log('[KEYBOARD] Ctrl+S pressed');
         handleManualSave();
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleManualSave]);
+    console.log('[KEYBOARD] Event listener attached');
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      console.log('[KEYBOARD] Event listener removed');
+    };
+  }, [handleManualSave]); // ✅ handleManualSave artık asla değişmez
 
   // Expose addMarkdownNode to parent
   React.useEffect(() => {

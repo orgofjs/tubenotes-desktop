@@ -30,3 +30,17 @@ export interface YouTubeMetadata {
   channelName?: string;
   duration?: string;
 }
+
+export interface KanbanTask {
+  id: string;
+  title: string;
+  description: string;
+  status: 'todo' | 'in-progress' | 'on-hold' | 'done';
+  position: number;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type KanbanColumn = 'todo' | 'in-progress' | 'on-hold' | 'done';

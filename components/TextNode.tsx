@@ -62,7 +62,10 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
+    const newText = e.target.value;
+    setText(newText);
+    // KRİTİK: Her değişiklikte data'yı güncelle - blur'u bekleme
+    data.label = newText;
     adjustSize();
   };
 

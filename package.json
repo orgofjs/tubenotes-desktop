@@ -1,6 +1,6 @@
 {
   "name": "tubenotes",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "TubeNotes Team",
   "description": "Visual Video Knowledge Base - YouTube video note-taking application",
   "main": "main.js",
@@ -22,9 +22,12 @@
   "dependencies": {
     "@codemirror/lang-markdown": "^6.5.0",
     "@codemirror/theme-one-dark": "^6.1.3",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@ducanh2912/next-pwa": "^10.2.9",
     "@prisma/adapter-better-sqlite3": "^7.3.0",
-    "@prisma/client": "^7.3.0",
+    "@prisma/client": "^6.19.2",
     "@tiptap/extension-character-count": "^3.15.3",
     "@tiptap/extension-link": "^3.15.3",
     "@tiptap/extension-placeholder": "^3.15.3",
