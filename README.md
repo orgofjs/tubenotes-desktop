@@ -47,19 +47,18 @@
 
 ## Türkçe
 
-### Genel Bakış
 
 TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistemidir. Video notları alın, sonsuz canvas üzerinde fikirlerinizi görselleştirin, şekiller çizin, markdown notları ekleyin, Kanban görevlerinizi yönetin. Masaüstü uygulaması (Windows, macOS, Linux) olarak kullanılabilir.
 
 ### Ana Özellikler
 
-**Kanban Görevler Modu**
-**Kanvas Not Alanı**
-**YouTube Video Notları**
-**Organizasyon Sistemi**
-**Tema Desteği**
-**Arama ve Filtreleme**
-**Yerel Depolama**
+- Kanban Görevler Modu
+- Kanvas Not Alanı
+- YouTube Video Notları
+- Organizasyon Sistemi
+- Tema Desteği
+- Arama ve Filtreleme
+- Yerel Depolama
 
 ### Teknolojiler
 
@@ -155,7 +154,7 @@ npm run build-linux
 
 ### Lisans
 
-MIT Lisansı - [LICENSE](LICENSE) dosyasına bakın.
+Apache 2.0 Lisansı - [LICENSE](LICENSE) dosyasına bakın.
 
 ---
 
@@ -163,19 +162,18 @@ MIT Lisansı - [LICENSE](LICENSE) dosyasına bakın.
 
 ## English
 
-### Overview
 
 TubeNotes is a modern visual knowledge management system for YouTube videos. Take video notes, visualize your ideas on infinite canvas, draw shapes, manage your Kanban tasks and add markdown notes. Available as desktop application (Windows, macOS, Linux).
 
 ### Key Features
 
-**Kanban Task Mode**
-**Canvas Mode**
-**YouTube Video Notes**
-**Organization System**
-**Theme Support**
-**Search & Filtering**
-**Local Storage**
+- Kanban Task Mode
+- Canvas Mode
+- YouTube Video Notes
+- Organization System
+- Theme Support
+- Search & Filtering
+- Local Storage
 
 ### Technologies
 
@@ -271,7 +269,7 @@ Edit `app/globals.css`:
 
 ### License
 
-MIT License - see [LICENSE](LICENSE) file.
+Apache 2.0 License - see [LICENSE](LICENSE) file.
 
 ---
 
