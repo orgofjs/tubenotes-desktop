@@ -6,6 +6,9 @@ on:
       - 'v*' # Örn: v1.0.0
   workflow_dispatch: # Manuel tetikleme için
 
+permissions:
+  contents: write # Release oluşturmak için gerekli izin
+
 jobs:
   release:
     runs-on: windows-latest
