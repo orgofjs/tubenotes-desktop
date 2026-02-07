@@ -1,0 +1,64 @@
+name: Build and Release TubeNotes
+
+on:
+  push:
+    tags:
+      - 'v*' # Örn: v1.0.0
+  workflow_dispatch: # Manuel tetikleme için
+
+jobs:
+  release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild native modules for Electron
+        run: npm run electron-rebuild
+        continue-on-error: false
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Build Next.js
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Build Electron App (Unsigned)
+        run: npm run build-win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_ENV: production
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: Upload unsigned .exe as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tubenotes-unsigned-x64
+          path: dist/*.exe
+          retention-days: 7
+
+      - name: Create Draft Release (unsigned)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.exe
+          draft: true
+          generate_release_notes: true
+          name: TubeNotes ${{ github.ref_name }}
+          body: |
+            ⚠️ **Bu sürüm henüz dijital olarak imzalanmamıştır.**
+            SignPath onayından sonra imzalı sürüm yüklenecektir.
+            
+            ### İndirme
+            - Windows 10/11 (x64): `TubeNotes-Setup-${{ github.ref_name }}.exe`

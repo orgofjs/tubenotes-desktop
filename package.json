@@ -1,8 +1,13 @@
 {
   "name": "tubenotes",
   "version": "0.2.2",
-  "author": "TubeNotes Team",
-  "description": "Visual Video Knowledge Base - YouTube video note-taking application",
+  "author": "orgofjs (https://github.com/orgofjs)",
+  "description": "Visual Video Knowledge Base - note-taking application",
+  "homepage": "https://github.com/orgofjs/tubenotes-desktop#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orgofjs/tubenotes-desktop.git"
+  },
   "main": "main.js",
   "private": true,
   "scripts": {
@@ -12,6 +17,7 @@
     "lint": "eslint",
     "electron": "electron .",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .\"",
+    "electron-rebuild": "electron-rebuild -f -w better-sqlite3",
     "build-electron": "next build && electron-builder",
     "build-win": "next build && electron-builder --win",
     "build-mac": "next build && electron-builder --mac",
@@ -76,6 +82,7 @@
       "prisma/**/*",
       "node_modules/@prisma/**/*",
       "node_modules/.prisma/**/*",
+      "node_modules/better-sqlite3/**/*",
       "package.json"
     ],
     "extraResources": [
@@ -90,9 +97,12 @@
     },
     "win": {
       "target": [
-        "nsis"
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
       ],
-      "icon": "public/icon-512x512.png"
+      "icon": "public/icon.ico"
     },
     "mac": {
       "target": [
@@ -113,7 +123,17 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
-    }
+      "createStartMenuShortcut": true,
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "perMachine": false
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "orgofjs",
+        "repo": "tubenotes-desktop"
+      }
+    ]
   }
 }
