@@ -3,7 +3,6 @@
 ![License](https://img.shields.io/github/license/orgofjs/tubenotes-desktop)
 ![Version](https://img.shields.io/github/v/release/orgofjs/tubenotes-desktop)
 ![Platform](https://img.shields.io/badge/platform-windows-blue)
-![Build Status](https://img.shields.io/github/actions/workflow/status/orgofjs/tubenotes-desktop/build.yml)
 
 <div align="center">
 
