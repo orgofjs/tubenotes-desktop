@@ -111,6 +111,7 @@ AGENTS.md
 .github/UPDATES/
 .github/ProjectFlow.md
 .github/copilot-instructions.md
+.github/frontend-design.md
 
 /lib/generated/prisma
 

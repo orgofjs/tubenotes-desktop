@@ -363,10 +363,6 @@ export default function Sidebar({
               className="p-4"
             >
               <div className="relative">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--foreground)] z-10"
-                  size={16}
-                />
                 <input
                   type="text"
                   placeholder={t('searchNotes')}
@@ -376,7 +372,7 @@ export default function Sidebar({
                     onSearch(e.target.value);
                   }}
                   className="
-                    w-full pl-12 pr-4 py-2
+                    w-full pl-20 pr-4 py-2
                     bg-[var(--background)]
                     border-2 border-[var(--border)]
                     text-sm font-mono
