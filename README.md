@@ -1,5 +1,10 @@
 # TubeNotes - Visual Video Knowledge Base
 
+![License](https://img.shields.io/github/license/orgofjs/tubenotes-desktop)
+![Version](https://img.shields.io/github/v/release/orgofjs/tubenotes-desktop)
+![Platform](https://img.shields.io/badge/platform-windows-blue)
+![Build Status](https://img.shields.io/github/actions/workflow/status/orgofjs/tubenotes-desktop/build.yml)
+
 <div align="center">
 
 
@@ -29,13 +34,13 @@
 ---
 
 > **TR:** 
->Bu proje hem hobi hem ihtiyaç olarak AI ile geliştirilmektedir. Geliştirmeler devam edecektir. 
+>Bu proje hem hobi hem ihtiyaç olarak AI ile geliştirilmektedir. Geliştirmeler devam edecektir. Uygulamayı hemen kullanmak için [Hızlı Başlangıç](#hızlıbaslangıc) kısmına ilerleyin.
 >Planlanan özellikleri ve proje yönlendirmesi [ROADMAP.md](./ROADMAP.md). dosyası içindedir.
 >Geliştirme sürecinin güncel ilerleyişini [GitHub Projeler panosu](https://github.com/users/orgofjs/projects/1/views/1) ve [CHANGELOG.md](CHANGELOG.md) üzerinden takip edebilirsiniz. 
 >Katkı yapmak için [CONTRIBUTING.md](./CONTRIBUTING.md) dosyasından yönergelere ulaşabilirsiniz.
 >
 > **EN:** 
->This project is being developed with AI as both a hobby and a necessity. Development will continue.
+>This project is being developed with AI as both a hobby and a necessity. Development will continue. Go to [Quick Start](#quickstart) to start using the app right away.
 >Planned features and project direction can be found in [ROADMAP.md](./ROADMAP.md).
 >Current development progress can be tracked via the
 [GitHub Projects board](https://github.com/users/orgofjs/projects/1/views/1) and [CHANGELOG.md](CHANGELOG.md).
@@ -47,8 +52,16 @@
 
 ## Türkçe
 
-
 TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistemidir. Video notları alın, sonsuz canvas üzerinde fikirlerinizi görselleştirin, şekiller çizin, markdown notları ekleyin, Kanban görevlerinizi yönetin. Masaüstü uygulaması (Windows, macOS, Linux) olarak kullanılabilir.
+
+<a id="hızlıbaslangıc"></a>
+
+## Hızlı Başlangıç
+
+- Adım 1: [Yayınlar](https://github.com/orgofjs/tubenotes-desktop/releases) sayfasına gidin.
+- Adım 2: En son sürümü indirin `TubeNotes-Setup-0.2.3.exe`.
+- Adım 3: Yükleyin ve not almaya başlayın!
+
 
 ### Ana Özellikler
 
@@ -162,8 +175,15 @@ Apache 2.0 Lisansı - [LICENSE](LICENSE) dosyasına bakın.
 
 ## English
 
-
 TubeNotes is a modern visual knowledge management system for YouTube videos. Take video notes, visualize your ideas on infinite canvas, draw shapes, manage your Kanban tasks and add markdown notes. Available as desktop application (Windows, macOS, Linux).
+
+<a id="quickstart"></a>
+
+## Quick Start
+
+- Step 1: Go to the [Releases](https://github.com/orgofjs/tubenotes-desktop/releases) page.
+- Step 2: Download the latest `TubeNotes-Setup-0.2.3.exe`.
+- Step 3: Install and start taking notes!
 
 ### Key Features
 
