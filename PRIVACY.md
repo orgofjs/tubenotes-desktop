@@ -1,5 +1,7 @@
 # Privacy Policy for TubeNotes
 
+> This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it.
+
 TubeNotes is a local-first application. It does not collect, store, or transmit any user data to external servers.
 
 **Last Updated:** February 2026
