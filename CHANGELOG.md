@@ -2,6 +2,10 @@
 
 All notable changes to TubeNotes will be documented in this file.
 
+## [0.2.4] - 2026-02-11
+
+- Bug fixes and some improvements.
+
 ## [0.2.2] - 2026-02-07
 
 ### Major Features

@@ -18,6 +18,8 @@ import {
   ConnectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ShapeNode from '@/components/ShapeNode';
 import CodeMirrorNode from '@/components/CodeMirrorNode';
 import TextNode from '@/components/TextNode';
@@ -98,6 +100,10 @@ function CanvasViewInner({
   const [dragEnd, setDragEnd] = useState<{ x: number; y: number } | null>(null);
   const reactFlowInstance = useReactFlow();
   const viewport = useViewport();
+  const { t } = useTranslation('common');
+
+  // Track selected nodes for delete button visibility
+  const selectedNodeCount = nodes.filter(n => n.selected).length;
 
   // SORUN 5-6 FIX: InitialDataRef - canvas başlangıç durumunu saklar (tüm useEffect'lerden ÖNCE tanımlanmalı)
   // React Flow'un internal field'larını temizleyen helper
@@ -249,6 +255,15 @@ function CanvasViewInner({
     },
     [setInternalNodes]
   );
+
+  // Delete selected nodes and their connected edges
+  const deleteSelectedNodes = useCallback(() => {
+    const selectedIds = new Set(nodesRef.current.filter(n => n.selected).map(n => n.id));
+    console.log('[DELETE] Deleting selected nodes:', Array.from(selectedIds));
+    setInternalNodes((nds) => nds.filter((n) => !n.selected));
+    setInternalEdges((eds) => eds.filter((e) => !selectedIds.has(e.source) && !selectedIds.has(e.target)));
+    onUnsavedChangesRef.current?.(true);
+  }, [setInternalNodes, setInternalEdges]);
 
   const addMarkdownNode = useCallback(() => {
     console.log('[ADD MARKDOWN] Creating new markdown node');
@@ -441,7 +456,21 @@ function CanvasViewInner({
             className="!border-0 !bg-transparent !shadow-none"
             showInteractive={false}
             position="bottom-left"
-          />
+          >
+            {selectedNodeCount > 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteSelectedNodes();
+                }}
+                className="react-flow__controls-button"
+                style={{ order: -1, color: '#ef4444' }}
+                title={t('deleteSelectedNode')}
+              >
+                <Trash2 size={16} />
+              </button>
+            )}
+          </Controls>
           <Background 
             variant={BackgroundVariant.Dots} 
             gap={20} 

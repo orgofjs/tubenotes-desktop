@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X, Globe, Palette, Info, ExternalLink, Download, Server } from 'lucide-react';
+import { X, Globe, Palette, Info, ExternalLink, Download, Server, Shield } from 'lucide-react';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -12,7 +12,7 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-type SettingsTab = 'theme' | 'language' | 'export' | 'selfhost' | 'about';
+type SettingsTab = 'theme' | 'language' | 'export' | 'selfhost' | 'privacy' | 'about';
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { t } = useTranslation('common');
@@ -23,6 +23,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     { id: 'language', label: t('languageSettings'), icon: <Globe size={20} /> },
     { id: 'export', label: 'Export Data', icon: <Download size={20} />, disabled: true },
     { id: 'selfhost', label: 'Self Host', icon: <Server size={20} />, disabled: true },
+    { id: 'privacy', label: t('privacyPolicySettings'), icon: <Shield size={20} /> },
     { id: 'about', label: t('aboutSettings'), icon: <Info size={20} /> },
   ];
 
@@ -166,6 +167,139 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     </motion.div>
                   )}
 
+                  {activeTab === 'privacy' && (
+                    <motion.div
+                      key="privacy"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.2 }}
+                      className="space-y-6"
+                    >
+                      <div>
+                        <h3 className="text-display text-xl mb-2 text-[var(--foreground)]">
+                          {t('privacyPolicy')}
+                        </h3>
+                        <p className="text-sm text-[var(--foreground-muted)] font-mono mb-6">
+                          {t('privacyPolicyDescription')}
+                        </p>
+                      </div>
+
+                      <div className="space-y-4 max-h-[380px] overflow-y-auto pr-2 scrollbar-hidden">
+                        {/* Privacy Notice Banner */}
+                        <div className="p-4 theme-border bg-[var(--accent-primary)]/10"
+                          style={{
+                            borderColor: 'var(--accent-primary)',
+                            borderStyle: 'solid',
+                            borderWidth: 'var(--border-width)',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <p className="text-sm font-mono text-[var(--accent-primary)] leading-relaxed">
+                            {t('privacyNotice')}
+                          </p>
+                        </div>
+
+                        {/* Section 1 - Data Collection */}
+                        <div className="theme-border bg-[var(--background)] p-4"
+                          style={{
+                            borderColor: 'var(--border)',
+                            borderStyle: 'solid',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                            1. {t('privacyDataCollection')}
+                          </h4>
+                          <ul className="space-y-2 text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                            <li>• {t('privacyNoPersonalData')}</li>
+                            <li>• {t('privacyNoTracking')}</li>
+                            <li>• {t('privacyNoExternalServers')}</li>
+                          </ul>
+                        </div>
+
+                        {/* Section 2 - Data Storage */}
+                        <div className="theme-border bg-[var(--background)] p-4"
+                          style={{
+                            borderColor: 'var(--border)',
+                            borderStyle: 'solid',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                            2. {t('privacyDataStorage')}
+                          </h4>
+                          <ul className="space-y-2 text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                            <li>• {t('privacyLocalStorage')}</li>
+                            <li>• {t('privacyFileAccess')}</li>
+                          </ul>
+                        </div>
+
+                        {/* Section 3 - Internet Usage */}
+                        <div className="theme-border bg-[var(--background)] p-4"
+                          style={{
+                            borderColor: 'var(--border)',
+                            borderStyle: 'solid',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                            3. {t('privacyInternetUsage')}
+                          </h4>
+                          <ul className="space-y-2 text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                            <li>• {t('privacyUpdateChecks')}</li>
+                            <li>• {t('privacyExternalLinks')}</li>
+                          </ul>
+                        </div>
+
+                        {/* Section 4 - User Control */}
+                        <div className="theme-border bg-[var(--background)] p-4"
+                          style={{
+                            borderColor: 'var(--border)',
+                            borderStyle: 'solid',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                            4. {t('privacyUserControl')}
+                          </h4>
+                          <p className="text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                            {t('privacyUserControlDesc')}
+                          </p>
+                        </div>
+
+                        {/* Section 5 - Contact */}
+                        <div className="theme-border bg-[var(--background)] p-4"
+                          style={{
+                            borderColor: 'var(--border)',
+                            borderStyle: 'solid',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                            5. {t('privacyContact')}
+                          </h4>
+                          <p className="text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                            {t('privacyContactDesc')}
+                          </p>
+                        </div>
+
+                        {/* Last Updated */}
+                        <div className="mt-4 p-3 theme-border bg-[var(--surface-hover)]"
+                          style={{
+                            borderColor: 'var(--border)',
+                            borderStyle: 'solid',
+                            borderRadius: 'var(--border-radius)'
+                          }}
+                        >
+                          <p className="text-xs font-mono text-[var(--foreground-muted)]">
+                            {t('privacyLastUpdated')}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
                   {activeTab === 'about' && (
                     <motion.div
                       key="about"
@@ -199,7 +333,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                             {t('version')}
                           </span>
                           <span className="text-sm font-mono text-[var(--accent-primary)]">
-                            0.2.2
+                            0.2.4
                           </span>
                         </div>
 

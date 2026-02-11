@@ -34,6 +34,7 @@ export default function Home() {
   const [selectedTool, setSelectedTool] = useState<'selection' | 'text' | null>(null);
   const canvasViewRef = useRef<CanvasViewHandle>(null);
   const [hasDataLoadError, setHasDataLoadError] = useState(false);
+  const [canvasEverModified, setCanvasEverModified] = useState(false);
 
   // Track unsaved changes effect
   useEffect(() => {
@@ -46,6 +47,9 @@ export default function Home() {
   const handleUnsavedChanges = useCallback((hasChanges: boolean) => {
     console.log('[UNSAVED CHANGES] Setting unsaved changes to:', hasChanges);
     setHasUnsavedChanges(hasChanges);
+    if (hasChanges) {
+      setCanvasEverModified(true);
+    }
   }, []);
   
   // SORUN 4 FIX: Node eklenince parent state'i güncelle
@@ -194,6 +198,7 @@ export default function Home() {
       setHasUnsavedChanges(false);
       setSaveStatus('saved');
       setCanvasData(null);
+      setCanvasEverModified(false);
       
       setViewMode('canvas');
       setSelectedCanvasId(canvasId);
@@ -295,6 +300,7 @@ export default function Home() {
         console.log('[SAVE] Save successful, not updating parent state (child already has correct data)');
         setHasUnsavedChanges(false);
         setSaveStatus('saved');
+        setCanvasEverModified(true);
       }
     } catch (err) {
       // Canvas silinmişse hata verme, sadece log yaz
@@ -519,8 +525,13 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => canvasViewRef.current?.importCanvas()}
-                    title={t('importFromFile')}
-                    className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)]"
+                    disabled={canvasEverModified}
+                    title={canvasEverModified ? t('importDisabled') : t('importFromFile')}
+                    className={`group p-3 rounded-xl transition-all border-2 border-[var(--border)] ${
+                      canvasEverModified
+                        ? 'opacity-40 cursor-not-allowed'
+                        : 'hover:bg-[var(--surface-hover)]'
+                    }`}
                   >
                     <Upload size={18} />
                   </button>
