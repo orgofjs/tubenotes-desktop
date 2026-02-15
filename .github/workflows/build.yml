@@ -10,8 +10,21 @@ permissions:
   contents: write # Release oluşturmak için gerekli izin
 
 jobs:
-  release:
-    runs-on: windows-latest
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: win
+            artifact-name: tubenotes-windows-x64
+            artifact-path: dist/*.exe
+          - os: macos-latest
+            platform: mac
+            artifact-name: tubenotes-macos
+            artifact-path: dist/*.dmg
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out git repository
@@ -22,6 +35,10 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+
+      - name: Install Python setuptools (macOS)
+        if: matrix.platform == 'mac'
+        run: pip3 install setuptools
 
       - name: Install dependencies
         run: npm ci
@@ -38,24 +55,41 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: Build Electron App (Unsigned)
-        run: npm run build-win
+      - name: Build Electron App
+        run: npm run build-${{ matrix.platform }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_ENV: production
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
-      - name: Upload unsigned .exe as artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tubenotes-unsigned-x64
-          path: dist/*.exe
+          name: ${{ matrix.artifact-name }}
+          path: ${{ matrix.artifact-path }}
           retention-days: 7
 
-      - name: Create Draft Release (unsigned)
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: find artifacts -type f | head -20
+
+      - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.exe
+          files: |
+            artifacts/**/*.exe
+            artifacts/**/*.dmg
           draft: true
           generate_release_notes: true
           name: TubeNotes ${{ github.ref_name }}
@@ -65,3 +99,4 @@ jobs:
             
             ### İndirme
             - Windows 10/11 (x64): `TubeNotes-Setup-${{ github.ref_name }}.exe`
+            - macOS (Universal): `TubeNotes-${{ github.ref_name }}.dmg`

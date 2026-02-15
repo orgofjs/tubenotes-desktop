@@ -3,6 +3,8 @@
 ![License](https://img.shields.io/github/license/orgofjs/tubenotes-desktop)
 ![Version](https://img.shields.io/github/v/release/orgofjs/tubenotes-desktop)
 ![Platform](https://img.shields.io/badge/platform-windows-blue)
+![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Website](https://img.shields.io/badge/website-tubenotes-green?link=https%3A%2F%2Ftubenotesdesktop.github.io%2F)
 
 <div align="center">
 
