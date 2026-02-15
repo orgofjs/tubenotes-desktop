@@ -38,7 +38,7 @@ jobs:
 
       - name: Install Python setuptools (macOS)
         if: matrix.platform == 'mac'
-        run: pip3 install setuptools
+        run: pip3 install setuptools --break-system-packages
 
       - name: Install dependencies
         run: npm ci
