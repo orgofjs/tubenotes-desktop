@@ -2,7 +2,7 @@
 
 All notable changes to TubeNotes will be documented in this file.
 
-## [0.2.5] - 2026-02-11
+## [0.2.5] - 2026-02-15
 
 - Bug fixes.
 - Tested on macOS.
