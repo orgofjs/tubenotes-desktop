@@ -36,16 +36,16 @@
 
 > **TR:** 
 >Bu proje hem hobi hem ihtiyaç olarak AI ile geliştirilmektedir. Geliştirmeler devam edecektir. Uygulamayı hemen kullanmak için [Hızlı Başlangıç](#hızlıbaslangıc) kısmına ilerleyin.
->Planlanan özellikleri ve proje yönlendirmesi [ROADMAP.md](./ROADMAP.md). dosyası içindedir.
->Geliştirme sürecinin güncel ilerleyişini [GitHub Projeler panosu](https://github.com/users/orgofjs/projects/1/views/1) ve [CHANGELOG.md](CHANGELOG.md) üzerinden takip edebilirsiniz. 
->Katkı yapmak için [CONTRIBUTING.md](./CONTRIBUTING.md) dosyasından yönergelere ulaşabilirsiniz.
+>Planlanan özellikleri ve proje yönlendirmesi [ROADMAP.md](./doc/ROADMAP.md). dosyası içindedir.
+>Geliştirme sürecinin güncel ilerleyişini [GitHub Projeler panosu](https://github.com/users/orgofjs/projects/1/views/1) ve [CHANGELOG.md](doc/CHANGELOG.md) üzerinden takip edebilirsiniz. 
+>Katkı yapmak için [CONTRIBUTING.md](./doc/CONTRIBUTING.md) dosyasından yönergelere ulaşabilirsiniz.
 >
 > **EN:** 
 >This project is being developed with AI as both a hobby and a necessity. Development will continue. Go to [Quick Start](#quickstart) to start using the app right away.
->Planned features and project direction can be found in [ROADMAP.md](./ROADMAP.md).
+>Planned features and project direction can be found in [ROADMAP.md](./doc/ROADMAP.md).
 >Current development progress can be tracked via the
-[GitHub Projects board](https://github.com/users/orgofjs/projects/1/views/1) and [CHANGELOG.md](CHANGELOG.md).
->For contribution guidelines, refer to [CONTRIBUTING.md](./CONTRIBUTING.md).
+[GitHub Projects board](https://github.com/users/orgofjs/projects/1/views/1) and [CHANGELOG.md](doc/CHANGELOG.md).
+>For contribution guidelines, refer to [CONTRIBUTING.md](./doc/CONTRIBUTING.md).
 
 ---
 
