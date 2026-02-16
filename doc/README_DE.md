@@ -34,7 +34,7 @@ TubeNotes ist ein modernes visuelles Wissensmanagementsystem für YouTube-Videos
 ## Schnellstart
 
 - Schritt 1: Gehen Sie zur [Releases](https://github.com/orgofjs/tubenotes-desktop/releases)-Seite.
-- Schritt 2: Laden Sie die neueste Version `TubeNotes-Setup-0.2.3.exe` herunter.
+- Schritt 2: Laden Sie die neueste Version `TubeNotes-Setup-0.2.5.exe` herunter.
 - Schritt 3: Installieren und mit dem Notieren beginnen!
 
 ### Hauptfunktionen

@@ -60,7 +60,7 @@ TubeNotes, YouTube videolarınız için modern bir görsel bilgi yönetim sistem
 ## Hızlı Başlangıç
 
 - Adım 1: [Yayınlar](https://github.com/orgofjs/tubenotes-desktop/releases) sayfasına gidin.
-- Adım 2: En son sürümü indirin `TubeNotes-Setup-0.2.3.exe`.
+- Adım 2: En son sürümü indirin.
 - Adım 3: Yükleyin ve not almaya başlayın!
 
 
@@ -183,7 +183,7 @@ TubeNotes is a modern visual knowledge management system for YouTube videos. Tak
 ## Quick Start
 
 - Step 1: Go to the [Releases](https://github.com/orgofjs/tubenotes-desktop/releases) page.
-- Step 2: Download the latest `TubeNotes-Setup-0.2.3.exe`.
+- Step 2: Download the latest.
 - Step 3: Install and start taking notes!
 
 ### Key Features
