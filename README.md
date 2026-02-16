@@ -28,7 +28,7 @@
 
 ---
 
-**[Türkçe](#türkçe)** | **[English](#english)**
+**[Türkçe](#türkçe)** | **[English](#english)** | **[Deutsch](./doc/README_DE.md)**
 
 </div>
 
