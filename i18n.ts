@@ -5,6 +5,7 @@ import { initReactI18next } from 'react-i18next';
 import enCommon from './locales/en/common.json';
 import trCommon from './locales/tr/common.json';
 import deCommon from './locales/de/common.json';
+import esCommon from './locales/es/common.json';
 
 const i18n = createInstance();
 
@@ -17,6 +18,9 @@ const resources = {
   },
   de: {
     common: deCommon,
+  },
+  es: {
+    common: esCommon,
   },
 };
 

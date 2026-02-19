@@ -19,6 +19,7 @@ export default function LanguageSwitcher({ inline = false }: LanguageSwitcherPro
     { code: 'en', name: 'English', flag: '🇬🇧' },
     { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
     { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
   ];
 
   // Update current language when i18n language changes
