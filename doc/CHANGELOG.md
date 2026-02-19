@@ -2,6 +2,15 @@
 
 All notable changes to TubeNotes will be documented in this file.
 
+## [0.2.6] - 2026-02-19
+
+- Reduced app sized.
+- |  | Before | After | Improvement |
+|---------|--------|-------|-------------|
+| **.exe package** | 187 MB | **93 MB** | reduced ~50% |
+| **.dmg package** | 238 MB | **96 MB** | reduced ~60% |
+| **Installed app size** | 850 MB | **300 MB** | reduced ~65% |
+
 ## [0.2.5] - 2026-02-15
 
 - Bug fixes.
