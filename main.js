@@ -417,12 +417,14 @@ app.whenReady().then(async () => {
       }
 
       // Register file protocol handler
+      // Use process.resourcesPath for extraResources (out/ is not packed in asar)
+      const outDir = path.join(process.resourcesPath, 'out');
         let requestedUrl = request.url.replace('app://', '');
         // Remove leading ./ if present
         requestedUrl = requestedUrl.replace(/^\.\//, '');
         
         // Resolve path relative to out directory
-        const filePath = path.normalize(path.join(__dirname, 'out', requestedUrl));
+        const filePath = path.normalize(path.join(outDir, requestedUrl));
         
         console.log(`[Protocol] Requested: ${request.url} -> Resolved: ${filePath}`);
         
