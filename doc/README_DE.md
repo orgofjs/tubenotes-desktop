@@ -92,7 +92,7 @@ withPWA({
 - macOS 10.13+
 - Linux: Ubuntu 18.04+, Fedora 32+, Debian 10+
 - RAM: -
-- Festplatte: 500MB freier Speicherplatz
+- Festplatte: 300MB freier Speicherplatz
 
 **Entwicklung**
 - Node.js 18.x+

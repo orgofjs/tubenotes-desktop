@@ -119,7 +119,7 @@ withPWA({
 - macOS 10.13+
 - Linux: Ubuntu 18.04+, Fedora 32+, Debian 10+
 - RAM: -
-- Disk: 500MB boş alan
+- Disk: 300MB boş alan
 
 **Geliştirme**
 - Node.js 18.x+
@@ -241,7 +241,7 @@ withPWA({
 - macOS 10.13+
 - Linux: Ubuntu 18.04+, Fedora 32+, Debian 10+
 - RAM: -
-- Disk: 500MB free space
+- Disk: 300MB free space
 
 **Development**
 - Node.js 18.x+
