@@ -4,7 +4,7 @@ All notable changes to TubeNotes will be documented in this file.
 
 ## [0.2.7] - 2026-02-22
 
-- IntelliSense bugs have been fixed, 
+- For developers: Tailwind CSS IntelliSense bugs have been fixed, 
 - Bug fixes,
 - Stability improvements implemented,
 - New theme,
