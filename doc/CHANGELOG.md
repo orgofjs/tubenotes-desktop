@@ -7,6 +7,7 @@ All notable changes to TubeNotes will be documented in this file.
 - IntelliSense bugs have been fixed, 
 - Bug fixes,
 - Stability improvements implemented,
+- New theme,
 - File structure updated.
 
 ## [0.2.6] - 2026-02-19
