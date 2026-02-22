@@ -333,7 +333,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                             {t('version')}
                           </span>
                           <span className="text-sm font-mono text-accent-primary">
-                            0.2.6
+                            0.2.7
                           </span>
                         </div>
 
