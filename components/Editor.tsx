@@ -43,7 +43,7 @@ export default function Editor({ content, onChange }: EditorProps) {
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none min-h-[500px] font-mono text-[var(--foreground)]',
+        class: 'prose prose-invert max-w-none focus:outline-none min-h-125 font-mono text-foreground',
       },
     },
   });
@@ -70,8 +70,8 @@ export default function Editor({ content, onChange }: EditorProps) {
       className={`
         p-2 border-2 transition-all
         ${isActive 
-          ? 'bg-[var(--accent-primary)] border-[var(--accent-primary)] text-[var(--background)]' 
-          : 'border-[var(--border)] hover:border-[var(--accent-primary)]'
+          ? 'bg-accent-primary border-accent-primary text-background' 
+          : 'border-border-color hover:border-accent-primary'
         }
       `}
       title={label}
@@ -83,7 +83,7 @@ export default function Editor({ content, onChange }: EditorProps) {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="sticky top-0 z-10 bg-[var(--surface)] border-b-3 border-[var(--border)] p-4">
+      <div className="sticky top-0 z-10 bg-surface border-b-3 border-border-color p-4">
         <div className="flex items-center gap-2 flex-wrap">
           <div className="flex gap-1">
             <ToolbarButton
@@ -106,7 +106,7 @@ export default function Editor({ content, onChange }: EditorProps) {
             />
           </div>
 
-          <div className="w-px h-6 bg-[var(--border)]" />
+          <div className="w-px h-6 bg-border-color" />
 
           <div className="flex gap-1">
             <ToolbarButton
@@ -123,7 +123,7 @@ export default function Editor({ content, onChange }: EditorProps) {
             />
           </div>
 
-          <div className="w-px h-6 bg-[var(--border)]" />
+          <div className="w-px h-6 bg-border-color" />
 
           <div className="flex gap-1">
             <ToolbarButton
@@ -146,7 +146,7 @@ export default function Editor({ content, onChange }: EditorProps) {
             />
           </div>
 
-          <div className="w-px h-6 bg-[var(--border)]" />
+          <div className="w-px h-6 bg-border-color" />
 
           <div className="flex gap-1">
             <ToolbarButton
@@ -161,7 +161,7 @@ export default function Editor({ content, onChange }: EditorProps) {
             />
           </div>
 
-          <div className="ml-auto text-xs font-mono text-[var(--foreground-muted)]">
+          <div className="ml-auto text-xs font-mono text-foreground-muted">
             {editor.storage.characterCount?.characters() || 0} CHARS
           </div>
         </div>

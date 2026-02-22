@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -210,10 +210,10 @@ export default function Sidebar({
               flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-4 py-3'} cursor-pointer
               transition-all duration-200
               ${activeSelection?.type === 'folder' && activeSelection?.id === folder.id
-                ? 'bg-[var(--accent-primary)] text-[var(--background)]'
-                : 'hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)]'
+                ? 'bg-accent-primary text-background'
+                : 'hover:bg-surface-hover text-foreground-muted'
               }
-              border-l-3 ${activeSelection?.type === 'folder' && activeSelection?.id === folder.id ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
+              border-l-3 ${activeSelection?.type === 'folder' && activeSelection?.id === folder.id ? 'border-accent-secondary' : 'border-transparent'}
             `}
             style={{ paddingLeft: isCollapsed ? undefined : `${depth * 20 + 12}px` }}
             onClick={() => {
@@ -228,7 +228,7 @@ export default function Sidebar({
                   e.stopPropagation();
                   toggleFolder(folder.id);
                 }}
-                className="hover:text-[var(--accent-secondary)] transition-colors"
+                className="hover:text-accent-secondary transition-colors"
               >
                 {isExpanded ? (
                   <ChevronDown size={16} />
@@ -252,7 +252,7 @@ export default function Sidebar({
                       e.stopPropagation();
                       onDeleteFolder(folder.id);
                     }}
-                    className="opacity-0 group-hover:opacity-100 hover:text-[var(--accent-primary)] transition-all"
+                    className="opacity-0 group-hover:opacity-100 hover:text-accent-primary transition-all"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -275,7 +275,7 @@ export default function Sidebar({
           x: 0
         }}
         transition={{ type: "spring", damping: 20, stiffness: 150 }}
-        className="h-screen bg-[var(--surface)] theme-border flex flex-col sidebar-transition"
+        className="h-screen bg-surface theme-border flex flex-col sidebar-transition"
         style={{
           width: isCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)',
           borderRightWidth: 'var(--border-width)',
@@ -305,22 +305,22 @@ export default function Sidebar({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 border-b-2 border-[var(--border)]"
+                className="p-4 border-b-2 border-border-color"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h1 className="text-display text-3xl text-[var(--accent-primary)] mb-1">
+                    <h1 className="text-display text-3xl text-accent-primary mb-1">
                       {t('tubeNotes')}
                     </h1>
-                    <p className="text-xs text-[var(--foreground-muted)] font-mono">
+                    <p className="text-xs text-foreground-muted font-mono">
                       {t('visualVideoKnowledgeBase')}
                     </p>
                   </div>
                   {/* Hamburger Menu Button - Expanded */}
                   <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="p-2 text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] 
-                      hover:bg-[var(--surface-hover)] transition-colors"
+                    className="p-2 text-accent-primary hover:text-accent-secondary 
+                      hover:bg-surface-hover transition-colors"
                     title={t('collapseSidebar')}
                   >
                     <Menu size={24} />
@@ -339,8 +339,8 @@ export default function Sidebar({
                 {/* Hamburger Menu Button - Collapsed */}
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
-                  className="p-3 text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] 
-                    hover:bg-[var(--surface-hover)] transition-colors"
+                  className="p-3 text-accent-primary hover:text-accent-secondary 
+                    hover:bg-surface-hover transition-colors"
                   title={t('expandSidebar')}
                 >
                   <Menu size={28} />
@@ -373,12 +373,12 @@ export default function Sidebar({
                   }}
                   className="
                     w-full pl-20 pr-4 py-2
-                    bg-[var(--background)]
-                    border-2 border-[var(--border)]
+                    bg-background
+                    border-2 border-border-color
                     text-sm font-mono
-                    focus:border-[var(--accent-primary)] focus:outline-none
+                    focus:border-accent-primary focus:outline-none
                     transition-colors
-                    placeholder:text-[var(--foreground-muted)]
+                    placeholder:text-foreground-muted
                   "
                 />
               </div>
@@ -387,7 +387,7 @@ export default function Sidebar({
         </AnimatePresence>
 
         {/* Quick Actions */}
-        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} ${isCollapsed ? 'space-y-4' : 'space-y-2'} border-b-2 border-[var(--border)]`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} ${isCollapsed ? 'space-y-4' : 'space-y-2'} border-b-2 border-border-color`}>
           <QuickActionButton
             icon={<Star size={isCollapsed ? 22 : 16} />}
             label={t('important')}
@@ -416,13 +416,13 @@ export default function Sidebar({
         <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'}`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center mb-4' : 'justify-between mb-3'}`}>
             {!isCollapsed && (
-              <h2 className="text-xs font-mono text-[var(--foreground-muted)] uppercase">
+              <h2 className="text-xs font-mono text-foreground-muted uppercase">
                 {t('folders')}
               </h2>
             )}
             <button
               onClick={() => setIsAddingFolder(true)}
-              className="text-[var(--accent-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+              className="text-accent-secondary hover:text-accent-primary transition-colors"
               title={t('addFolder')}
             >
               <FolderPlus size={isCollapsed ? 22 : 16} />
@@ -433,7 +433,7 @@ export default function Sidebar({
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-3 p-2 bg-[var(--background)] border-2 border-[var(--accent-primary)]"
+              className="mb-3 p-2 bg-background border-2 border-accent-primary"
             >
               <input
                 type="text"
@@ -453,7 +453,7 @@ export default function Sidebar({
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={handleAddFolder}
-                  className="flex-1 py-1 bg-[var(--accent-primary)] text-[var(--background)] text-xs font-mono hover:bg-[var(--accent-secondary)] transition-colors"
+                  className="flex-1 py-1 bg-accent-primary text-background text-xs font-mono hover:bg-accent-secondary transition-colors"
                 >
                   {t('add')}
                 </button>
@@ -462,7 +462,7 @@ export default function Sidebar({
                     setIsAddingFolder(false);
                     setNewFolderName('');
                   }}
-                  className="flex-1 py-1 border-2 border-[var(--border)] text-xs font-mono hover:border-[var(--accent-primary)] transition-colors"
+                  className="flex-1 py-1 border-2 border-border-color text-xs font-mono hover:border-accent-primary transition-colors"
                 >
                   {t('cancel')}
                 </button>
@@ -476,16 +476,16 @@ export default function Sidebar({
         </div>
 
         {/* Canvases Section */}
-        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} border-t-2 border-[var(--border)]`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} border-t-2 border-border-color`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center mb-4' : 'justify-between mb-3'}`}>
             {!isCollapsed && (
-              <h2 className="text-xs font-mono text-[var(--foreground-muted)] uppercase">
+              <h2 className="text-xs font-mono text-foreground-muted uppercase">
                 {t('canvases')}
               </h2>
             )}
             <button
               onClick={() => setIsAddingCanvas(true)}
-              className="text-[var(--accent-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+              className="text-accent-secondary hover:text-accent-primary transition-colors"
               title={t('addCanvas')}
             >
               <Plus size={isCollapsed ? 22 : 16} />
@@ -496,7 +496,7 @@ export default function Sidebar({
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-3 p-2 bg-[var(--background)] border-2 border-[var(--accent-primary)]"
+              className="mb-3 p-2 bg-background border-2 border-accent-primary"
             >
               <input
                 type="text"
@@ -516,7 +516,7 @@ export default function Sidebar({
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={handleAddCanvas}
-                  className="flex-1 py-1 bg-[var(--accent-primary)] text-[var(--background)] text-xs font-mono hover:bg-[var(--accent-secondary)] transition-colors"
+                  className="flex-1 py-1 bg-accent-primary text-background text-xs font-mono hover:bg-accent-secondary transition-colors"
                 >
                   {t('add')}
                 </button>
@@ -525,7 +525,7 @@ export default function Sidebar({
                     setIsAddingCanvas(false);
                     setNewCanvasName('');
                   }}
-                  className="flex-1 py-1 border-2 border-[var(--border)] text-xs font-mono hover:border-[var(--accent-primary)] transition-colors"
+                  className="flex-1 py-1 border-2 border-border-color text-xs font-mono hover:border-accent-primary transition-colors"
                 >
                   {t('cancel')}
                 </button>
@@ -543,7 +543,7 @@ export default function Sidebar({
                 className="group"
               >
                 {editingCanvasId === canvas.id && !isCollapsed ? (
-                  <div className="p-2 bg-[var(--background)] border-2 border-[var(--accent-primary)]">
+                  <div className="p-2 bg-background border-2 border-accent-primary">
                     <input
                       type="text"
                       value={editingCanvasName}
@@ -561,7 +561,7 @@ export default function Sidebar({
                     <div className="flex gap-2 mt-2">
                       <button
                         onClick={() => handleRenameCanvas(canvas.id)}
-                        className="flex-1 py-1 bg-[var(--accent-primary)] text-[var(--background)] text-xs font-mono hover:bg-[var(--accent-secondary)] transition-colors"
+                        className="flex-1 py-1 bg-accent-primary text-background text-xs font-mono hover:bg-accent-secondary transition-colors"
                       >
                         {t('save')}
                       </button>
@@ -570,7 +570,7 @@ export default function Sidebar({
                           setEditingCanvasId(null);
                           setEditingCanvasName('');
                         }}
-                        className="flex-1 py-1 border-2 border-[var(--border)] text-xs font-mono hover:border-[var(--accent-primary)] transition-colors"
+                        className="flex-1 py-1 border-2 border-border-color text-xs font-mono hover:border-accent-primary transition-colors"
                       >
                         {t('cancel')}
                       </button>
@@ -582,10 +582,10 @@ export default function Sidebar({
                       flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-3 py-2'} cursor-pointer
                       transition-all duration-200
                       ${activeSelection?.type === 'canvas' && activeSelection?.id === canvas.id
-                        ? 'bg-[var(--accent-primary)] text-[var(--background)]'
-                        : 'hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)]'
+                        ? 'bg-accent-primary text-background'
+                        : 'hover:bg-surface-hover text-foreground-muted'
                       }
-                      border-l-3 ${activeSelection?.type === 'canvas' && activeSelection?.id === canvas.id ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
+                      border-l-3 ${activeSelection?.type === 'canvas' && activeSelection?.id === canvas.id ? 'border-accent-secondary' : 'border-transparent'}
                     `}
                     onClick={() => handleCanvasClick(canvas.id)}
                     title={isCollapsed ? canvas.name : undefined}
@@ -602,7 +602,7 @@ export default function Sidebar({
                             setEditingCanvasId(canvas.id);
                             setEditingCanvasName(canvas.name);
                           }}
-                          className="opacity-0 group-hover:opacity-100 hover:text-[var(--accent-secondary)] transition-all"
+                          className="opacity-0 group-hover:opacity-100 hover:text-accent-secondary transition-all"
                         >
                           <Edit2 size={14} />
                         </button>
@@ -611,7 +611,7 @@ export default function Sidebar({
                             e.stopPropagation();
                             handleDeleteCanvas(canvas.id);
                           }}
-                          className="opacity-0 group-hover:opacity-100 hover:text-[var(--accent-primary)] transition-all"
+                          className="opacity-0 group-hover:opacity-100 hover:text-accent-primary transition-all"
                         >
                           <Trash2 size={14} />
                         </button>
@@ -625,10 +625,10 @@ export default function Sidebar({
         </div>
 
         {/* Kanban Board Section */}
-        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} border-t-2 border-[var(--border)]`}>
+        <div className={`${isCollapsed ? 'px-2 py-4' : 'px-4 py-4'} border-t-2 border-border-color`}>
           <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
             {!isCollapsed && (
-              <h2 className="text-xs font-mono text-[var(--foreground-muted)] uppercase">
+              <h2 className="text-xs font-mono text-foreground-muted uppercase">
                 {t('kanbanBoard')}
               </h2>
             )}
@@ -639,10 +639,10 @@ export default function Sidebar({
                 flex items-center ${isCollapsed ? 'justify-center px-2 py-5' : 'gap-2 px-3 py-2'} cursor-pointer
                 transition-all duration-200
                 ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'kanban'
-                  ? 'bg-[var(--accent-primary)] text-[var(--background)]'
-                  : 'hover:bg-[var(--surface-hover)] text-[var(--foreground-muted)]'
+                  ? 'bg-accent-primary text-background'
+                  : 'hover:bg-surface-hover text-foreground-muted'
                 }
-                border-l-3 ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'kanban' ? 'border-[var(--accent-secondary)]' : 'border-transparent'}
+                border-l-3 ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'kanban' ? 'border-accent-secondary' : 'border-transparent'}
               `}
               onClick={() => {
                 // Save current selection for return (no longer needed since no navigation)
@@ -664,7 +664,7 @@ export default function Sidebar({
       </div>
 
       {/* Footer - Total Notes & Settings */}
-      <div className="border-t-2 border-[var(--border)]">
+      <div className="border-t-2 border-border-color">
           {/* Total Notes - Only visible when expanded */}
           <AnimatePresence>
             {!isCollapsed && (
@@ -673,18 +673,18 @@ export default function Sidebar({
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 text-xs font-mono text-[var(--foreground-muted)]"
+                className="p-4 text-xs font-mono text-foreground-muted"
               >
                 <div className="flex justify-between">
                   <span>{t('totalNotes')}</span>
-                  <span className="text-[var(--accent-primary)]">{totalNotes}</span>
+                  <span className="text-accent-primary">{totalNotes}</span>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Settings Button */}
-          <div className={`${!isCollapsed && 'border-t-2 border-[var(--border)]'}`}>
+          <div className={`${!isCollapsed && 'border-t-2 border-border-color'}`}>
             <button
               onClick={() => {
                 setIsSettingsOpen(true);
@@ -695,8 +695,8 @@ export default function Sidebar({
                 transition-all duration-200
                 text-sm font-mono
                 ${activeSelection?.type === 'quickAction' && activeSelection?.id === 'settings'
-                  ? 'bg-[var(--accent-primary)] text-[var(--background)] border-l-3 border-[var(--accent-secondary)]'
-                  : 'text-[var(--foreground-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] border-l-3 border-transparent'
+                  ? 'bg-accent-primary text-background border-l-3 border-accent-secondary'
+                  : 'text-foreground-muted hover:bg-surface-hover hover:text-foreground border-l-3 border-transparent'
                 }
               `}
               title={isCollapsed ? t('settings') : undefined}
@@ -739,8 +739,8 @@ function QuickActionButton({
         transition-all duration-200
         text-sm font-mono
         ${isActive
-          ? 'bg-[var(--accent-primary)] text-[var(--background)] border-l-3 border-[var(--accent-secondary)]'
-          : 'text-[var(--foreground-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] border-l-3 border-transparent'
+          ? 'bg-accent-primary text-background border-l-3 border-accent-secondary'
+          : 'text-foreground-muted hover:bg-surface-hover hover:text-foreground border-l-3 border-transparent'
         }
       `}
       title={isCollapsed ? tooltip : undefined}

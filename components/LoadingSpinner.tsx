@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { motion } from 'framer-motion';
 
@@ -19,10 +19,10 @@ export default function LoadingSpinner({ size = 'md', text }: LoadingSpinnerProp
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-        className={`${sizeMap[size]} border-4 border-[var(--border)] border-t-[var(--accent-primary)]`}
+        className={`${sizeMap[size]} border-4 border-border-color border-t-accent-primary`}
       />
       {text && (
-        <p className="text-display text-lg text-[var(--foreground-muted)]">{text}</p>
+        <p className="text-display text-lg text-foreground-muted">{text}</p>
       )}
     </div>
   );

@@ -92,7 +92,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="source-top"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
       <Handle 
         type="source" 
@@ -100,7 +100,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="source-right"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
       <Handle 
         type="source" 
@@ -108,7 +108,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="source-bottom"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
       <Handle 
         type="source" 
@@ -116,7 +116,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="source-left"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
 
       <Handle 
@@ -125,7 +125,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="target-top"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
       <Handle 
         type="target" 
@@ -133,7 +133,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="target-right"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
       <Handle 
         type="target" 
@@ -141,7 +141,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="target-bottom"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
       <Handle 
         type="target" 
@@ -149,7 +149,7 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
         id="target-left"
         isConnectable={true}
         style={{ pointerEvents: 'all', zIndex: 10 }}
-        className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+        className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
       />
 
       <div 
@@ -166,11 +166,11 @@ export default function TextNode({ id, data, selected }: TextNodeProps) {
               setIsEditing(false);
               data.label = text;
             }}
-            className="bg-transparent border-none outline-none text-left font-sans text-sm text-[var(--color-text)] w-full h-full resize-none overflow-hidden leading-relaxed"
+            className="bg-transparent border-none outline-none text-left font-sans text-sm text-(--color-text) w-full h-full resize-none overflow-hidden leading-relaxed"
             placeholder="Type here... (Shift+Enter for new line, Enter to save)"
           />
         ) : (
-          <div className="font-sans text-sm text-[var(--color-text)] break-words w-full h-full overflow-hidden leading-relaxed text-left whitespace-pre-wrap">
+          <div className="font-sans text-sm text-(--color-text) wrap-break-word w-full h-full overflow-hidden leading-relaxed text-left whitespace-pre-wrap">
             {text || 'Double click to edit'}
           </div>
         )}

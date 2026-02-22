@@ -46,16 +46,16 @@ export default function KanbanColumn({
     <div
       ref={setNodeRef}
       className={`
-        flex flex-col h-full w-full min-w-[340px] max-w-[340px] flex-shrink-0
+        flex flex-col h-full w-full min-w-85 max-w-85 shrink-0
         border-2 transition-all duration-200
         ${isOver 
-          ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
-          : 'border-[var(--border)] bg-[var(--background)]'
+          ? 'border-accent-primary bg-surface-hover' 
+          : 'border-border-color bg-background'
         }
       `}
     >
       {/* Column Header */}
-      <div className="flex items-center justify-between p-4 border-b-2 border-[var(--border)]">
+      <div className="flex items-center justify-between p-4 border-b-2 border-border-color">
         <div className="flex items-center gap-3">
           <div
             className="w-3 h-3"
@@ -64,13 +64,13 @@ export default function KanbanColumn({
           <h2 className="text-sm font-mono font-bold uppercase tracking-wider">
             {columnTitles[columnId]}
           </h2>
-          <span className="px-2 py-0.5 text-xs font-mono bg-[var(--surface)] text-[var(--foreground-muted)]">
+          <span className="px-2 py-0.5 text-xs font-mono bg-surface text-foreground-muted">
             {tasks.length}
           </span>
         </div>
         <button
           onClick={() => onAddTask(columnId)}
-          className="p-1.5 hover:bg-[var(--surface-hover)] text-[var(--accent-primary)] transition-colors"
+          className="p-1.5 hover:bg-surface-hover text-accent-primary transition-colors"
           title={t('addTask')}
         >
           <Plus size={18} />
@@ -85,12 +85,12 @@ export default function KanbanColumn({
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center h-full min-h-[200px] text-center"
+                className="flex flex-col items-center justify-center h-full min-h-50 text-center"
               >
-                <p className="text-xs font-mono text-[var(--foreground-muted)] mb-2">
+                <p className="text-xs font-mono text-foreground-muted mb-2">
                   {t('noTasksYet')}
                 </p>
-                <p className="text-xs font-mono text-[var(--foreground-muted)] opacity-60">
+                <p className="text-xs font-mono text-foreground-muted opacity-60">
                   {t('dragTasksHere')}
                 </p>
               </motion.div>

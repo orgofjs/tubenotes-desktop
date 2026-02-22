@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Palette, Check } from 'lucide-react';
 
-type ThemeFamily = 'cyberpunk' | 'editorial';
+type ThemeFamily = 'cyberpunk' | 'editorial' | 'smooth';
 type ThemeVariant = 'dark' | 'navy' | 'light';
 type Theme = `${ThemeFamily}-${ThemeVariant}`;
 
@@ -109,6 +109,28 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
           colors: { primary: '#8b6f47', secondary: '#4a6fa5', bg: '#fafaf9' }
         },
       ]
+    },
+    {
+      id: 'smooth',
+      name: 'Smooth',
+      description: 'Modern & Polished',
+      variants: [
+        {
+          id: 'dark',
+          name: 'Karanlık',
+          colors: { primary: '#6c8ef5', secondary: '#4ecdc4', bg: '#111318' }
+        },
+        {
+          id: 'navy',
+          name: 'Lacivert',
+          colors: { primary: '#7b9ff5', secondary: '#44d9b8', bg: '#0e1525' }
+        },
+        {
+          id: 'light',
+          name: 'Açık',
+          colors: { primary: '#4f6ef0', secondary: '#2ea8a0', bg: '#f4f5fb' }
+        },
+      ]
     }
   ];
 
@@ -126,11 +148,11 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
       <div className="space-y-6">{themeGroups.map((group) => (
           <div key={group.id} className="space-y-3">
             {/* Theme Group Header */}
-            <div className="flex items-baseline gap-2 border-b-2 border-[var(--border)] pb-2">
-              <h4 className="text-base font-mono font-bold text-[var(--foreground)]">
+            <div className="flex items-baseline gap-2 border-b-2 border-border-color pb-2">
+              <h4 className="text-base font-mono font-bold text-foreground">
                 {group.name}
               </h4>
-              <span className="text-xs text-[var(--foreground-muted)]">
+              <span className="text-xs text-foreground-muted">
                 {group.description}
               </span>
             </div>
@@ -151,8 +173,8 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
                       relative p-3 
                       border-2 
                       ${isActive 
-                        ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
-                        : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+                        ? 'border-accent-primary bg-surface-hover' 
+                        : 'border-border-color hover:border-accent-secondary'
                       }
                       transition-all
                       flex flex-col items-center gap-2
@@ -162,15 +184,15 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
                     {/* Color Preview */}
                     <div className="flex gap-1">
                       <div 
-                        className="w-4 h-4 border border-[var(--border)]" 
+                        className="w-4 h-4 border border-border-color" 
                         style={{ backgroundColor: variant.colors.primary }}
                       />
                       <div 
-                        className="w-4 h-4 border border-[var(--border)]" 
+                        className="w-4 h-4 border border-border-color" 
                         style={{ backgroundColor: variant.colors.secondary }}
                       />
                       <div 
-                        className="w-4 h-4 border border-[var(--border)]" 
+                        className="w-4 h-4 border border-border-color" 
                         style={{ backgroundColor: variant.colors.bg }}
                       />
                     </div>
@@ -187,7 +209,7 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
                         animate={{ scale: 1 }}
                         className="absolute top-1 right-1"
                       >
-                        <Check size={14} className="text-[var(--accent-primary)]" />
+                        <Check size={14} className="text-accent-primary" />
                       </motion.div>
                     )}
                   </motion.button>
@@ -208,15 +230,15 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
         onClick={() => setIsOpen(!isOpen)}
         className="
           p-3 
-          bg-[var(--surface)] 
-          border-2 border-[var(--border)]
-          hover:border-[var(--accent-primary)]
+          bg-surface 
+          border-2 border-border-color
+          hover:border-accent-primary
           transition-colors
           flex items-center gap-2
         "
         title="Tema Değiştir"
       >
-        <Palette size={20} className="text-[var(--accent-primary)]" />
+        <Palette size={20} className="text-accent-primary" />
       </motion.button>
 
       <AnimatePresence>
@@ -227,15 +249,15 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
             exit={{ opacity: 0, y: -10 }}
             className="
               absolute top-full right-0 mt-2
-              bg-[var(--surface)]
-              border-3 border-[var(--border)]
+              bg-surface
+              border-3 border-border-color
               shadow-[6px_6px_0px_var(--accent-primary)]
               p-4
-              min-w-[280px]
+              min-w-70
               z-50
             "
           >
-            <div className="text-xs font-mono text-[var(--foreground-muted)] mb-3 uppercase">
+            <div className="text-xs font-mono text-foreground-muted mb-3 uppercase">
               Tema Seç
             </div>
             
@@ -243,7 +265,7 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
               {themeGroups.map((group) => (
                 <div key={group.id} className="space-y-2">
                   {/* Theme Group Label */}
-                  <div className="text-xs font-mono text-[var(--foreground)] uppercase">
+                  <div className="text-xs font-mono text-foreground uppercase">
                     {group.name}
                   </div>
                   
@@ -262,8 +284,8 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
                             w-full p-2 
                             border-2 
                             ${isActive 
-                              ? 'border-[var(--accent-primary)] bg-[var(--surface-hover)]' 
-                              : 'border-[var(--border)] hover:border-[var(--accent-secondary)]'
+                              ? 'border-accent-primary bg-surface-hover' 
+                              : 'border-border-color hover:border-accent-secondary'
                             }
                             transition-all
                             flex items-center justify-between
@@ -273,15 +295,15 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
                           <div className="flex items-center gap-2">
                             <div className="flex gap-1">
                               <div 
-                                className="w-3 h-3 border border-[var(--border)]" 
+                                className="w-3 h-3 border border-border-color" 
                                 style={{ backgroundColor: variant.colors.primary }}
                               />
                               <div 
-                                className="w-3 h-3 border border-[var(--border)]" 
+                                className="w-3 h-3 border border-border-color" 
                                 style={{ backgroundColor: variant.colors.secondary }}
                               />
                               <div 
-                                className="w-3 h-3 border border-[var(--border)]" 
+                                className="w-3 h-3 border border-border-color" 
                                 style={{ backgroundColor: variant.colors.bg }}
                               />
                             </div>
@@ -290,7 +312,7 @@ export default function ThemeSwitcher({ onThemeChange, inline = false }: ThemeSw
                             </span>
                           </div>
                           {isActive && (
-                            <Check size={14} className="text-[var(--accent-primary)]" />
+                            <Check size={14} className="text-accent-primary" />
                           )}
                         </motion.button>
                       );

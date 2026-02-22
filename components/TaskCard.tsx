@@ -1,21 +1,33 @@
-'use client';
+﻿'use client';
 
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { KanbanTask } from '@/types';
-import { Calendar, Trash2, Edit2, GripVertical } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { format } from 'date-fns';
+import { GripVertical, Pencil, Trash2, Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { KanbanTask } from '@/types';
 
 interface TaskCardProps {
   task: KanbanTask;
   onEdit: (task: KanbanTask) => void;
-  onDelete: (id: string) => void;
+  onDelete: (taskId: string) => void;
 }
+
+const priorityColors: Record<KanbanTask['priority'], string> = {
+  low: '#22c55e',
+  medium: '#f59e0b',
+  high: '#ef4444',
+};
+
+const priorityLabels: Record<KanbanTask['priority'], string> = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+};
 
 export default function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
   const { t } = useTranslation('common');
+
   const {
     attributes,
     listeners,
@@ -28,96 +40,108 @@ export default function TaskCard({ task, onEdit, onDelete }: TaskCardProps) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.4 : 1,
   };
 
-  const priorityColors = {
-    low: 'var(--accent-blue)',
-    medium: 'var(--accent-tertiary)',
-    high: 'var(--accent-primary)',
+  const priorityColor = priorityColors[task.priority];
+
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return null;
+    try {
+      return new Date(dateStr).toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+      });
+    } catch {
+      return null;
+    }
   };
+
+  const isOverdue =
+    task.dueDate &&
+    new Date(task.dueDate) < new Date() &&
+    task.status !== 'done';
 
   return (
-    <motion.div
-      ref={setNodeRef}
-      style={style}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="group relative bg-[var(--surface)] border-2 border-[var(--border)] hover:border-[var(--accent-primary)] transition-all duration-200 w-full"
-    >
-      {/* Drag Handle */}
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute left-3 top-3 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity z-10"
+    <div ref={setNodeRef} style={style}>
+      <motion.div
+        layout
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        className="group relative bg-surface border border-border-color hover:border-accent-primary transition-all"
       >
-        <GripVertical size={16} className="text-[var(--foreground-muted)]" />
-      </div>
+        {/* Priority indicator - thin left stripe */}
+        <div
+          className="absolute left-0 top-0 bottom-0 w-0.5"
+          style={{ backgroundColor: priorityColor }}
+        />
 
-      {/* Priority Indicator - İnce ve zarif */}
-      <div
-        className="absolute top-0 left-0 h-full"
-        style={{ 
-          backgroundColor: priorityColors[task.priority],
-          width: '4px'
-        }}
-      />
+        <div className="pl-3 pr-2 py-3">
+          {/* Header row: drag handle + title + actions */}
+          <div className="flex items-start gap-2">
+            {/* Drag handle */}
+            <button
+              {...attributes}
+              {...listeners}
+              className="mt-0.5 shrink-0 text-foreground-muted opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing"
+            >
+              <GripVertical size={14} />
+            </button>
 
-      {/* Content - Dengeli padding */}
-      <div style={{ paddingLeft: '24px', paddingRight: '24px', paddingTop: '16px', paddingBottom: '16px' }}>
-        {/* Title - Daha küçük ve şeffaf */}
-        <h3 className="text-xs font-mono font-medium text-[var(--foreground-muted)] opacity-70 mb-2 pr-12 break-words">
-          {task.title}
-        </h3>
+            {/* Title - smaller and muted */}
+            <p className="flex-1 text-sm font-mono text-foreground leading-snug break-all">
+              {task.title}
+            </p>
 
-        {/* Description - Normal boyut ve okunabilir */}
-        {task.description && (
-          <p className="text-sm font-mono text-[var(--foreground)] mb-3 break-words whitespace-pre-wrap leading-relaxed">
-            {task.description}
-          </p>
-        )}
-
-        {/* Meta Info */}
-        <div className="flex items-center justify-between text-xs font-mono text-[var(--foreground-muted)]">
-          {/* Due Date */}
-          {task.dueDate && (
-            <div className="flex items-center gap-1">
-              <Calendar size={12} />
-              <span>{format(new Date(task.dueDate), 'MMM dd')}</span>
+            {/* Action buttons */}
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+              <button
+                onClick={() => onEdit(task)}
+                className="p-1 text-foreground-muted hover:text-accent-primary transition-colors"
+                title={t('edit')}
+              >
+                <Pencil size={12} />
+              </button>
+              <button
+                onClick={() => onDelete(task.id)}
+                className="p-1 text-foreground-muted hover:text-red-500 transition-colors"
+                title={t('delete')}
+              >
+                <Trash2 size={12} />
+              </button>
             </div>
+          </div>
+
+          {/* Description */}
+          {task.description && (
+            <p className="mt-1.5 ml-6 text-xs text-foreground-muted leading-relaxed line-clamp-2">
+              {task.description}
+            </p>
           )}
 
-          {/* Priority Badge */}
-          <span
-            className="px-2 py-0.5 text-[10px] uppercase font-bold"
-            style={{
-              backgroundColor: priorityColors[task.priority],
-              color: 'var(--background)',
-            }}
-          >
-            {t(`priority${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}`)}
-          </span>
-        </div>
+          {/* Footer: priority badge + due date */}
+          <div className="flex items-center gap-2 mt-2 ml-6">
+            <span
+              className="text-xs font-mono px-1.5 py-0.5 uppercase tracking-wider"
+              style={{ color: priorityColor, border: `1px solid ${priorityColor}33` }}
+            >
+              {priorityLabels[task.priority]}
+            </span>
 
-        {/* Action Buttons */}
-        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            onClick={() => onEdit(task)}
-            className="p-1.5 hover:bg-[var(--surface-hover)] text-[var(--accent-secondary)] transition-colors"
-            title={t('editTask')}
-          >
-            <Edit2 size={14} />
-          </button>
-          <button
-            onClick={() => onDelete(task.id)}
-            className="p-1.5 hover:bg-[var(--surface-hover)] text-[var(--accent-primary)] transition-colors"
-            title={t('deleteTask')}
-          >
-            <Trash2 size={14} />
-          </button>
+            {task.dueDate && (
+              <span
+                className={`flex items-center gap-1 text-xs font-mono ${
+                  isOverdue ? 'text-red-500' : 'text-foreground-muted'
+                }`}
+              >
+                <Calendar size={10} />
+                {formatDate(task.dueDate)}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

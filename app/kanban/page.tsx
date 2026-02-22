@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -16,7 +16,7 @@ export default function KanbanPage() {
         <motion.header
           initial={{ y: -100 }}
           animate={{ y: 0 }}
-          className="border-b-2 border-[var(--border)] p-6"
+          className="border-b-2 border-border-color p-6"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -38,7 +38,7 @@ export default function KanbanPage() {
                     router.push('/');
                   }
                 }}
-                className="p-2 hover:bg-[var(--surface-hover)] transition-colors"
+                className="p-2 hover:bg-surface-hover transition-colors"
                 title={t('back')}
               >
                 <ArrowLeft size={24} />
@@ -47,7 +47,7 @@ export default function KanbanPage() {
                 <h1 className="text-3xl font-display font-bold uppercase tracking-wider">
                   {t('kanbanBoard')}
                 </h1>
-                <p className="text-sm font-mono text-[var(--foreground-muted)] mt-1">
+                <p className="text-sm font-mono text-foreground-muted mt-1">
                   {t('kanbanBoardDescription')}
                 </p>
               </div>
@@ -56,7 +56,7 @@ export default function KanbanPage() {
         </motion.header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden bg-[var(--background)]">
+      <main className="flex-1 overflow-hidden bg-background">
         <KanbanBoard />
       </main>
     </div>

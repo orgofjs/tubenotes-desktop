@@ -32,8 +32,8 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
   };
 
   return (
-    <div className="flex-1 h-screen overflow-y-auto bg-[var(--background)] grid-noise">
-      <div className="max-w-[1600px] mx-auto" 
+    <div className="flex-1 h-screen overflow-y-auto bg-background grid-noise">
+      <div className="max-w-400 mx-auto" 
         style={{ 
           padding: 'calc(var(--spacing-unit) * 4)',
           paddingLeft: 'calc(var(--spacing-unit) * 6)'
@@ -47,14 +47,14 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
         >
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h1 className="text-display text-6xl text-[var(--foreground)] mb-2 tracking-wider">
+              <h1 className="text-display text-6xl text-foreground mb-2 tracking-wider">
                 {t('videoLibrary')}
               </h1>
-              <div className="flex items-center gap-4 text-sm font-mono text-[var(--foreground-muted)]">
+              <div className="flex items-center gap-4 text-sm font-mono text-foreground-muted">
                 <span>{notes.length} {notes.length !== 1 ? t('videos') : t('video')}</span>
-                <span className="text-[var(--accent-primary)]">•</span>
+                <span className="text-accent-primary">•</span>
                 <span>{notes.filter(n => n.status === 'watched').length} {t('watched')}</span>
-                <span className="text-[var(--accent-primary)]">•</span>
+                <span className="text-accent-primary">•</span>
                 <span>{notes.filter(n => n.status === 'important').length} {t('important')}</span>
               </div>
             </div>
@@ -65,8 +65,8 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
               onClick={() => setIsAddingNote(true)}
               className="
                 px-6 py-3 
-                bg-[var(--accent-primary)] 
-                text-[var(--background)]
+                bg-accent-primary 
+                text-background
                 theme-border
                 text-display text-xl
                 hover:brightness-110
@@ -90,10 +90,10 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="p-6 bg-[var(--surface)] border-3 border-[var(--accent-primary)] shadow-[6px_6px_0px_var(--accent-primary)]"
+              className="p-6 bg-surface border-3 border-accent-primary shadow-[6px_6px_0px_var(--accent-primary)]"
             >
               <div className="flex items-center gap-4">
-                <LinkIcon className="text-[var(--accent-primary)]" size={24} />
+                <LinkIcon className="text-accent-primary" size={24} />
                 <input
                   type="text"
                   placeholder={t('pasteYouTubeUrl')}
@@ -110,10 +110,10 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   disabled={isLoading}
                   className="
                     flex-1 px-4 py-3
-                    bg-[var(--background)]
-                    border-2 border-[var(--border)]
+                    bg-background
+                    border-2 border-border-color
                     text-mono text-sm
-                    focus:border-[var(--accent-secondary)] focus:outline-none
+                    focus:border-accent-secondary focus:outline-none
                     disabled:opacity-50
                     transition-colors
                   "
@@ -123,10 +123,10 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   disabled={isLoading}
                   className="
                     px-6 py-3
-                    bg-[var(--accent-secondary)]
-                    text-[var(--background)]
+                    bg-accent-secondary
+                    text-background
                     text-display text-lg
-                    hover:bg-[var(--accent-primary)]
+                    hover:bg-accent-primary
                     disabled:opacity-50
                     transition-colors
                   "
@@ -141,9 +141,9 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   disabled={isLoading}
                   className="
                     px-6 py-3
-                    border-2 border-[var(--border)]
+                    border-2 border-border-color
                     text-display text-lg
-                    hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]
+                    hover:border-accent-primary hover:text-accent-primary
                     disabled:opacity-50
                     transition-colors
                   "
@@ -151,7 +151,7 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
                   {t('cancel')}
                 </button>
               </div>
-              <p className="mt-3 text-xs font-mono text-[var(--foreground-muted)]">
+              <p className="mt-3 text-xs font-mono text-foreground-muted">
                 {t('supportedUrls')}
               </p>
             </motion.div>
@@ -165,22 +165,22 @@ export default function Dashboard({ notes, onAddNote, onNoteClick, onStatusChang
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-20 text-center"
           >
-            <div className="text-8xl mb-6">📹</div>
+            <div className="text-8xl mb-6">??</div>
             <h2 className="text-display text-4xl mb-3">{t('noVideosYet')}</h2>
-            <p className="text-mono text-sm text-[var(--foreground-muted)] mb-8">
+            <p className="text-mono text-sm text-foreground-muted mb-8">
               {t('startBuildingKnowledgeBase')}
             </p>
             <button
               onClick={() => setIsAddingNote(true)}
               className="
                 px-8 py-4
-                bg-[var(--accent-primary)]
-                text-[var(--background)]
-                border-3 border-[var(--background)]
+                bg-accent-primary
+                text-background
+                border-3 border-background
                 text-display text-2xl
                 shadow-[4px_4px_0px_var(--accent-secondary)]
                 hover:shadow-[6px_6px_0px_var(--accent-secondary)]
-                hover:translate-x-[-2px] hover:translate-y-[-2px]
+                hover:-translate-x-0.5 hover:-translate-y-0.5
                 transition-all duration-200
               "
             >

@@ -1,0 +1,153 @@
+/* ============================================ */
+/* CYBERPUNK THEME - Brutalist & Bold          */
+/* ============================================ */
+
+:root[data-theme="cyberpunk-dark"] {
+  /* Brutalist Editorial Color Palette - Dark */
+  --background: #0a0a0a;
+  --surface: #1a1a1a;
+  --surface-hover: #252525;
+  --foreground: #ffffff;
+  --foreground-muted: #a0a0a0;
+
+  /* Accent Colors - Bold & Sharp */
+  --accent-primary: #ff3366;
+  --accent-secondary: #00ff88;
+  --accent-tertiary: #ffdd00;
+  --accent-blue: #00ccff;
+
+  /* Status Colors */
+  --status-watching: #ff6b35;
+  --status-watched: #00ff88;
+  --status-important: #ffdd00;
+
+  /* Borders & Lines */
+  --border: #333333;
+  --border-accent: #ff3366;
+
+  /* Shadows */
+  --shadow-brutal: 4px 4px 0px var(--accent-primary);
+  --shadow-brutal-hover: 6px 6px 0px var(--accent-primary);
+
+  /* Canvas-specific Colors */
+  --color-primary: #ff3366;
+  --color-secondary: #00ff88;
+  --color-accent: #ffdd00;
+  --color-bg: #0a0a0a;
+  --color-text: #ffffff;
+  --color-border: #333333;
+
+  /* Layout Variables - CYBERPUNK STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
+}
+
+:root[data-theme="cyberpunk-navy"] {
+  /* Navy Blue Theme */
+  --background: #0d1b2a;
+  --surface: #1b263b;
+  --surface-hover: #293847;
+  --foreground: #e0e1dd;
+  --foreground-muted: #778da9;
+
+  /* Accent Colors */
+  --accent-primary: #415a77;
+  --accent-secondary: #00d4ff;
+  --accent-tertiary: #ffd60a;
+  --accent-blue: #00b4d8;
+
+  /* Status Colors */
+  --status-watching: #f4a261;
+  --status-watched: #06ffa5;
+  --status-important: #ffd60a;
+
+  /* Borders & Lines */
+  --border: #415a77;
+  --border-accent: #00d4ff;
+
+  /* Shadows */
+  --shadow-brutal: 4px 4px 0px var(--accent-primary);
+  --shadow-brutal-hover: 6px 6px 0px var(--accent-primary);
+
+  /* Canvas-specific Colors */
+  --color-primary: #415a77;
+  --color-secondary: #00d4ff;
+  --color-accent: #ffd60a;
+  --color-bg: #0d1b2a;
+  --color-text: #e0e1dd;
+  --color-border: #415a77;
+
+  /* Layout Variables - CYBERPUNK STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
+}
+
+:root[data-theme="cyberpunk-light"] {
+  /* Light Theme */
+  --background: #f8f9fa;
+  --surface: #ffffff;
+  --surface-hover: #e9ecef;
+  --foreground: #212529;
+  --foreground-muted: #6c757d;
+
+  /* Accent Colors */
+  --accent-primary: #d63384;
+  --accent-secondary: #0dcaf0;
+  --accent-tertiary: #ffc107;
+  --accent-blue: #0d6efd;
+
+  /* Status Colors */
+  --status-watching: #fd7e14;
+  --status-watched: #198754;
+  --status-important: #ffc107;
+
+  /* Borders & Lines */
+  --border: #dee2e6;
+  --border-accent: #d63384;
+
+  /* Shadows */
+  --shadow-brutal: 4px 4px 0px var(--accent-primary);
+  --shadow-brutal-hover: 6px 6px 0px var(--accent-primary);
+
+  /* Canvas-specific Colors */
+  --color-primary: #d63384;
+  --color-secondary: #0dcaf0;
+  --color-accent: #ffc107;
+  --color-bg: #f8f9fa;
+  --color-text: #212529;
+  --color-border: #dee2e6;
+
+  /* Layout Variables - CYBERPUNK STYLE */
+  --sidebar-position: left;
+  --sidebar-width: 288px;
+  --sidebar-collapsed-width: 64px;
+  --border-width: 3px;
+  --border-radius: 0px;
+  --spacing-unit: 8px;
+  --grid-gap: 20px;
+  --grid-columns: repeat(auto-fill, minmax(320px, 1fr));
+  --card-padding: 0px;
+  --button-transform: translate(-2px, -2px);
+  --font-weight-display: 700;
+  --letter-spacing: 0.05em;
+}

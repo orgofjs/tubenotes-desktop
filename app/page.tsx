@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -344,7 +344,7 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingSpinner size="lg" text={t('loadingTubeNotes')} />
       </div>
     );
@@ -374,13 +374,13 @@ export default function Home() {
             <motion.header
               initial={{ y: -100 }}
               animate={{ y: 0 }}
-              className="border-b-2 border-[var(--border)] p-6"
+              className="border-b-2 border-border-color p-6"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setViewMode('notes')}
-                    className="p-2 hover:bg-[var(--surface-hover)] transition-colors"
+                    className="p-2 hover:bg-surface-hover transition-colors"
                     title={t('back')}
                   >
                     <ArrowLeft size={24} />
@@ -389,7 +389,7 @@ export default function Home() {
                     <h1 className="text-3xl font-display font-bold uppercase tracking-wider">
                       {t('kanbanBoard')}
                     </h1>
-                    <p className="text-sm font-mono text-[var(--foreground-muted)] mt-1">
+                    <p className="text-sm font-mono text-foreground-muted mt-1">
                       {t('kanbanBoardDescription')}
                     </p>
                   </div>
@@ -398,7 +398,7 @@ export default function Home() {
             </motion.header>
 
             {/* Kanban Content */}
-            <main className="flex-1 overflow-hidden bg-[var(--background)]">
+            <main className="flex-1 overflow-hidden bg-background">
               <KanbanBoard />
             </main>
           </motion.div>
@@ -411,7 +411,7 @@ export default function Home() {
             className="flex-1 flex flex-col"
           >
             {/* Canvas Header */}
-            <div className="h-18 border-b-3 border-[var(--border)] bg-[var(--surface)] px-6 flex items-center justify-between">
+            <div className="h-18 border-b-3 border-border-color bg-surface px-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => {
@@ -421,13 +421,13 @@ export default function Home() {
                     setSaveStatus('saved');
                     setSelectedTool(null);
                   }}
-                  className="px-4 py-2 bg-[var(--surface-hover)] hover:bg-[var(--accent-primary)] hover:text-[var(--background)] border-2 border-[var(--border)] transition-all font-mono text-sm flex items-center gap-2"
+                  className="px-4 py-2 bg-surface-hover hover:bg-accent-primary hover:text-background border-2 border-border-color transition-all font-mono text-sm flex items-center gap-2"
                 >
                   <Layers size={16} />
                   {t('back')}
                 </button>
                 
-                <div className="h-10 w-px bg-[var(--border)]" />
+                <div className="h-10 w-px bg-border-color" />
                 
                 {/* Toolbar */}
                 <div className="flex items-center gap-2">
@@ -436,12 +436,12 @@ export default function Home() {
                     onClick={() => setSelectedTool(selectedTool === 'selection' ? null : 'selection')}
                     className={`group p-3 rounded-xl transition-all ${
                       selectedTool === 'selection'
-                        ? 'bg-[var(--color-accent)]/30 ring-2 ring-[var(--color-accent)]'
-                        : 'hover:bg-[var(--surface-hover)]'
+                        ? 'bg-(--color-accent)/30 ring-2 ring-(--color-accent)'
+                        : 'hover:bg-surface-hover'
                     }`}
                     title={t('dragToCreateRectangle')}
                   >
-                    <svg className={`w-6 h-6 stroke-2 fill-none ${selectedTool === 'selection' ? 'stroke-[var(--color-accent)]' : 'stroke-[var(--foreground)]'}`} viewBox="0 0 24 24">
+                    <svg className={`w-6 h-6 stroke-2 fill-none ${selectedTool === 'selection' ? 'stroke-(--color-accent)' : 'stroke-foreground'}`} viewBox="0 0 24 24">
                       <path d="M3 3 L3 21 L21 21" strokeLinecap="round"/>
                       <path d="M7 7 L7 17 L17 17 L17 7 Z" strokeDasharray="4 2"/>
                     </svg>
@@ -452,27 +452,27 @@ export default function Home() {
                     onClick={() => setSelectedTool(selectedTool === 'text' ? null : 'text')}
                     className={`group p-3 rounded-xl transition-all ${
                       selectedTool === 'text'
-                        ? 'bg-[var(--color-accent)]/30 ring-2 ring-[var(--color-accent)]'
-                        : 'hover:bg-[var(--surface-hover)]'
+                        ? 'bg-(--color-accent)/30 ring-2 ring-(--color-accent)'
+                        : 'hover:bg-surface-hover'
                     }`}
                     title={t('clickToAddText')}
                   >
-                    <svg className={`w-6 h-6 stroke-2 fill-none ${selectedTool === 'text' ? 'stroke-[var(--color-accent)]' : 'stroke-[var(--foreground)]'}`} viewBox="0 0 24 24">
+                    <svg className={`w-6 h-6 stroke-2 fill-none ${selectedTool === 'text' ? 'stroke-(--color-accent)' : 'stroke-foreground'}`} viewBox="0 0 24 24">
                       <path d="M17 4 L17 2 L7 2 L7 4" strokeLinecap="round"/>
                       <path d="M12 2 L12 22" strokeLinecap="round"/>
                       <path d="M9 22 L15 22" strokeLinecap="round"/>
                     </svg>
                   </button>
 
-                  <div className="w-px h-8 bg-[var(--border)]" />
+                  <div className="w-px h-8 bg-border-color" />
 
                   {/* Markdown Note Button */}
                   <button
                     onClick={() => canvasViewRef.current?.addMarkdownNode()}
-                    className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all"
+                    className="group p-3 hover:bg-surface-hover rounded-xl transition-all"
                     title={t('addMarkdownNote')}
                   >
-                    <svg className="w-6 h-6 stroke-[var(--color-accent)] stroke-2 fill-none group-hover:fill-[var(--color-accent)]/10" viewBox="0 0 24 24">
+                    <svg className="w-6 h-6 stroke-(--color-accent) stroke-2 fill-none group-hover:fill-(--color-accent)/10" viewBox="0 0 24 24">
                       <path d="M3 8 L3 16 L6 16 L6 11 L8 13 L10 11 L10 16 L13 16 L13 8 Z M15 8 L15 16 L18 16 L21 13 M18 16 L18 8"/>
                     </svg>
                   </button>
@@ -505,7 +505,7 @@ export default function Home() {
                     }}
                     disabled={hasDataLoadError}
                     title={hasDataLoadError ? t('cannotSaveCorruptedData') : t('saveNow')}
-                    className={`group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)] ${
+                    className={`group p-3 hover:bg-surface-hover rounded-xl transition-all border-2 border-border-color ${
                       hasDataLoadError ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
@@ -514,12 +514,12 @@ export default function Home() {
                     </svg>
                   </button>
                   
-                  <div className="w-px h-6 bg-[var(--border)]" />
+                  <div className="w-px h-6 bg-border-color" />
                   
                   <button
                     onClick={() => canvasViewRef.current?.exportCanvas()}
                     title={t('exportToFile')}
-                    className="group p-3 hover:bg-[var(--surface-hover)] rounded-xl transition-all border-2 border-[var(--border)]"
+                    className="group p-3 hover:bg-surface-hover rounded-xl transition-all border-2 border-border-color"
                   >
                     <Download size={18} />
                   </button>
@@ -527,17 +527,17 @@ export default function Home() {
                     onClick={() => canvasViewRef.current?.importCanvas()}
                     disabled={canvasEverModified}
                     title={canvasEverModified ? t('importDisabled') : t('importFromFile')}
-                    className={`group p-3 rounded-xl transition-all border-2 border-[var(--border)] ${
+                    className={`group p-3 rounded-xl transition-all border-2 border-border-color ${
                       canvasEverModified
                         ? 'opacity-40 cursor-not-allowed'
-                        : 'hover:bg-[var(--surface-hover)]'
+                        : 'hover:bg-surface-hover'
                     }`}
                   >
                     <Upload size={18} />
                   </button>
                 </div>
                 
-                <div className="flex items-center gap-2 text-[var(--foreground-muted)]">
+                <div className="flex items-center gap-2 text-foreground-muted">
                   <Grid3x3 size={20} />
                   <span className="font-mono text-sm">{t('canvasMode')}</span>
                 </div>

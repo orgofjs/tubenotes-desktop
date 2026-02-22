@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -276,7 +276,7 @@ export default function KanbanBoard() {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="w-full max-w-md bg-[var(--surface)] border-2 border-[var(--accent-primary)] p-6"
+              className="w-full max-w-md bg-surface border-2 border-accent-primary p-6"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -286,7 +286,7 @@ export default function KanbanBoard() {
                 </h2>
                 <button
                   onClick={() => setModalData({ isOpen: false, mode: 'create' })}
-                  className="text-[var(--foreground-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                  className="text-foreground-muted hover:text-accent-primary transition-colors"
                 >
                   <X size={20} />
                 </button>
@@ -296,7 +296,7 @@ export default function KanbanBoard() {
               <form onSubmit={handleSubmitTask} className="space-y-4">
                 {/* Title */}
                 <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--foreground-muted)] mb-2">
+                  <label className="block text-xs font-mono uppercase text-foreground-muted mb-2">
                     {t('taskTitle')}
                   </label>
                   <input
@@ -305,13 +305,13 @@ export default function KanbanBoard() {
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     placeholder={t('taskTitlePlaceholder')}
                     required
-                    className="w-full bg-[var(--background)] border-2 border-[var(--border)] p-3 text-sm font-mono focus:outline-none focus:border-[var(--accent-primary)]"
+                    className="w-full bg-background border-2 border-border-color p-3 text-sm font-mono focus:outline-none focus:border-accent-primary"
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--foreground-muted)] mb-2">
+                  <label className="block text-xs font-mono uppercase text-foreground-muted mb-2">
                     {t('taskDescription')}
                   </label>
                   <textarea
@@ -319,13 +319,13 @@ export default function KanbanBoard() {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder={t('taskDescriptionPlaceholder')}
                     rows={4}
-                    className="w-full bg-[var(--background)] border-2 border-[var(--border)] p-3 text-sm font-mono focus:outline-none focus:border-[var(--accent-primary)] resize-y min-h-[100px] max-h-[300px]"
+                    className="w-full bg-background border-2 border-border-color p-3 text-sm font-mono focus:outline-none focus:border-accent-primary resize-y min-h-25 max-h-75"
                   />
                 </div>
 
                 {/* Priority */}
                 <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--foreground-muted)] mb-2">
+                  <label className="block text-xs font-mono uppercase text-foreground-muted mb-2">
                     {t('priority')}
                   </label>
                   <div className="flex gap-2">
@@ -337,8 +337,8 @@ export default function KanbanBoard() {
                         className={`
                           flex-1 py-2 text-xs font-mono uppercase font-bold transition-all
                           ${formData.priority === priority
-                            ? 'bg-[var(--accent-primary)] text-[var(--background)] border-2 border-[var(--accent-primary)]'
-                            : 'bg-[var(--background)] text-[var(--foreground-muted)] border-2 border-[var(--border)] hover:border-[var(--accent-primary)]'
+                            ? 'bg-accent-primary text-background border-2 border-accent-primary'
+                            : 'bg-background text-foreground-muted border-2 border-border-color hover:border-accent-primary'
                           }
                         `}
                       >
@@ -350,14 +350,14 @@ export default function KanbanBoard() {
 
                 {/* Due Date */}
                 <div>
-                  <label className="block text-xs font-mono uppercase text-[var(--foreground-muted)] mb-2">
+                  <label className="block text-xs font-mono uppercase text-foreground-muted mb-2">
                     {t('dueDate')}
                   </label>
                   <input
                     type="date"
                     value={formData.dueDate}
                     onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                    className="w-full bg-[var(--background)] border-2 border-[var(--border)] p-3 text-sm font-mono focus:outline-none focus:border-[var(--accent-primary)]"
+                    className="w-full bg-background border-2 border-border-color p-3 text-sm font-mono focus:outline-none focus:border-accent-primary"
                   />
                 </div>
 
@@ -365,14 +365,14 @@ export default function KanbanBoard() {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-[var(--accent-primary)] text-[var(--background)] text-sm font-mono font-bold uppercase hover:bg-[var(--accent-secondary)] transition-colors"
+                    className="flex-1 py-3 bg-accent-primary text-background text-sm font-mono font-bold uppercase hover:bg-accent-secondary transition-colors"
                   >
                     {modalData.mode === 'create' ? t('add') : t('save')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setModalData({ isOpen: false, mode: 'create' })}
-                    className="flex-1 py-3 border-2 border-[var(--border)] text-sm font-mono font-bold uppercase hover:border-[var(--accent-primary)] transition-colors"
+                    className="flex-1 py-3 border-2 border-border-color text-sm font-mono font-bold uppercase hover:border-accent-primary transition-colors"
                   >
                     {t('cancel')}
                   </button>

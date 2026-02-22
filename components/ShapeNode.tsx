@@ -64,8 +64,8 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
         isVisible={selected}
         minWidth={80}
         minHeight={80}
-        lineClassName="border-[var(--color-accent)]"
-        handleClassName="h-3 w-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full"
+        lineClassName="border-(--color-accent)"
+        handleClassName="h-3 w-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full"
       />
 
       <div
@@ -75,7 +75,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           ${shapeStyles[currentShapeType]}
           bg-transparent
           ${data.borderless ? 'border-0' : 'border-2'}
-          ${selected ? 'border-[var(--color-accent)]' : 'border-[var(--color-primary)]'}
+          ${selected ? 'border-(--color-accent)' : 'border-(--color-primary)'}
           flex items-center justify-center
           transition-all duration-200
           cursor-pointer
@@ -90,7 +90,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="source-top"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
         <Handle 
           type="source" 
@@ -98,7 +98,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="source-right"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
         <Handle 
           type="source" 
@@ -106,7 +106,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="source-bottom"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
         <Handle 
           type="source" 
@@ -114,7 +114,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="source-left"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
 
         <Handle 
@@ -123,7 +123,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="target-top"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
         <Handle 
           type="target" 
@@ -131,7 +131,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="target-right"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
         <Handle 
           type="target" 
@@ -139,7 +139,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="target-bottom"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
         <Handle 
           type="target" 
@@ -147,7 +147,7 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
           id="target-left"
           isConnectable={true}
           style={{ pointerEvents: 'all', zIndex: 10 }}
-          className={`w-3 h-3 bg-[var(--color-accent)] border-2 border-[var(--color-bg)] rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
+          className={`w-3 h-3 bg-(--color-accent) border-2 border-(--color-bg) rounded-full transition-opacity ${selected ? 'opacity-60 hover:opacity-100' : 'opacity-0'}`}
         />
 
         {/* İçerik - Diamond için ters döndür */}
@@ -164,12 +164,12 @@ export default function ShapeNode({ id, data, selected }: ShapeNodeProps) {
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               autoFocus
-              className="bg-transparent border-none outline-none text-center font-sans text-sm text-[var(--color-text)] w-full h-full resize-none overflow-hidden leading-relaxed"
+              className="bg-transparent border-none outline-none text-center font-sans text-sm text-(--color-text) w-full h-full resize-none overflow-hidden leading-relaxed"
               placeholder="Type here..."
             />
           ) : (
             <div 
-              className="font-sans text-sm text-[var(--color-text)] break-words w-full h-full overflow-hidden leading-relaxed text-center flex items-center justify-center p-2"
+              className="font-sans text-sm text-(--color-text) wrap-break-word w-full h-full overflow-hidden leading-relaxed text-center flex items-center justify-center p-2"
             >
               <p className="whitespace-pre-wrap">{label || 'Double click'}</p>
             </div>

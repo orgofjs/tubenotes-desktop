@@ -47,7 +47,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50
-              w-full max-w-4xl h-[600px] bg-[var(--surface)] theme-border flex flex-col"
+              w-full max-w-4xl h-150 bg-surface theme-border flex flex-col"
             style={{
               borderColor: 'var(--border)',
               borderStyle: 'solid',
@@ -65,12 +65,12 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 borderTop: '0'
               }}
             >
-              <h2 className="text-display text-2xl text-[var(--accent-primary)]">
+              <h2 className="text-display text-2xl text-accent-primary">
                 {t('settings')}
               </h2>
               <button
                 onClick={onClose}
-                className="text-[var(--foreground-muted)] hover:text-[var(--accent-primary)] 
+                className="text-foreground-muted hover:text-accent-primary 
                   transition-colors p-2"
               >
                 <X size={24} />
@@ -102,10 +102,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         transition-all duration-200
                         theme-border
                         ${tab.disabled
-                          ? 'opacity-40 cursor-not-allowed text-[var(--foreground-muted)]'
+                          ? 'opacity-40 cursor-not-allowed text-foreground-muted'
                           : activeTab === tab.id
-                            ? 'bg-[var(--accent-primary)] text-[var(--background)]'
-                            : 'text-[var(--foreground-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]'
+                            ? 'bg-accent-primary text-background'
+                            : 'text-foreground-muted hover:bg-surface-hover hover:text-foreground'
                         }
                       `}
                       style={{
@@ -135,10 +135,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       className="space-y-6"
                     >
                       <div>
-                        <h3 className="text-display text-xl mb-2 text-[var(--foreground)]">
+                        <h3 className="text-display text-xl mb-2 text-foreground">
                           {t('themeSettings')}
                         </h3>
-                        <p className="text-sm text-[var(--foreground-muted)] font-mono mb-6">
+                        <p className="text-sm text-foreground-muted font-mono mb-6">
                           Choose your visual theme and color palette
                         </p>
                       </div>
@@ -156,10 +156,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       className="space-y-6"
                     >
                       <div>
-                        <h3 className="text-display text-xl mb-2 text-[var(--foreground)]">
+                        <h3 className="text-display text-xl mb-2 text-foreground">
                           {t('languageSettings')}
                         </h3>
-                        <p className="text-sm text-[var(--foreground-muted)] font-mono mb-6">
+                        <p className="text-sm text-foreground-muted font-mono mb-6">
                           Select your preferred language
                         </p>
                       </div>
@@ -177,17 +177,17 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       className="space-y-6"
                     >
                       <div>
-                        <h3 className="text-display text-xl mb-2 text-[var(--foreground)]">
+                        <h3 className="text-display text-xl mb-2 text-foreground">
                           {t('privacyPolicy')}
                         </h3>
-                        <p className="text-sm text-[var(--foreground-muted)] font-mono mb-6">
+                        <p className="text-sm text-foreground-muted font-mono mb-6">
                           {t('privacyPolicyDescription')}
                         </p>
                       </div>
 
-                      <div className="space-y-4 max-h-[380px] overflow-y-auto pr-2 scrollbar-hidden">
+                      <div className="space-y-4 max-h-95 overflow-y-auto pr-2 scrollbar-hidden">
                         {/* Privacy Notice Banner */}
-                        <div className="p-4 theme-border bg-[var(--accent-primary)]/10"
+                        <div className="p-4 theme-border bg-accent-primary/10"
                           style={{
                             borderColor: 'var(--accent-primary)',
                             borderStyle: 'solid',
@@ -195,23 +195,23 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <p className="text-sm font-mono text-[var(--accent-primary)] leading-relaxed">
+                          <p className="text-sm font-mono text-accent-primary leading-relaxed">
                             {t('privacyNotice')}
                           </p>
                         </div>
 
                         {/* Section 1 - Data Collection */}
-                        <div className="theme-border bg-[var(--background)] p-4"
+                        <div className="theme-border bg-background p-4"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                          <h4 className="text-sm font-mono font-bold text-foreground mb-3">
                             1. {t('privacyDataCollection')}
                           </h4>
-                          <ul className="space-y-2 text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                          <ul className="space-y-2 text-xs font-mono text-foreground-muted leading-relaxed">
                             <li>• {t('privacyNoPersonalData')}</li>
                             <li>• {t('privacyNoTracking')}</li>
                             <li>• {t('privacyNoExternalServers')}</li>
@@ -219,80 +219,80 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         </div>
 
                         {/* Section 2 - Data Storage */}
-                        <div className="theme-border bg-[var(--background)] p-4"
+                        <div className="theme-border bg-background p-4"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                          <h4 className="text-sm font-mono font-bold text-foreground mb-3">
                             2. {t('privacyDataStorage')}
                           </h4>
-                          <ul className="space-y-2 text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                          <ul className="space-y-2 text-xs font-mono text-foreground-muted leading-relaxed">
                             <li>• {t('privacyLocalStorage')}</li>
                             <li>• {t('privacyFileAccess')}</li>
                           </ul>
                         </div>
 
                         {/* Section 3 - Internet Usage */}
-                        <div className="theme-border bg-[var(--background)] p-4"
+                        <div className="theme-border bg-background p-4"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                          <h4 className="text-sm font-mono font-bold text-foreground mb-3">
                             3. {t('privacyInternetUsage')}
                           </h4>
-                          <ul className="space-y-2 text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                          <ul className="space-y-2 text-xs font-mono text-foreground-muted leading-relaxed">
                             <li>• {t('privacyUpdateChecks')}</li>
                             <li>• {t('privacyExternalLinks')}</li>
                           </ul>
                         </div>
 
                         {/* Section 4 - User Control */}
-                        <div className="theme-border bg-[var(--background)] p-4"
+                        <div className="theme-border bg-background p-4"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                          <h4 className="text-sm font-mono font-bold text-foreground mb-3">
                             4. {t('privacyUserControl')}
                           </h4>
-                          <p className="text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                          <p className="text-xs font-mono text-foreground-muted leading-relaxed">
                             {t('privacyUserControlDesc')}
                           </p>
                         </div>
 
                         {/* Section 5 - Contact */}
-                        <div className="theme-border bg-[var(--background)] p-4"
+                        <div className="theme-border bg-background p-4"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <h4 className="text-sm font-mono font-bold text-[var(--foreground)] mb-3">
+                          <h4 className="text-sm font-mono font-bold text-foreground mb-3">
                             5. {t('privacyContact')}
                           </h4>
-                          <p className="text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                          <p className="text-xs font-mono text-foreground-muted leading-relaxed">
                             {t('privacyContactDesc')}
                           </p>
                         </div>
 
                         {/* Last Updated */}
-                        <div className="mt-4 p-3 theme-border bg-[var(--surface-hover)]"
+                        <div className="mt-4 p-3 theme-border bg-surface-hover"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <p className="text-xs font-mono text-[var(--foreground-muted)]">
+                          <p className="text-xs font-mono text-foreground-muted">
                             {t('privacyLastUpdated')}
                           </p>
                         </div>
@@ -311,10 +311,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     >
                       {/* About Header */}
                       <div>
-                        <h3 className="text-display text-xl mb-2 text-[var(--foreground)]">
+                        <h3 className="text-display text-xl mb-2 text-foreground">
                           {t('about')}
                         </h3>
-                        <p className="text-sm text-[var(--foreground-muted)] font-mono">
+                        <p className="text-sm text-foreground-muted font-mono">
                           TubeNotes - Visual Video Knowledge Base
                         </p>
                       </div>
@@ -322,53 +322,53 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       {/* Info Grid */}
                       <div className="space-y-4">
                         {/* Version */}
-                        <div className="flex items-center justify-between p-4 theme-border bg-[var(--background)]"
+                        <div className="flex items-center justify-between p-4 theme-border bg-background"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <span className="text-sm font-mono text-[var(--foreground-muted)]">
+                          <span className="text-sm font-mono text-foreground-muted">
                             {t('version')}
                           </span>
-                          <span className="text-sm font-mono text-[var(--accent-primary)]">
+                          <span className="text-sm font-mono text-accent-primary">
                             0.2.6
                           </span>
                         </div>
 
                         {/* License */}
-                        <div className="flex items-center justify-between p-4 theme-border bg-[var(--background)]"
+                        <div className="flex items-center justify-between p-4 theme-border bg-background"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <span className="text-sm font-mono text-[var(--foreground-muted)]">
+                          <span className="text-sm font-mono text-foreground-muted">
                             {t('license')}
                           </span>
-                          <span className="text-sm font-mono text-[var(--accent-secondary)]">
+                          <span className="text-sm font-mono text-accent-secondary">
                             Apache 2.0
                           </span>
                         </div>
 
                         {/* Founder */}
-                        <div className="flex items-center justify-between p-4 theme-border bg-[var(--background)]"
+                        <div className="flex items-center justify-between p-4 theme-border bg-background"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <span className="text-sm font-mono text-[var(--foreground-muted)]">
+                          <span className="text-sm font-mono text-foreground-muted">
                             {t('founder')}
                           </span>
                           <a
                             href="https://github.com/orgofjs"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm font-mono text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] transition-colors"
+                            className="flex items-center gap-2 text-sm font-mono text-accent-primary hover:text-accent-secondary transition-colors"
                           >
                             @orgofjs
                             <ExternalLink size={14} />
@@ -376,21 +376,21 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         </div>
 
                         {/* Repository */}
-                        <div className="flex items-center justify-between p-4 theme-border bg-[var(--background)]"
+                        <div className="flex items-center justify-between p-4 theme-border bg-background"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
                             borderRadius: 'var(--border-radius)'
                           }}
                         >
-                          <span className="text-sm font-mono text-[var(--foreground-muted)]">
+                          <span className="text-sm font-mono text-foreground-muted">
                             {t('repository')}
                           </span>
                           <a
                             href="https://github.com/orgofjs/tubenotes-desktop"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-sm font-mono text-[var(--accent-primary)] hover:text-[var(--accent-secondary)] transition-colors"
+                            className="flex items-center gap-2 text-sm font-mono text-accent-primary hover:text-accent-secondary transition-colors"
                           >
                             {t('openSource')}
                             <ExternalLink size={14} />
@@ -398,7 +398,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         </div>
 
                         {/* Contributors */}
-                        <div className="theme-border bg-[var(--background)]"
+                        <div className="theme-border bg-background"
                           style={{
                             borderColor: 'var(--border)',
                             borderStyle: 'solid',
@@ -411,7 +411,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                               borderBottomWidth: 'var(--border-width)'
                             }}
                           >
-                            <span className="text-sm font-mono text-[var(--foreground-muted)]">
+                            <span className="text-sm font-mono text-foreground-muted">
                               {t('contributors')}
                             </span>
                           </div>
@@ -421,15 +421,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                               href="https://github.com/orgofjs"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-end gap-2 p-3 hover:bg-[var(--surface-hover)] transition-colors group"
+                              className="flex items-center justify-end gap-2 p-3 hover:bg-surface-hover transition-colors group"
                               style={{
                                 borderRadius: 'var(--border-radius)'
                               }}
                             >
-                              <span className="text-sm font-mono text-[var(--foreground)] group-hover:text-[var(--accent-primary)] transition-colors">
+                              <span className="text-sm font-mono text-foreground group-hover:text-accent-primary transition-colors">
                                 orgofjs
                               </span>
-                              <ExternalLink size={14} className="text-[var(--foreground-muted)] group-hover:text-[var(--accent-secondary)] transition-colors" />
+                              <ExternalLink size={14} className="text-foreground-muted group-hover:text-accent-secondary transition-colors" />
                             </a>
 
                             {/* Contributor Item - midhunadarvin */}
@@ -437,29 +437,29 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                               href="https://github.com/midhunadarvin"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-end gap-2 p-3 hover:bg-[var(--surface-hover)] transition-colors group"
+                              className="flex items-center justify-end gap-2 p-3 hover:bg-surface-hover transition-colors group"
                               style={{
                                 borderRadius: 'var(--border-radius)'
                               }}
                             >
-                              <span className="text-sm font-mono text-[var(--foreground)] group-hover:text-[var(--accent-primary)] transition-colors">
+                              <span className="text-sm font-mono text-foreground group-hover:text-accent-primary transition-colors">
                                 midhunadarvin
                               </span>
-                              <ExternalLink size={14} className="text-[var(--foreground-muted)] group-hover:text-[var(--accent-secondary)] transition-colors" />
+                              <ExternalLink size={14} className="text-foreground-muted group-hover:text-accent-secondary transition-colors" />
                             </a>
                           </div>
                         </div>
                       </div>
 
                       {/* Footer Note */}
-                      <div className="mt-8 p-4 theme-border bg-[var(--surface-hover)]"
+                      <div className="mt-8 p-4 theme-border bg-surface-hover"
                         style={{
                           borderColor: 'var(--border)',
                           borderStyle: 'solid',
                           borderRadius: 'var(--border-radius)'
                         }}
                       >
-                        <p className="text-xs font-mono text-[var(--foreground-muted)] leading-relaxed">
+                        <p className="text-xs font-mono text-foreground-muted leading-relaxed">
                           TubeNotes is an open-source project. Contributions are welcome!
                           Visit our GitHub repository to report issues or contribute.
                         </p>

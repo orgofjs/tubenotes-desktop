@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -57,7 +57,7 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
   };
 
   return (
-    <div className="flex-1 h-screen flex flex-col bg-[var(--background)]">
+    <div className="flex-1 h-screen flex flex-col bg-background">
       {/* Header with Thumbnail */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -65,7 +65,7 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
         className="relative"
       >
         {/* Background Thumbnail with Parallax Effect */}
-        <div className="relative h-[300px] overflow-hidden border-b-3 border-[var(--border)]">
+        <div className="relative h-75 overflow-hidden border-b-3 border-border-color">
           {!imageError ? (
             <Image
               src={getYouTubeThumbnail(note.url)}
@@ -75,32 +75,32 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
               onError={() => setImageError(true)}
             />
           ) : (
-            <div className="w-full h-full bg-[var(--surface)]" />
+            <div className="w-full h-full bg-surface" />
           )}
           
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--background)]/80 to-[var(--background)]" />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/80 to-background" />
 
           {/* Content */}
           <div className="absolute inset-0 flex flex-col justify-end p-8">
-            <div className="max-w-[1200px] w-full mx-auto">
+              <div className="max-w-300 w-full mx-auto">
               {/* Back Button */}
               <motion.button
                 whileHover={{ x: -4 }}
                 onClick={onBack}
-                className="flex items-center gap-2 mb-6 text-[var(--foreground-muted)] hover:text-[var(--accent-primary)] transition-colors"
+                className="flex items-center gap-2 mb-6 text-foreground-muted hover:text-accent-primary transition-colors"
               >
                 <ArrowLeft size={20} />
                 <span className="font-mono text-sm">{t('backToLibrary')}</span>
               </motion.button>
 
               {/* Title */}
-              <h1 className="text-display text-5xl mb-4 text-[var(--foreground)]">
+              <h1 className="text-display text-5xl mb-4 text-foreground">
                 {note.title}
               </h1>
 
               {/* Metadata */}
-              <div className="flex items-center gap-6 text-sm font-mono text-[var(--foreground-muted)]">
+              <div className="flex items-center gap-6 text-sm font-mono text-foreground-muted">
                 {note.channelName && (
                   <div className="flex items-center gap-2">
                     <User size={16} />
@@ -115,7 +115,7 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
                   href={note.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 hover:text-[var(--accent-primary)] transition-colors"
+                  className="flex items-center gap-2 hover:text-accent-primary transition-colors"
                 >
                   <ExternalLink size={16} />
                   <span>{t('watchOnYouTube')}</span>
@@ -152,7 +152,7 @@ export default function NotePage({ note, onUpdate, onBack }: NotePageProps) {
 
       {/* Editor Container */}
       <div className="flex-1 overflow-hidden">
-        <div className="max-w-[1200px] w-full mx-auto h-full">
+        <div className="max-w-300 w-full mx-auto h-full">
           <Editor content={content} onChange={setContent} />
         </div>
       </div>

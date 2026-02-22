@@ -55,7 +55,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
       onClick={onClick}
     >
       {/* Thumbnail Container */}
-      <div className="relative aspect-video bg-[var(--surface)] theme-border overflow-hidden"
+      <div className="relative aspect-video bg-surface theme-border overflow-hidden"
         style={{ borderColor: 'var(--border)', borderStyle: 'solid' }}
       >
         {!imageError ? (
@@ -67,9 +67,9 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-[var(--foreground-muted)]">
+          <div className="w-full h-full flex items-center justify-center text-foreground-muted">
             <div className="text-center">
-              <div className="text-4xl mb-2">📹</div>
+              <div className="text-4xl mb-2">??</div>
               <div className="text-xs font-mono">{t('noThumbnail')}</div>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: isHovered ? 1 : 0 }}
-          className="absolute inset-0 bg-gradient-to-t from-[var(--background)] via-transparent to-transparent flex items-end justify-between p-4"
+          className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent flex items-end justify-between p-4"
         >
           <div className="flex gap-2">
             {(['unwatched', 'watching', 'watched', 'important'] as const).map((status) => {
@@ -93,7 +93,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
                     e.stopPropagation();
                     onStatusChange(note.id, status);
                   }}
-                  className="p-2 bg-[var(--background)] border-2 border-[var(--border)] hover:border-[var(--accent-primary)] transition-colors"
+                  className="p-2 bg-background border-2 border-border-color hover:border-accent-primary transition-colors"
                   style={{
                     color: note.status === status ? statusColors[status] : 'var(--foreground-muted)',
                   }}
@@ -109,7 +109,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleDelete}
-              className="p-2 bg-[var(--background)] border-2 border-[var(--border)] hover:border-[var(--accent-primary)] text-[var(--foreground-muted)] hover:text-[var(--accent-primary)] transition-colors"
+              className="p-2 bg-background border-2 border-border-color hover:border-accent-primary text-foreground-muted hover:text-accent-primary transition-colors"
             >
               <Trash2 size={16} />
             </motion.button>
@@ -118,7 +118,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
 
         {/* Status Badge */}
         <div
-          className="absolute top-2 right-2 px-2 py-1 text-xs font-mono bg-[var(--background)] border-2"
+          className="absolute top-2 right-2 px-2 py-1 text-xs font-mono bg-background border-2"
           style={{
             borderColor: statusColors[note.status],
             color: statusColors[note.status],
@@ -130,11 +130,11 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
 
       {/* Info Section */}
       <div className="mt-3 space-y-2">
-        <h3 className="text-sm font-mono leading-tight line-clamp-2 group-hover:text-[var(--accent-primary)] transition-colors">
+        <h3 className="text-sm font-mono leading-tight line-clamp-2 group-hover:text-accent-primary transition-colors">
           {note.title}
         </h3>
 
-        <div className="flex items-center justify-between text-xs text-[var(--foreground-muted)] font-mono">
+        <div className="flex items-center justify-between text-xs text-foreground-muted font-mono">
           <span>{note.channelName || t('unknownChannel')}</span>
           <div className="flex items-center gap-1">
             <Clock size={12} />
@@ -147,7 +147,7 @@ export default function VideoCard({ note, onClick, onStatusChange, onDelete }: V
       <motion.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: isHovered ? 1 : 0 }}
-        className="h-1 bg-[var(--accent-primary)] mt-2 origin-left"
+        className="h-1 bg-accent-primary mt-2 origin-left"
       />
     </motion.div>
   );

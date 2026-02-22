@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -159,7 +159,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-[var(--background)] text-[var(--foreground)]">
+    <div className="flex h-screen bg-background text-foreground">
       <Sidebar
         folders={folders}
         selectedFolderId={selectedFolderId}

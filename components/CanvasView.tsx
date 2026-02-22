@@ -453,7 +453,7 @@ function CanvasViewInner({
           panOnDrag={selectedTool !== 'selection' && selectedTool !== 'text'}
         >
           <Controls 
-            className="!border-0 !bg-transparent !shadow-none"
+            className="border-0! bg-transparent! shadow-none!"
             showInteractive={false}
             position="bottom-left"
           >
